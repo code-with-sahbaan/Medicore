@@ -1,0 +1,22 @@
+/* You can add global styles to this file, and also import other style files */
+html, body {
+    font-family: "Inter", sans-serif;
+    font-size: 14px;
+    --input-padding: 1rem 1.15rem;
+    --input-radius: 0.8rem;
+}
+
+.p-inputtext, .p-button{
+    padding: var(--input-padding) !important;
+    border-radius: var(--input-radius) !important;
+    width: 100% !important;
+}
+
+.p-password{
+    width: 100% !important;
+}
+
+.p-password-toggle-mask-icon{
+    cursor:pointer !important;
+}
+  
