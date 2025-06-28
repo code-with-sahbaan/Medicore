@@ -18,13 +18,16 @@ export class HttpConfigInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     // 🔐 Add headers (e.g., auth token)
-    const modifiedReq = req.clone({
-      setHeaders: {
-        Authorization: `Bearer ${getJWTtoken()}`
-      },
-      url:`${environment.apiUrl}${req.url}`
-    });
-
+    const modifiedReq = environment.nonTokenizedURL.has(req.url)
+      ? req.clone({
+          url: `${environment.apiUrl}${req.url}`,
+        })
+      : req.clone({
+          setHeaders: {
+            Authorization: `Bearer ${getJWTtoken()}`,
+          },
+          url: `${environment.apiUrl}${req.url}`,
+        });
     return next.handle(modifiedReq).pipe(
       tap({
         next: (event) => {

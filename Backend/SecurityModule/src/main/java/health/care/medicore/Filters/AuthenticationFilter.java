@@ -1,9 +1,9 @@
 package health.care.medicore.Filters;
 
 import health.care.medicore.Entities.Users;
-import health.care.medicore.RequestDTO.LoginRequestDTO;
+import health.care.medicore.RequestDTO.LoginRequest;
 import health.care.medicore.ResponseDTO.BaseResponse;
-import health.care.medicore.ResponseDTO.LoginResponseDTO;
+import health.care.medicore.ResponseDTO.LoginResponse;
 import health.care.medicore.ServicesImpl.UserServiceImpl;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -44,9 +44,9 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        LoginRequestDTO loginDTO;
+        LoginRequest loginDTO;
         try {
-            loginDTO = new ObjectMapper().readValue(request.getInputStream(), LoginRequestDTO.class);
+            loginDTO = new ObjectMapper().readValue(request.getInputStream(), LoginRequest.class);
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                     loginDTO.getEmail(), loginDTO.getPassword());
             return authenticationManager.authenticate(authenticationToken);
@@ -65,8 +65,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
             String accessToken = JWT.create().withSubject(user.getUsername()).withIssuer(request.getRequestURI()).withExpiresAt(expirationTime).withClaim("roles",user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                     .sign(algorithm);
 
-        BaseResponse<LoginResponseDTO> baseResponse = new BaseResponse<>();
-        LoginResponseDTO logInResponse = new LoginResponseDTO();
+        BaseResponse<LoginResponse> baseResponse = new BaseResponse<>();
+        LoginResponse logInResponse = new LoginResponse();
         logInResponse = userService.convertEntityToDto(users, logInResponse.getClass());
         logInResponse.setRole(users.getRole().getRole());
         logInResponse.setAccessToken(accessToken);

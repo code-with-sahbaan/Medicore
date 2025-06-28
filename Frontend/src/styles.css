@@ -6,7 +6,7 @@ html, body {
     --input-radius: 0.8rem;
 }
 
-.p-inputtext, .p-button{
+.p-inputtext, .p-button, .p-select{
     padding: var(--input-padding) !important;
     border-radius: var(--input-radius) !important;
     width: 100% !important;
@@ -18,5 +18,14 @@ html, body {
 
 .p-password-toggle-mask-icon{
     cursor:pointer !important;
+}
+
+.p-select-label{
+    padding: 0 !important;
+}
+
+a{
+    text-decoration: underline;
+    text-decoration-color: black; /* 👈 change to your desired color */
 }
   

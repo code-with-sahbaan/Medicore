@@ -20,7 +20,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.List;
 import java.util.Set;
 
 import static health.care.medicore.Utils.Constants.OWNER;
@@ -59,10 +63,23 @@ public class WebConfiguration {
         return provider::authenticate;
     }
 
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(List.of(originAllowed));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
+    }
+
 
     @Bean
     protected SecurityFilterChain securityFilterChain(HttpSecurity http,AuthenticationManager authenticationManager) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
+        http.cors(cors -> {
+            cors.configure(http);
+        });
         http.logout(lOut->{
             lOut.logoutUrl("/user/logout").invalidateHttpSession(true)
                     .logoutSuccessHandler((new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK)));
@@ -89,7 +106,7 @@ public class WebConfiguration {
         // permitting urls without any role
         http.authorizeHttpRequests(authorize->{
             authorize.requestMatchers("/h2-console/**").permitAll();
-            authorize.requestMatchers("/user/signUp/**").permitAll();
+            authorize.requestMatchers("/common/signup/**").permitAll();
             authorize.requestMatchers("/user/logout/**").permitAll();
         });
 

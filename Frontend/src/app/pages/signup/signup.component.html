@@ -2,7 +2,7 @@
   <div
     class="col-12 md:col-12 lg:col-7 flex flex-column justify-content-between"
   >
-    <div class="flex flex-column align-items-center lg:align-items-start">
+    <div class="flex flex-column align-items-center">
       <img
         src="https://res.cloudinary.com/dyrbo1wml/image/upload/v1750841014/Logo_ofqiag.png"
         width="150"
@@ -10,17 +10,41 @@
       />
     </div>
     <form
-      [formGroup]="loginForm"
+      [formGroup]="singupForm"
       (ngSubmit)="onSubmit()"
       class="h-full flex flex-column justify-content-center align-items-center gap-2"
     >
       <div class="flex flex-column justify-content-center align-items-center">
         <h2 class="text-800 text-4xl font-semibold" style="margin: 0">
-          Welcome Back
+          Join Us
         </h2>
         <p class="text-700 text-base">
-          Enter your email and password to continue.
+          Create your account to join or build the Hospital
         </p>
+      </div>
+      <div class="flex flex-column gap-3 col-12 md:col-8 lg:col-6">
+        <small
+          *ngIf="
+            getFormControls['fullName'].touched &&
+            getFormControls['fullName'].invalid
+          "
+          class="p-error"
+        >
+          <p-message
+            *ngIf="getFormControls['fullName'].errors?.['required']"
+            severity="error"
+            variant="simple"
+            size="small"
+            >Name is required</p-message
+          >
+        </small>
+        <label for="email">Full Name</label>
+        <input
+          pInputText
+          id="fullName"
+          aria-describedby="fullName-help"
+          formControlName="fullName"
+        />
       </div>
       <div class="flex flex-column gap-3 col-12 md:col-8 lg:col-6">
         <small
@@ -50,6 +74,28 @@
           id="email"
           aria-describedby="email-help"
           formControlName="email"
+        />
+      </div>
+      <div class="flex flex-column gap-3 col-12 md:col-8 lg:col-6">
+        <small
+          *ngIf="
+            getFormControls['role'].touched && getFormControls['role'].invalid
+          "
+          class="p-error"
+        >
+          <p-message
+            *ngIf="getFormControls['role'].errors?.['required']"
+            severity="error"
+            variant="simple"
+            size="small"
+            >Role is required</p-message
+          >
+        </small>
+        <label for="role">Role</label>
+        <p-select
+          [options]="roles"
+          formControlName="role"
+          placeholder="Select a Role"
         />
       </div>
       <div class="flex flex-column gap-3 col-12 md:col-8 lg:col-6">
@@ -87,37 +133,55 @@
           mediumLabel="Average complexity"
           strongLabel="Complex password"
         />
-        <div>
-          <a href="http://" style="text-decoration: none">Forgot Password?</a>
-        </div>
       </div>
-      <div
-        class="flex flex-column align-items-center gap-3 col-12 md:col-8 lg:col-6"
-      >
+      <div class="flex flex-column gap-3 col-12 md:col-8 lg:col-6">
+        <div class="flex">
+          <p-checkbox formControlName="TC" value="T&C" inputId="T&C" />
+          <label for="T&C" class="ml-2">I agree to <a style="text-decoration: none;" href="termsandconditions">Terms and Conditions</a></label>
+        </div>
+        <small
+          *ngIf="getFormControls['TC'].touched && getFormControls['TC'].invalid"
+          class="p-error"
+        >
+          <p-message
+            *ngIf="getFormControls['TC'].errors?.['required']"
+            severity="error"
+            variant="simple"
+            size="small"
+            >Terms and Conditions is required</p-message
+          >
+        </small>
         <p-button
           class="w-full"
-          [disabled]="loginForm.invalid"
+          [disabled]="singupForm.invalid"
           type="submit"
-          label="Log In"
+          label="Create Account"
         />
-        <p class="text-700 text-sm">
-          Don't have an account yet?
-          <a href="register" style="text-decoration: none">Create an account</a>
-        </p>
       </div>
+      <p class="text-700 text-sm">
+        Already have an account?
+        <a href="/" style="text-decoration: none">Sign In</a>
+      </p>
     </form>
     <div>
       <p class="text-center text-sm text-600 mt-4">
         © 2025 Medicore. All rights reserved.
       </p>
-      <a href="/"><p class="text-center text-sm text-600 mt-4">Privacy and Policy</p></a>
+      <a href="/privacyandpolicy"
+        ><p class="text-center text-sm text-600 mt-4">Privacy and Policy</p></a
+      >
     </div>
   </div>
   <div class="col-12 md:col-12 lg:col-5 hidden lg:block md:block">
     <div
       class="h-full bg-primary"
       id="login-bg-img"
-      style="border-radius: 20px; background-image: url('https://images.unsplash.com/photo-1625869736621-784a42674da4?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');background-repeat: no-repeat; background-size: cover;"
+      style="
+        border-radius: 20px;
+        background-image: url('https://plus.unsplash.com/premium_photo-1673953510107-d5aee40d80a7?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+        background-repeat: no-repeat;
+        background-size: cover;
+      "
     ></div>
   </div>
 </div>

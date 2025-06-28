@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class LoginRequestDTO {
+public class LoginRequest {
 
     @NotNull(message = "Email is Required")
     @Size(min = 3, max = 100, message = "Email must be within 3 - 100 chars limit")

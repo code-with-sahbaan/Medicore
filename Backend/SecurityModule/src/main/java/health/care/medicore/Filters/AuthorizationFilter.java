@@ -47,16 +47,6 @@ public class AuthorizationFilter extends OncePerRequestFilter {
         }
 
         /**
-         * @Cors Policies
-         */
-
-        response.setHeader("Access-Control-Allow-Origin", originAllowed);
-        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        response.setHeader("Access-Control-Allow-Headers", "authorization, content-type");
-        response.setHeader("Access-Control-Allow-Credentials", "true");
-        response.setIntHeader("Access-Control-Max-Age", 3600);
-
-        /**
          * @Request Handling
          */
 
