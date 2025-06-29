@@ -52,7 +52,13 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 
         // handling if it is non-tokenized url i.e public url
         if (publicURLs.contains(request.getServletPath())) {
-            filterChain.doFilter(request, response);
+            try{
+                filterChain.doFilter(request, response);
+            }catch (Exception e){
+                FilterUtil.writeErrorResponse(response,
+                        e instanceof TokenExpiredException ? e.getLocalizedMessage() : e.getCause().getMessage(),
+                        e instanceof TokenExpiredException ? HttpServletResponse.SC_FORBIDDEN : HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
         } else {
             // or if it is tokenized url then checking the url in header and checking it.
             String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);

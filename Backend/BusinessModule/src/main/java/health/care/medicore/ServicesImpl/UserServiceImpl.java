@@ -58,6 +58,12 @@ public class UserServiceImpl extends GenericServiceImpl<Users> implements UserDe
     @Override
     @Transactional
     public void signup(SignupRequest signupRequest) throws Exception {
+        /*
+        * Checking if user exists with this email
+        * */
+        if (userRepository.findByEmail(signupRequest.getEmail()).isPresent()){
+            throw new IllegalArgumentException("User Already Exists with this Email");
+        }
         Users users = convertDtoToEntity(signupRequest);
         users.setPassword(new BCryptPasswordEncoder().encode(signupRequest.getPassword()));
         Role role = roleService.getByRole(signupRequest.getRole());
