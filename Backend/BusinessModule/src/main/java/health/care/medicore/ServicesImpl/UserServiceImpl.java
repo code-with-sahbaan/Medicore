@@ -4,6 +4,7 @@ import health.care.medicore.Entities.Role;
 import health.care.medicore.Entities.Users;
 import health.care.medicore.Repositories.UserRepository;
 import health.care.medicore.RequestDTO.SignupRequest;
+import health.care.medicore.ResponseDTO.BaseResponse;
 import health.care.medicore.Services.RoleService;
 import health.care.medicore.Services.UserService;
 import jakarta.transaction.Transactional;
@@ -57,7 +58,7 @@ public class UserServiceImpl extends GenericServiceImpl<Users> implements UserDe
 
     @Override
     @Transactional
-    public void signup(SignupRequest signupRequest) throws Exception {
+    public BaseResponse signup(SignupRequest signupRequest) throws Exception {
         /*
         * Checking if user exists with this email
         * */
@@ -69,5 +70,6 @@ public class UserServiceImpl extends GenericServiceImpl<Users> implements UserDe
         Role role = roleService.getByRole(signupRequest.getRole());
         users.setRole(role);
         userRepository.save(users);
+        return new BaseResponse("Account Created Successfully", null);
     }
 }

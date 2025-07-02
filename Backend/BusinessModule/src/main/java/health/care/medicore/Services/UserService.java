@@ -3,6 +3,7 @@ package health.care.medicore.Services;
 
 import health.care.medicore.Entities.Users;
 import health.care.medicore.RequestDTO.SignupRequest;
+import health.care.medicore.ResponseDTO.BaseResponse;
 
 import java.util.Optional;
 
@@ -10,5 +11,5 @@ public interface UserService{
 
     Optional<Users> getUserByEmail(String email);
 
-    void signup(SignupRequest signupRequest) throws Exception;
+    BaseResponse signup(SignupRequest signupRequest) throws Exception;
 }

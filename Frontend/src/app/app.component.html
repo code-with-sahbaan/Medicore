@@ -1,1 +1,8 @@
+<!-- Spinner/Loader -->
+<div class="custom-spinner" *ngIf="uiService.isLoading">
+    <p-progress-spinner ariaLabel="loading" />
+</div>
+<!-- Toast/Message Bar -->
+<p-toast />
+<!-- Screens -->
 <router-outlet></router-outlet>

@@ -3,10 +3,14 @@ import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/ro
 import { environment } from '../environments/environment';
 import { Title } from '@angular/platform-browser';
 import { filter, map, mergeMap } from 'rxjs';
+import { ProgressSpinner } from 'primeng/progressspinner';
+import { Toast } from 'primeng/toast';
+import { UiService } from './service/ui.service';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, ProgressSpinner, Toast, NgIf],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
@@ -14,9 +18,13 @@ export class AppComponent {
   constructor(
     private titleService: Title,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    public uiService: UiService,
   ) {}
 
+  /**
+   * Setting the title dynamically of each screen.
+   */
   ngOnInit(): void {
     this.router.events
       .pipe(

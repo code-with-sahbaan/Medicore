@@ -7,6 +7,7 @@ import { providePrimeNG } from 'primeng/config';
 import { MyPreset } from './theme/preset';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HttpConfigInterceptor } from './interceptors/http.interceptor';
+import { MessageService } from 'primeng/api';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,12 +18,19 @@ export const appConfig: ApplicationConfig = {
       theme: {
         preset: MyPreset,
       },
+      zIndex: {
+        modal: 1100, // dialog, sidebar
+        overlay: 1000, // dropdown, overlaypanel
+        menu: 1000, // overlay menus
+        tooltip: 1100, // tooltip
+      },
     }),
+    MessageService,
     provideHttpClient(withInterceptorsFromDi()),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpConfigInterceptor,
-      multi:true
-    }
+      multi: true,
+    },
   ],
 };

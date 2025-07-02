@@ -16,6 +16,8 @@ import { Select } from 'primeng/select';
 import { SplitterModule } from 'primeng/splitter';
 import { ApiService } from '../../service/api.service';
 import { Router } from '@angular/router';
+import { finalize } from 'rxjs';
+import { UiService } from '../../service/ui.service';
 
 @Component({
   selector: 'app-signup',
@@ -38,10 +40,10 @@ export class SignupComponent {
   singupForm: FormGroup;
   roles: string[] = ['Owner', 'Doctor', 'Patient'];
 
-  constructor(private fb: FormBuilder, private api: ApiService, private router: Router) {
+  constructor(private fb: FormBuilder, private api: ApiService, private router: Router, private uiService: UiService) {
     this.singupForm = fb.group({
       fullName: ['', [Validators.required]],
-      role: ['', Validators.required],
+      role: ['Owner', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       TC:['', Validators.required]
@@ -57,13 +59,28 @@ export class SignupComponent {
       this.singupForm.markAllAsTouched();
       return;
     }
+    /**
+     * Showing Loader
+     */
+    this.uiService.showSpinner();
+    /**
+     * Calling API
+     */
     const data = this.singupForm.value;
-    this.api.signup(data).subscribe({
+    this.api.signup(data).pipe(
+      finalize(()=>{
+        // Hiding Loader after API call completion
+        this.uiService.hideSpinner();
+      })
+    ).subscribe({
       next: response =>{
-        this.router.navigate(['/']);
+        // Showing success Toast
+        this.uiService.showSuccess(response.responseMessage);
+        console.log(response);
       },
       error : error =>{
-        console.log(error);
+        // Showing error toast
+        this.uiService.showError(error.error.responseMessage);
       }
     });
   }

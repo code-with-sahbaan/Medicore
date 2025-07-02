@@ -7,6 +7,6 @@ export class ApiService {
   constructor(private http: HttpClient) {}
 
   signup(payload: any): Observable<any> {
-    return this.http.post('/common/signup', payload);
+    return this.http.post('/common/signup', payload).pipe();
   }
 }

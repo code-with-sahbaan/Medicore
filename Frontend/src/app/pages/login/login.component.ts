@@ -6,6 +6,7 @@ import { Message } from 'primeng/message';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PasswordModule } from 'primeng/password';
 import { NgIf } from '@angular/common';
+import { ProgressSpinner } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-login',
@@ -17,14 +18,16 @@ import { NgIf } from '@angular/common';
     FormsModule,
     PasswordModule,
     ReactiveFormsModule,
-    NgIf
+    NgIf,
+    ProgressSpinner,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
-  standalone:true
+  standalone: true,
 })
 export class LoginComponent {
   loginForm: FormGroup;
+  isLoading: Boolean = false;
 
   constructor(private fb: FormBuilder) {
     this.loginForm = fb.group({
@@ -36,7 +39,6 @@ export class LoginComponent {
   get getFormControls() {
     return this.loginForm?.controls;
   }
-
 
   onSubmit() {
     if (this.loginForm?.invalid) {

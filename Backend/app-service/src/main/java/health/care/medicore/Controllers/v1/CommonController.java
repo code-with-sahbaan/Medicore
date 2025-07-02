@@ -23,7 +23,7 @@ public class CommonController {
 
     @PostMapping("/signup")
     public ResponseEntity<BaseResponse> signup(@RequestBody SignupRequest signupRequest) throws Exception {
-        userService.signup(signupRequest);
-        return new ResponseEntity<>(HttpStatus.OK);
+        BaseResponse response = userService.signup(signupRequest);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
