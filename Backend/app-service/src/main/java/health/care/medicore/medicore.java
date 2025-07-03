@@ -1,13 +1,43 @@
 package health.care.medicore;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+
+import java.util.Properties;
 
 @SpringBootApplication
 public class medicore {
 
     public static void main(String[] args) {
         SpringApplication.run(medicore.class, args);
+    }
+
+    @Value("${spring.mail.username}")
+    private String emailSender;
+
+    @Value("${spring.mail.password}")
+    private String emailPassword;
+
+    @Bean
+    public JavaMailSender mailSender(){
+        JavaMailSenderImpl mailSender1=new JavaMailSenderImpl();
+        mailSender1.setHost("smtp.gmail.com");
+        mailSender1.setPort(587);
+
+        mailSender1.setUsername(emailSender);
+        mailSender1.setPassword(emailPassword);
+
+        Properties props = mailSender1.getJavaMailProperties();
+        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.debug", "true");
+
+        return mailSender1;
     }
 
 }

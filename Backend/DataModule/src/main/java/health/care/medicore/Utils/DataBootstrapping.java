@@ -1,7 +1,9 @@
 package health.care.medicore.Utils;
 
+import health.care.medicore.Entities.AppConfigs;
 import health.care.medicore.Entities.Role;
 import health.care.medicore.Entities.Users;
+import health.care.medicore.Repositories.AppConfigRepository;
 import health.care.medicore.Repositories.RoleRepository;
 import health.care.medicore.Repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +35,9 @@ public class DataBootstrapping implements CommandLineRunner {
     @Autowired
     private RoleRepository roleRepository;
 
+    @Autowired
+    private AppConfigRepository appConfigRepository;
+
     @Override
     public void run(String... args) throws Exception {
 
@@ -46,17 +51,14 @@ public class DataBootstrapping implements CommandLineRunner {
             }
         }
 
-        log.info("*** ADDING DEFAULT USER IN DB ***");
-        /*
-         * Adding a user for testing with
-         * email: abc@example.com
-         * password: password
-         * */
-        Users users = new Users();
-        users.setEmail("abc@example.com");
-        users.setPassword(new BCryptPasswordEncoder().encode("password"));
-        users.setFullName("My User 01");
-        users.setRole(roleRepository.findByRoleIgnoreCase(Constants.OWNER));
-        userRepository.save(users);
+        log.info("*** INSERTING EMAIL OTP TEMPLATE ***");
+        if (
+                appConfigRepository.findByName(Constants.EMAIL_OTP_TEMPLATE_NAME) == null
+        ){
+            AppConfigs appConfigs = new AppConfigs();
+            appConfigs.setName(Constants.EMAIL_OTP_TEMPLATE_NAME);
+            appConfigs.setValue(Constants.EMAIL_OTP_TEMPLATE);
+            appConfigRepository.save(appConfigs);
+        }
     }
 }

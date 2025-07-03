@@ -76,7 +76,7 @@ export class SignupComponent {
       next: response =>{
         // Showing success Toast
         this.uiService.showSuccess(response.responseMessage);
-        console.log(response);
+        this.router.navigate(['/']);
       },
       error : error =>{
         // Showing error toast

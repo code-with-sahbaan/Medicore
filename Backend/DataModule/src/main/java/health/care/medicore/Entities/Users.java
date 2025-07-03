@@ -28,4 +28,10 @@ public class Users {
     @ManyToOne(fetch = FetchType.EAGER)
     private Role role;
 
+    @Column(name = "EMAIL_OTP")
+    private String emailOTP;
+
+    @Column(name = "IS_ACTIVE")
+    private Boolean isActive = false;
+
 }

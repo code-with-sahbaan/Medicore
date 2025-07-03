@@ -9,4 +9,8 @@ export class ApiService {
   signup(payload: any): Observable<any> {
     return this.http.post('/common/signup', payload).pipe();
   }
+
+  login(payload: any): Observable<any> {
+    return this.http.post('/user/login', payload).pipe();
+  }
 }

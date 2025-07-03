@@ -3,10 +3,18 @@ import { ButtonModule } from 'primeng/button';
 import { SplitterModule } from 'primeng/splitter';
 import { InputTextModule } from 'primeng/inputtext';
 import { Message } from 'primeng/message';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { PasswordModule } from 'primeng/password';
 import { NgIf } from '@angular/common';
-import { ProgressSpinner } from 'primeng/progressspinner';
+import { UiService } from '../../service/ui.service';
+import { ApiService } from '../../service/api.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +27,6 @@ import { ProgressSpinner } from 'primeng/progressspinner';
     PasswordModule,
     ReactiveFormsModule,
     NgIf,
-    ProgressSpinner,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
@@ -27,9 +34,12 @@ import { ProgressSpinner } from 'primeng/progressspinner';
 })
 export class LoginComponent {
   loginForm: FormGroup;
-  isLoading: Boolean = false;
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private api: ApiService,
+    private uiService: UiService
+  ) {
     this.loginForm = fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
@@ -46,5 +56,32 @@ export class LoginComponent {
       this.loginForm.markAllAsTouched();
       return;
     }
+    /**
+     * Showing Loader
+     */
+    this.uiService.showSpinner();
+    /**
+     * Calling API
+     */
+    const data = this.loginForm.value;
+    this.api
+      .login(data)
+      .pipe(
+        finalize(() => {
+          // Hiding Loader after API call completion
+          this.uiService.hideSpinner();
+        })
+      )
+      .subscribe({
+        next: (response) => {
+          // Showing success Toast
+          this.uiService.showSuccess(response.responseMessage);
+          console.log(response);
+        },
+        error: (error) => {
+          // Showing error toast
+          this.uiService.showError(error.error.responseMessage);
+        },
+      });
   }
 }
