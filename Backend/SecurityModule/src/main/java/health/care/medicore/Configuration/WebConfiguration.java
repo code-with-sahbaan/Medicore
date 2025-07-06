@@ -107,8 +107,9 @@ public class WebConfiguration {
         // permitting urls without any role
         http.authorizeHttpRequests(authorize->{
             authorize.requestMatchers("/h2-console/**").permitAll();
-            authorize.requestMatchers("/common/signup/**").permitAll();
+            authorize.requestMatchers("/user/signup/**").permitAll();
             authorize.requestMatchers("/user/logout/**").permitAll();
+            authorize.requestMatchers("/user/verifyOtp/**").permitAll();
         });
 
         // permitting urls with role-based access

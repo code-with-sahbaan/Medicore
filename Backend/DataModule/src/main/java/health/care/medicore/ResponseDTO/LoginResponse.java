@@ -11,4 +11,5 @@ public class LoginResponse {
     private String fullName;
     private String accessToken;
     private String role;
+    private Boolean isActive;
 }

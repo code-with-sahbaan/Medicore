@@ -1,0 +1,76 @@
+<!-- Actual Screen Start -->
+<div class="grid grid-nogutter p-4 md:p-8 lg:p-6 h-screen">
+    <div
+      class="col-12 md:col-12 lg:col-7 flex flex-column justify-content-between"
+    >
+      <div class="flex flex-column align-items-center">
+        <img
+          src="https://res.cloudinary.com/dyrbo1wml/image/upload/v1750841014/Logo_ofqiag.png"
+          width="150"
+          alt="Logo"
+        />
+      </div>
+      <form
+        [formGroup]="otpForm"
+        (ngSubmit)="onSubmit()"
+        class="h-full flex flex-column justify-content-center align-items-center gap-8"
+      >
+        <div class="flex flex-column justify-content-center align-items-center">
+          <h2 class="text-800 text-4xl font-semibold" style="margin: 0">
+            Confirm Your Identity
+          </h2>
+          <p class="text-700 text-base">
+            Please verify your email to continue
+          </p>
+        </div>
+        <p-message severity="info" class="text-center">A five digit otp has been sent to {{authService.email}}</p-message>
+        <div class="flex flex-column gap-3 col-9 md:col-5 lg:col-3">
+          <small
+            *ngIf="
+              getFormControls['otp'].touched
+            "
+            class="p-error"
+          >
+            <p-message
+              *ngIf="getFormControls['otp'].errors?.['required']"
+              severity="error"
+              variant="simple"
+              size="small"
+              >OTP is required</p-message
+            >
+          </small>
+          <p-inputotp formControlName="otp" [integerOnly]="true" size="small" [length]="5" />
+        </div>
+        
+        <div class="flex flex-column gap-3 col-12 md:col-8 lg:col-6">
+          <p-button
+            class="w-full"
+            [disabled]="otpForm.invalid"
+            type="submit"
+            label="Verify OTP"
+          />
+        </div>
+      </form>
+      <div>
+        <p class="text-center text-sm text-600 mt-4">
+          © 2025 Medicore. All rights reserved.
+        </p>
+        <a href="/privacyandpolicy"
+          ><p class="text-center text-sm text-600 mt-4">Privacy and Policy</p></a
+        >
+      </div>
+    </div>
+    <div class="col-12 md:col-12 lg:col-5 hidden lg:block md:block">
+      <div
+        class="h-full bg-primary"
+        id="login-bg-img"
+        style="
+          border-radius: 20px;
+          background-image: url('https://plus.unsplash.com/premium_photo-1673953510107-d5aee40d80a7?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+          background-repeat: no-repeat;
+          background-size: cover;
+        "
+      ></div>
+    </div>
+  </div>
+  

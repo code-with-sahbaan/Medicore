@@ -1,8 +1,10 @@
 package health.care.medicore.Controllers.v1;
 
 import health.care.medicore.RequestDTO.SignupRequest;
+import health.care.medicore.RequestDTO.VerifyOtpRequest;
 import health.care.medicore.ResponseDTO.BaseResponse;
 import health.care.medicore.Services.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,15 +17,24 @@ import org.springframework.web.bind.annotation.RestController;
  *A Controller that is accessible to every type of role
  * */
 @RestController
-@RequestMapping("/common")
-public class CommonController {
+@RequestMapping("/user")
+@Slf4j
+public class UserController {
 
     @Autowired
     private UserService userService;
 
     @PostMapping("/signup")
     public ResponseEntity<BaseResponse> signup(@RequestBody SignupRequest signupRequest) throws Exception {
+        log.info("Executing signup in UserController");
         BaseResponse response = userService.signup(signupRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping("/verifyOtp")
+    public ResponseEntity<BaseResponse> verifyOtp(@RequestBody VerifyOtpRequest verifyOtpRequest) throws Exception {
+        log.info("Executing verifyOtp in UserController");
+        userService.verifyOtp(verifyOtpRequest);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

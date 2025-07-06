@@ -9,6 +9,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import health.care.medicore.Utils.FilterUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -74,7 +75,14 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         baseResponse.setResponseMessage("Login Successfully!");
         response.setContentType("application/json");
         new ObjectMapper().writeValue(response.getOutputStream(), baseResponse);
-
+        // If user is InActive then sending the otp email again
+        if (!logInResponse.getIsActive()) {
+            try {
+                userService.sendOTP(users);
+            } catch (MessagingException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     @Override

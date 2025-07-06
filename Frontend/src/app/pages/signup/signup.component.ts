@@ -18,6 +18,7 @@ import { ApiService } from '../../service/api.service';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
 import { UiService } from '../../service/ui.service';
+import { AuthService } from '../../service/auth.service';
 
 @Component({
   selector: 'app-signup',
@@ -40,7 +41,7 @@ export class SignupComponent {
   singupForm: FormGroup;
   roles: string[] = ['Owner', 'Doctor', 'Patient'];
 
-  constructor(private fb: FormBuilder, private api: ApiService, private router: Router, private uiService: UiService) {
+  constructor(private fb: FormBuilder, private api: ApiService, private router: Router, private uiService: UiService, private authService : AuthService) {
     this.singupForm = fb.group({
       fullName: ['', [Validators.required]],
       role: ['Owner', Validators.required],
@@ -76,7 +77,8 @@ export class SignupComponent {
       next: response =>{
         // Showing success Toast
         this.uiService.showSuccess(response.responseMessage);
-        this.router.navigate(['/']);
+        this.authService.email = this.singupForm.get('email')?.value;
+        this.router.navigate(['verifyOtp']);
       },
       error : error =>{
         // Showing error toast

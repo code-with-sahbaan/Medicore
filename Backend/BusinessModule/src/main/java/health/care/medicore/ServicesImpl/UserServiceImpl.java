@@ -6,6 +6,7 @@ import health.care.medicore.Entities.Users;
 import health.care.medicore.Repositories.AppConfigRepository;
 import health.care.medicore.Repositories.UserRepository;
 import health.care.medicore.RequestDTO.SignupRequest;
+import health.care.medicore.RequestDTO.VerifyOtpRequest;
 import health.care.medicore.ResponseDTO.BaseResponse;
 import health.care.medicore.Services.RoleService;
 import health.care.medicore.Services.UserService;
@@ -47,6 +48,9 @@ public class UserServiceImpl extends GenericServiceImpl<Users> implements UserDe
 
     @Value("${spring.mail.username}")
     private String emailSender;
+
+    @Value("${spring.application.name}")
+    private String appName;
 
     public UserServiceImpl() {
         super(Users.class);
@@ -92,12 +96,21 @@ public class UserServiceImpl extends GenericServiceImpl<Users> implements UserDe
         return new BaseResponse("Account Created Successfully", null);
     }
 
-    private void sendOTP(Users users) throws MessagingException, UnsupportedEncodingException {
+    @Override
+    public void verifyOtp(VerifyOtpRequest verifyOtpRequest) throws Exception {
+        Users users = userRepository.findByEmail(verifyOtpRequest.getEmail()).get();
+        if (!users.getEmailOTP().equals(verifyOtpRequest.getOtp())){
+            throw new Exception("Verification failed due to incorrect OTP");
+        }
+    }
+
+    public void sendOTP(Users users) throws MessagingException, UnsupportedEncodingException {
         // Creating OTP
         Random r = new Random(System.currentTimeMillis());
         int RandomCode = (10000 + r.nextInt(20000));
         String otp = Integer.toString(RandomCode);
         users.setEmailOTP(otp);
+        userRepository.save(users);
         // Sending Email
         /* GENERATING EMAIL */
         AppConfigs appConfigs = appConfigRepository.findByName(Constants.EMAIL_OTP_TEMPLATE_NAME);
@@ -108,7 +121,7 @@ public class UserServiceImpl extends GenericServiceImpl<Users> implements UserDe
         String content = appConfigs.getValue();
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
-        mimeMessageHelper.setFrom(fromEmail, "© 2025 Medicore. All rights reserved.");
+        mimeMessageHelper.setFrom(fromEmail, appName);
         mimeMessageHelper.setSubject(subject);
         mimeMessageHelper.setTo(toEmail);
         content = content.replace("[[name]]", fullName);

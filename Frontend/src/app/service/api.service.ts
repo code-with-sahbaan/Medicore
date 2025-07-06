@@ -7,10 +7,14 @@ export class ApiService {
   constructor(private http: HttpClient) {}
 
   signup(payload: any): Observable<any> {
-    return this.http.post('/common/signup', payload).pipe();
+    return this.http.post('/user/signup', payload).pipe();
   }
 
   login(payload: any): Observable<any> {
     return this.http.post('/user/login', payload).pipe();
+  }
+
+  verifyOtp(payload: any): Observable<any> {
+    return this.http.post('/user/verifyOtp', payload).pipe();
   }
 }

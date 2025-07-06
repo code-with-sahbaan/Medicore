@@ -15,11 +15,13 @@ import { NgIf } from '@angular/common';
 import { UiService } from '../../service/ui.service';
 import { ApiService } from '../../service/api.service';
 import { finalize } from 'rxjs';
+import { Router } from '@angular/router';
+import { AuthService } from '../../service/auth.service';
 
 @Component({
   selector: 'app-login',
   imports: [
-    ButtonModule,
+  ButtonModule,
     SplitterModule,
     InputTextModule,
     Message,
@@ -38,7 +40,9 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private api: ApiService,
-    private uiService: UiService
+    private uiService: UiService,
+    private router: Router,
+    private authService: AuthService 
   ) {
     this.loginForm = fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -76,7 +80,11 @@ export class LoginComponent {
         next: (response) => {
           // Showing success Toast
           this.uiService.showSuccess(response.responseMessage);
-          console.log(response);
+          const user = response.responseBody;
+          if(user.isActive == false){
+            this.authService.email = user.email;
+            this.router.navigate(['verifyOtp']);
+          }
         },
         error: (error) => {
           // Showing error toast
