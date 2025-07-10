@@ -138,7 +138,7 @@
       <div class="flex flex-column gap-3 col-12 md:col-8 lg:col-6">
         <div class="flex">
           <p-checkbox formControlName="TC" value="T&C" inputId="T&C" />
-          <label for="T&C" class="ml-2">I agree to <a style="text-decoration: none;" href="termsandconditions">Terms and Conditions</a></label>
+          <label for="T&C" class="ml-2">I agree to <a style="text-decoration: underline;" href="termsandconditions">Terms and Conditions</a></label>
         </div>
         <small
           *ngIf="getFormControls['TC'].touched && getFormControls['TC'].invalid"
@@ -161,7 +161,7 @@
       </div>
       <p class="text-700 text-sm">
         Already have an account?
-        <a href="/" style="text-decoration: none">Sign In</a>
+        <a href="/" style="text-decoration: underline">Sign In</a>
       </p>
     </form>
     <div>
@@ -169,7 +169,7 @@
         © 2025 Medicore. All rights reserved.
       </p>
       <a href="/privacyandpolicy"
-        ><p class="text-center text-sm text-600 mt-4">Privacy and Policy</p></a
+        ><p class="text-center text-sm text-600 mt-4" style="text-decoration: underline;">Privacy and Policy</p></a
       >
     </div>
   </div>

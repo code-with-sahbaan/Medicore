@@ -1,0 +1,95 @@
+<div class="card flex p-4">
+  <p-drawer #drawerRef [(visible)]="visible">
+    <ng-template #headless>
+      <div class="flex flex-col h-full">
+        <div class="flex items-center justify-between px-4 pt-4 shrink-0">
+          <img
+            src="https://res.cloudinary.com/dyrbo1wml/image/upload/v1750841014/Logo_ofqiag.png"
+            width="150"
+            alt="Logo"
+          />
+          <span>
+            <p-button
+              type="button"
+              (click)="closeCallback($event)"
+              icon="pi pi-times"
+              rounded="true"
+              outlined="true"
+              styleClass="h-8 w-8"
+            ></p-button>
+          </span>
+        </div>
+        <ul class="list-none p-2 m-0 overflow-hidden">
+            <li>
+              <a
+                pRipple
+                class="flex items-center cursor-pointer p-4 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
+              >
+                <i class="pi pi-home mr-2"></i>
+                <span class="font-medium">Dashboard</span>
+              </a>
+            </li>
+            <li>
+              <a
+                pRipple
+                class="flex items-center cursor-pointer p-4 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
+              >
+                <i class="pi pi-address-book mr-2"></i>
+                <span class="font-medium">Book Appointment</span>
+              </a>
+            </li>
+            <li>
+                <a
+                  pRipple
+                  class="flex items-center cursor-pointer p-4 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
+                >
+                  <i class="pi pi-bookmark mr-2"></i>
+                  <span class="font-medium">My Appointments</span>
+                </a>
+              </li>
+            <li>
+              <a
+                pRipple
+                class="flex items-center cursor-pointer p-4 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
+              >
+                <i class="pi pi-microchip-ai mr-2"></i>
+                <span class="font-medium">AI Symptom Checker</span>
+              </a>
+            </li>
+            <li>
+              <a
+                pRipple
+                class="flex items-center cursor-pointer p-4 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
+              >
+                <i class="pi pi-history mr-2"></i>
+                <span class="font-medium">My Health Records</span>
+              </a>
+            </li>
+            <li>
+              <a
+                pRipple
+                class="flex items-center cursor-pointer p-4 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
+              >
+                <i class="pi pi-question-circle mr-2"></i>
+                <span class="font-medium">Support & Help</span>
+              </a>
+            </li>
+          </ul>
+        <div class="mt-auto">
+          <hr class="mb-4 mx-4 border-t border-0 border-surface" />
+          <a
+            pRipple
+            class="m-4 flex items-center cursor-pointer p-4 gap-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
+          >
+            <p-avatar
+              image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
+              shape="circle"
+            />
+            <span class="font-bold">Amy Elsner</span>
+          </a>
+        </div>
+      </div>
+    </ng-template>
+  </p-drawer>
+  <p-button (click)="visible = true" icon="pi pi-bars" />
+</div>

@@ -1,3 +1,6 @@
+@import "primeicons/primeicons.css";
+@import "tailwindcss";
+@plugin "tailwindcss-primeui";
 /* You can add global styles to this file, and also import other style files */
 html, body {
     font-family: "Inter", sans-serif;
@@ -22,11 +25,6 @@ html, body {
 
 .p-select-label{
     padding: 0 !important;
-}
-
-a{
-    text-decoration: underline;
-    text-decoration-color: black;
 }
 
 .custom-spinner{
