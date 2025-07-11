@@ -28,6 +28,8 @@ export const routes: Routes = [
     },
   },
   // Patients Dashboard Menu
+  {path: 'patient', redirectTo: 'patient/home'}
+  ,
   {
     path: 'patient',
     component: PatientSideDrawerComponent,

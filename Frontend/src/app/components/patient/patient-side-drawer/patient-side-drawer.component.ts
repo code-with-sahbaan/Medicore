@@ -5,12 +5,19 @@ import { Ripple } from 'primeng/ripple';
 import { AvatarModule } from 'primeng/avatar';
 import { StyleClass } from 'primeng/styleclass';
 import { Drawer } from 'primeng/drawer';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { NgIf, NgStyle } from '@angular/common';
 
 @Component({
   selector: 'app-patient-side-drawer',
-  imports: [DrawerModule, ButtonModule, Ripple, AvatarModule, RouterModule, NgStyle, NgIf],
+  imports: [
+    DrawerModule,
+    ButtonModule,
+    Ripple,
+    AvatarModule,
+    RouterModule,
+    NgStyle,
+  ],
   standalone: true,
   templateUrl: './patient-side-drawer.component.html',
   styleUrl: './patient-side-drawer.component.css',
@@ -18,6 +25,43 @@ import { NgIf, NgStyle } from '@angular/common';
 export class PatientSideDrawerComponent {
   visible = false;
   isDesktop = true;
+  currentUrl : string = 'patient/home';
+  menuItems = [
+    { icon: 'pi pi-home', label: 'Dashboard', route: '/patient/home' },
+    {
+      icon: 'pi pi-calendar',
+      label: 'Book Appointment',
+      route: '/patient/bookAppointment',
+    },
+    {
+      icon: 'pi pi-book',
+      label: 'My Appointments',
+      route: '/patient/Appointments',
+    },
+    {
+      icon: 'pi pi-microchip-ai',
+      label: 'AI Symptom Checker',
+      route: '/patient/aiChecker',
+    },
+    {
+      icon: 'pi pi-history',
+      label: 'My Health Records',
+      route: '/patient/healthRecords',
+    },
+    {
+      icon: 'pi pi-question-circle',
+      label: 'Support & Help',
+      route: '/patient/help',
+    },
+  ];
+
+  constructor(private router: Router) {
+    this.currentUrl = this.router.url;
+    // Subscribe to route changes
+    this.router.events.subscribe(() => {
+      this.currentUrl = this.router.url;
+    });
+  }
 
   ngOnInit() {
     this.checkScreenSize();
