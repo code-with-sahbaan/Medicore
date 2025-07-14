@@ -1,6 +1,7 @@
 .selected-menu{
-    background-color: var(--primary-color);
-    color: white;
+    background-color: #fbfbfb;
+    color: var(--primary-color);
+    border-left: 3px solid var(--primary-color);
 }
 
 :host ::ng-deep .p-button{

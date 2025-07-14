@@ -1,1 +1,55 @@
-<p>patient-dashboard works!</p>
+<div>
+  <div id="header" class="pb-7">
+    <h2
+      class="text-800 text-primary-900 text-4xl font-semibold"
+      style="margin: 0"
+    >
+      Dashboard
+    </h2>
+  </div>
+
+  <p-tabs value="0">
+    <p-tablist>
+      <p-tab value="0">Overview</p-tab>
+    </p-tablist>
+    <p-tabpanels>
+      <p-tabpanel value="0" class="col-12 grid justify-between">
+        <!-- Card 01 -->
+        <p-card class="col-12 md:col-3">
+          <ng-template #title class="m-0"> Available Credits </ng-template>
+          <ng-template #subtitle class="m-0">
+            Expires at 12-Dec-2025</ng-template
+          >
+          <div class="flex flex-column gap-1 mt-4">
+            <h2 class="text-primary-500 text-7xl font-bold" style="margin: 0">
+              300 $
+            </h2>
+            <a href="" style="text-decoration: underline">Buy More Credits</a>
+          </div>
+        </p-card>
+
+        <!-- Card 02 -->
+        <p-card class="col-12 md:col-3">
+          <ng-template #title class="m-0"> Total Appointments </ng-template>
+          <ng-template #subtitle class="m-0"> Since 01-Jan-2025</ng-template>
+          <div class="flex flex-column gap-1 mt-4">
+            <h2 class="text-primary-500 text-7xl font-bold" style="margin: 0">
+              20
+            </h2>
+            <a href="" style="text-decoration: underline">View Schedule</a>
+          </div>
+        </p-card>
+
+        <!-- Card 03 -->
+        <p-card class="col-12 md:col-6">
+          <ng-template #title class="m-0"> Upcoming Appointments </ng-template>
+          <ng-template #subtitle class="m-0"> Till Next Month</ng-template>
+          <div class="flex flex-column gap-1 mt-4">
+            
+            <a href="" style="text-decoration: underline">View Schedule</a>
+          </div>
+        </p-card>
+      </p-tabpanel>
+    </p-tabpanels>
+  </p-tabs>
+</div>
