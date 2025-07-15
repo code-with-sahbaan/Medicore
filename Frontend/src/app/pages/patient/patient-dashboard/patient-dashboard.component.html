@@ -15,7 +15,7 @@
     <p-tabpanels>
       <p-tabpanel value="0" class="col-12 grid justify-between">
         <!-- Card 01 -->
-        <p-card class="col-12 md:col-3">
+        <p-card class="col-12 md:col-3 h-15rem">
           <ng-template #title class="m-0"> Available Credits </ng-template>
           <ng-template #subtitle class="m-0">
             Expires at 12-Dec-2025</ng-template
@@ -29,7 +29,7 @@
         </p-card>
 
         <!-- Card 02 -->
-        <p-card class="col-12 md:col-3">
+        <p-card class="col-12 md:col-3 h-15rem">
           <ng-template #title class="m-0"> Total Appointments </ng-template>
           <ng-template #subtitle class="m-0"> Since 01-Jan-2025</ng-template>
           <div class="flex flex-column gap-1 mt-4">
@@ -41,12 +41,23 @@
         </p-card>
 
         <!-- Card 03 -->
-        <p-card class="col-12 md:col-6">
+        <p-card class="col-12 md:col-6 h-15rem">
           <ng-template #title class="m-0"> Upcoming Appointments </ng-template>
-          <ng-template #subtitle class="m-0"> Till Next Month</ng-template>
-          <div class="flex flex-column gap-1 mt-4">
-            
-            <a href="" style="text-decoration: underline">View Schedule</a>
+          <ng-template #subtitle class="m-0"> Most Recent Appointment</ng-template>
+          <div class="flex flex-column gap-2 mt-4">
+            <p-accordion>
+              <div *ngFor="let data of appointments">
+                <p-accordion-panel value="{{data.appointmentId}}">
+                  <p-accordion-header>{{data.appointmentDate}} - {{data.appointmentTime}}</p-accordion-header>
+                  <p-accordion-content>
+                    <p class="m-0">
+                      The appointment is set with {{data.doctorName}} for cough
+                    </p>
+                  </p-accordion-content>
+                </p-accordion-panel>
+              </div>
+            </p-accordion>
+            <a href="" style="text-decoration: underline">View All Schedules</a>
           </div>
         </p-card>
       </p-tabpanel>

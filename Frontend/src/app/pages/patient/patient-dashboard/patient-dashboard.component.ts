@@ -3,26 +3,22 @@ import { TabsModule } from 'primeng/tabs';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { TableModule } from 'primeng/table';
+import { AccordionModule } from 'primeng/accordion';
+
 
 @Component({
   selector: 'app-patient-dashboard',
-  imports: [CommonModule, TabsModule, CardModule, TableModule],
+  imports: [CommonModule, TabsModule, CardModule, TableModule, AccordionModule],
   templateUrl: './patient-dashboard.component.html',
   styleUrl: './patient-dashboard.component.css',
 })
 export class PatientDashboardComponent {
-  appointments: [{},{}] = [
+  appointments = [
     {
       appointmentId: 19654,
       doctorName: 'John Doe',
       appointmentDate: '12-Aug-2025',
       appointmentTime: '11:05 AM',
-    },
-    {
-      appointmentId: 19655,
-      doctorName: 'John Doe 02',
-      appointmentDate: '13-Aug-2025',
-      appointmentTime: '11:05 AM',
-    },
+    }
   ];
 }
