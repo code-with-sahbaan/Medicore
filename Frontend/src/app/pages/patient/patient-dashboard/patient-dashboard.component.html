@@ -1,9 +1,6 @@
 <div>
   <div id="header" class="pb-7">
-    <h2
-      class="text-800 text-primary-900 text-4xl font-semibold"
-      style="margin: 0"
-    >
+    <h2 class="text-800 text-primary-900 text-4xl font-semibold" style="margin: 0">
       Dashboard
     </h2>
   </div>
@@ -18,8 +15,7 @@
         <p-card class="col-12 md:col-3 h-15rem">
           <ng-template #title class="m-0"> Available Credits </ng-template>
           <ng-template #subtitle class="m-0">
-            Expires at 12-Dec-2025</ng-template
-          >
+            Expires at 12-Dec-2025</ng-template>
           <div class="flex flex-column gap-1 mt-4">
             <h2 class="text-primary-500 text-7xl font-bold" style="margin: 0">
               300 $
@@ -58,6 +54,15 @@
               </div>
             </p-accordion>
             <a href="" style="text-decoration: underline">View All Schedules</a>
+          </div>
+        </p-card>
+
+        <!-- Card 04 -->
+        <p-card class="col-12">
+          <ng-template #title class="m-0"> All Appointments </ng-template>
+          <ng-template #subtitle class="m-0"> This Weeks Appointment</ng-template>
+          <div class="flex flex-column gap-2 mt-4">
+            <app-calendar />
           </div>
         </p-card>
       </p-tabpanel>
