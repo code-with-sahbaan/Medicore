@@ -73,7 +73,7 @@ export class PatientSideDrawerComponent {
   }
 
   checkScreenSize() {
-    this.isDesktop = window.innerWidth >= 1024;
+    this.isDesktop = window.innerWidth >= 1025;
     this.visible = this.isDesktop;
   }
 

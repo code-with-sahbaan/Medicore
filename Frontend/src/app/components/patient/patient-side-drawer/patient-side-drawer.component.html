@@ -1,63 +1,42 @@
 <div class="card flex p-4">
-  <p-drawer
-    #drawerRef
-    [(visible)]="visible"
-    [dismissible]="!isDesktop"
-    [modal]="!isDesktop"
-    position="left"
-    [style]="{ width: '300px' }"
-    [blockScroll]="!isDesktop"
-  >
+  <p-drawer #drawerRef [(visible)]="visible" [dismissible]="!isDesktop" [modal]="!isDesktop" position="left"
+    [style]="{ width: '300px' }" [blockScroll]="!isDesktop">
     <ng-template #headless>
       <div class="flex flex-col h-full p-4">
         <div class="flex items-center justify-between px-4 pt-4 pb-6 shrink-0">
-          <img
-            src="https://res.cloudinary.com/dyrbo1wml/image/upload/v1750841014/Logo_ofqiag.png"
-            width="150"
-            alt="Logo"
-            class="cursor-pointer"
-            [routerLink]="['/patient/home']"
-          />
+          <img src="https://res.cloudinary.com/dyrbo1wml/image/upload/v1750841014/Logo_ofqiag.png" width="150"
+            alt="Logo" class="cursor-pointer" [routerLink]="['/patient/home']" />
         </div>
         <ul class="list-none p-2 m-0 overflow-hidden">
           @for (item of menuItems; track item.label) {
           <li>
-            <a
-              pRipple
+            <a pRipple
               class="flex items-center cursor-pointer p-3 mb-4 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors {{currentUrl == item.route ? 'selected-menu font-bold text-primary': 'text-primary-900'}}"
-              [routerLink]="item.route"
-            >
+              [routerLink]="item.route">
               <i class="{{ item.icon }} mr-2"></i>
               <span class="font-medium">{{ item.label }}</span>
             </a>
           </li>
-        }
+          }
         </ul>
         <div class="mt-auto">
           <hr class="mb-4 mx-4 border-t border-0 border-surface" />
-          <a
-            pRipple
-            class="m-4 flex items-center cursor-pointer p-4 gap-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
-          >
-            <p-avatar
-              image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
-              shape="circle"
-            />
+          <a pRipple
+            class="m-4 flex items-center cursor-pointer p-4 gap-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple">
+            <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" shape="circle" />
             <span class="font-bold">Amy Elsner</span>
           </a>
         </div>
       </div>
     </ng-template>
   </p-drawer>
-  <div
-    class="transition-all duration-300 w-screen"
-    [ngStyle]="{ 'padding-left.px': isDesktop ? 300 : 0 }"
-  >
+  <div class="transition-all duration-300 w-screen" [ngStyle]="{ 'padding-left.px': isDesktop ? 300 : 0 }">
     <!-- Topbar: Only shown on mobile/tablet -->
-    <div class="p-4 lg:hidden">
+    @if (!isDesktop){
+    <div class="p-4">
       <p-button icon="pi pi-bars" (click)="toggleDrawer()"></p-button>
     </div>
-
+    }
     <div class="p-4">
       <router-outlet></router-outlet>
     </div>

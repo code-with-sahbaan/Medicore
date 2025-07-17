@@ -1,0 +1,32 @@
+:host ::ng-deep .fc-license-message{
+    display: none;
+}
+
+:host ::ng-deep .fc-timeline-slot{
+    height: 50px;
+    border: none;
+}
+
+:host ::ng-deep .fc-timeline-slot-frame{
+    height: 100%;
+    width: 100%;
+    justify-content: center !important;
+    align-items: center;
+}
+
+:host ::ng-deep .fc-timeline-event-harness{
+    height: 70px;
+    margin-bottom: 10px;
+}
+
+:host ::ng-deep .fc-event{
+    height: 80%;
+    border-radius: 100px;
+    display: flex;
+    justify-content: flex-end;
+    background-color: var(--primary-color);
+}
+
+:host ::ng-deep .fc-event-title-container{
+    text-align: center;
+}
