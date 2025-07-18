@@ -61,11 +61,36 @@
         <p-card class="col-12">
           <ng-template #title class="m-0"> Workout Schedule </ng-template>
           <ng-template #subtitle class="m-0"> Today's Schedule </ng-template>
-          <div class="flex flex-column gap-2 mt-4">
-            <app-workout-schedule/>
+          <div class="flex flex-column gap-2 mt-4 mb-4">
+            <app-workout-schedule />
+          </div>
+          <div class="col-12 md:col-2">
+            <p-button type="button" label="Add Schedule" (click)="showDialog()" />
           </div>
         </p-card>
       </p-tabpanel>
     </p-tabpanels>
   </p-tabs>
+
+  <!-- Workout Schedule Dialog -->
+  <p-dialog header="Add Workout Schedule" [modal]="true" [(visible)]="visible"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }">
+    <div class="flex items-center gap-4 mb-4">
+      <input placeholder="Workout Title" [(ngModel)]="workoutEvent.title" pInputText id="task-help"
+        aria-describedby="task-help" />
+      <p-datepicker [(ngModel)]="workoutEvent.start" placeholder="Start Time" [timeOnly]="true" hourFormat="12" />
+      <p-datepicker [(ngModel)]="workoutEvent.end" placeholder="End Time" [timeOnly]="true" hourFormat="12" />
+    </div>
+    <div class="flex justify-between w-full gap-2 mb-4">
+      <p-button class="w-full" label="Cancel" severity="secondary" (click)="visible = false" />
+      <p-button class="w-full" label="Add" (click)="addWorkout()" />
+    </div>
+    <p-listbox [options]="dashboardService.workoutSchedules" [group]="true" class="w-full md:w-56">
+      <ng-template let-group #group>
+        <div class="flex items-center">
+          <span>{{ group.title }}</span>
+        </div>
+      </ng-template>
+    </p-listbox>
+  </p-dialog>
 </div>
