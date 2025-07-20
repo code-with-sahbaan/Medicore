@@ -88,7 +88,7 @@
     <p-listbox [options]="dashboardService.workoutSchedules" [group]="true" class="w-full md:w-56">
       <ng-template let-group #group>
         <div class="flex items-center">
-          <span>{{ group.title }}</span>
+          <span>{{ group.title }}</span> (<span>{{ formatDate(group.start) }} - {{ formatDate(group.end) }}</span>)
         </div>
       </ng-template>
     </p-listbox>

@@ -5,8 +5,6 @@ import timelinePlugin from '@fullcalendar/timeline';
 @Injectable({ providedIn: 'root' })
 export class DashboardService {
 
-    
-
     public workoutSchedules = [
         {
             title: 'Swimming',
@@ -30,4 +28,5 @@ export class DashboardService {
         height: 'auto',
         nowIndicator: true
     };
+    
 }

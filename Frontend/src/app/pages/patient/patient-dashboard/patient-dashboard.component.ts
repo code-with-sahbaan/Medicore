@@ -42,6 +42,13 @@ export class PatientDashboardComponent {
     this.visible = true;
   }
 
+  formatDate(dateInput: Date): string {
+    const date = new Date(dateInput);
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes}`;
+  }
+
   addWorkout() {
 
     // Start Time Extraction
@@ -58,10 +65,16 @@ export class PatientDashboardComponent {
       start: new Date().setHours(startHours, startMinutes),
       end: new Date().setHours(endHours, endMinutes)
     }
+
+    // Adding the object into arrays
     this.dashboardService.workoutSchedules = [...this.dashboardService.workoutSchedules, finalEvent];
-    this.dashboardService.calendarOptions = {
-      ...this.dashboardService.calendarOptions,
-      events: [...this.dashboardService.workoutSchedules] // create new array reference
+    this.dashboardService.calendarOptions.events = this.dashboardService.workoutSchedules;
+
+    // Disposing the Dialog
+    this.workoutEvent = {
+      title: '',
+      start: new Date(),
+      end: new Date()
     };
     this.visible = false
   }

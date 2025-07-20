@@ -36,7 +36,7 @@ export class PatientSideDrawerComponent {
     {
       icon: 'pi pi-book',
       label: 'My Appointments',
-      route: '/patient/Appointments',
+      route: '/patient/appointments',
     },
     {
       icon: 'pi pi-microchip-ai',
