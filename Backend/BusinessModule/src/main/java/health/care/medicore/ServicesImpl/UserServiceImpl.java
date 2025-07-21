@@ -46,7 +46,7 @@ public class UserServiceImpl extends GenericServiceImpl<Users> implements UserDe
     @Autowired
     private JavaMailSender mailSender;
 
-    @Value("${spring.mail.username}")
+    @Value("${medicore.email.sender}")
     private String emailSender;
 
     @Value("${spring.application.name}")

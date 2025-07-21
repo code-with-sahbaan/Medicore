@@ -52,9 +52,7 @@ public class DataBootstrapping implements CommandLineRunner {
         }
 
         log.info("*** INSERTING EMAIL OTP TEMPLATE ***");
-        if (
-                appConfigRepository.findByName(Constants.EMAIL_OTP_TEMPLATE_NAME) == null
-        ){
+        if (appConfigRepository.findByName(Constants.EMAIL_OTP_TEMPLATE_NAME) == null){
             AppConfigs appConfigs = new AppConfigs();
             appConfigs.setName(Constants.EMAIL_OTP_TEMPLATE_NAME);
             appConfigs.setValue(Constants.EMAIL_OTP_TEMPLATE);

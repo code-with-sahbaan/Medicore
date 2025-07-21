@@ -6,8 +6,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Date;
-import java.sql.Time;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,11 +21,11 @@ public class Appointments {
     @Column(name = "APPOINTMENT_ID")
     private long appointmentId;
 
-    @Column(name = "APPOINTMENT_DATE")
-    private Date appointmentDate;
+    @Column(name = "APPOINTMENT_DATE_TIME")
+    private LocalDateTime appointmentDateTime;
 
-    @Column(name = "APPOINTMENT_TIME")
-    private Time appointmentTime;
+    @Column(name = "APPOINTMENT_DURATION")
+    private long appointmentDuration;
 
     @OneToMany(mappedBy = "appointments", fetch = FetchType.LAZY)
     @JsonIgnore

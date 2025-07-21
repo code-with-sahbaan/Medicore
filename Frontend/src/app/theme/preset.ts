@@ -1,34 +1,37 @@
 import Aura from '@primeng/themes/aura';
 import { definePreset } from '@primeng/themes';
 
+const THEME_BASE_COLOR = 'blue';
+const THEME_SECONDARY_COLOR = '#ffffff';
+
 export const MyPreset = definePreset(Aura, {
   semantic: {
     primary: {
-      50: '{blue.50}',
-      100: '{blue.100}',
-      200: '{blue.200}',
-      300: '{blue.300}',
-      400: '{blue.400}',
-      500: '{blue.500}',
-      600: '{blue.600}',
-      700: '{blue.700}',
-      800: '{blue.800}',
-      900: '{blue.900}',
-      950: '{blue.950}',
+      50: `{${THEME_BASE_COLOR}.50}`,
+      100: `{${THEME_BASE_COLOR}.100}`,
+      200: `{${THEME_BASE_COLOR}.200}`,
+      300: `{${THEME_BASE_COLOR}.300}`,
+      400: `{${THEME_BASE_COLOR}.400}`,
+      500: `{${THEME_BASE_COLOR}.500}`,
+      600: `{${THEME_BASE_COLOR}.600}`,
+      700: `{${THEME_BASE_COLOR}.700}`,
+      800: `{${THEME_BASE_COLOR}.800}`,
+      900: `{${THEME_BASE_COLOR}.900}`,
+      950: `{${THEME_BASE_COLOR}.950}`,
     },
     colorScheme: {
       light: {
         primary: {
-          color: '{blue.500}',
-          inverseColor: '#ffffff',
-          hoverColor: '{blue.900}',
-          activeColor: '{blue.500}',
+          color: `{${THEME_BASE_COLOR}.500}`,
+          inverseColor: THEME_SECONDARY_COLOR,
+          hoverColor: `{${THEME_BASE_COLOR}.900}`,
+          activeColor: `{${THEME_BASE_COLOR}.500}`,
         },
         highlight: {
-          background: '{blue.950}',
-          focusBackground: '{blue.700}',
-          color: '#ffffff',
-          focusColor: '#ffffff',
+          background: `{${THEME_BASE_COLOR}.950}`,
+          focusBackground: `{${THEME_BASE_COLOR}.700}`,
+          color: THEME_SECONDARY_COLOR,
+          focusColor: THEME_SECONDARY_COLOR,
         },
       },
     },
