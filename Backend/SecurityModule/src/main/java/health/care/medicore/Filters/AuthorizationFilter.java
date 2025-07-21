@@ -25,14 +25,11 @@ import static java.util.Arrays.stream;
 
 public class AuthorizationFilter extends OncePerRequestFilter {
 
-    private final String originAllowed;
-
     private final Set<String> publicURLs;
 
     public final String secret;
 
-    public AuthorizationFilter(String originAllowed, Set<String> publicURLs, String secret) {
-        this.originAllowed = originAllowed;
+    public AuthorizationFilter(Set<String> publicURLs, String secret) {
         this.publicURLs = publicURLs;
         this.secret = secret;
     }

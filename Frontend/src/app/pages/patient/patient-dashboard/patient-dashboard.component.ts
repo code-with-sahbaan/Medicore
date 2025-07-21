@@ -12,10 +12,11 @@ import { Listbox } from 'primeng/listbox';
 import { DashboardService } from '../../../service/patient/dashboard.service';
 import { FormsModule } from '@angular/forms';
 import { DatePicker } from 'primeng/datepicker';
+import { FieldsetModule } from 'primeng/fieldset';
 
 @Component({
   selector: 'app-patient-dashboard',
-  imports: [CommonModule, TabsModule, CardModule, TableModule, AccordionModule, WorkoutScheduleComponent, ButtonModule, Dialog, InputTextModule, Listbox, FormsModule, DatePicker],
+  imports: [CommonModule, TabsModule, CardModule, TableModule, AccordionModule, WorkoutScheduleComponent, ButtonModule, Dialog, InputTextModule, Listbox, FormsModule, DatePicker, FieldsetModule],
   templateUrl: './patient-dashboard.component.html',
   styleUrl: './patient-dashboard.component.css',
 })

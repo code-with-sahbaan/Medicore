@@ -12,3 +12,15 @@
 :host ::ng-deep .p-button{
     width: 100% !important;
 }
+
+:host ::ng-deep .p-card{
+    height: 100%;
+}
+
+:host ::ng-deep .p-card-body{
+    height: 100%;
+}
+
+:host ::ng-deep .p-tabpanels{
+    padding:0;
+}

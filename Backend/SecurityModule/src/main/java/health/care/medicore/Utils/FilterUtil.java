@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class FilterUtil {
 
-    public static void writeErrorResponse(HttpServletResponse response, String message, Integer status) throws IOException {
+    public static void writeErrorResponse(HttpServletResponse response, String message, int status) throws IOException {
         response.setStatus(status);
         response.setContentType("application/json");
         BaseResponse baseResponse = new BaseResponse();

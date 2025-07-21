@@ -125,7 +125,7 @@ public class WebConfiguration {
         });
 
         // Enabling custom filters to act before UsernamePasswordAuthenticationFilter
-        http.addFilterBefore(new AuthorizationFilter(originAllowed, publicUrls, secret), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new AuthorizationFilter(publicUrls, secret), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(new AuthenticationFilter(authenticationManager, userService, accessTokenExpiry, secret), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

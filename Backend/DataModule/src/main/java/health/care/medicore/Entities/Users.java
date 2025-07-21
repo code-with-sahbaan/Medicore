@@ -1,8 +1,13 @@
 package health.care.medicore.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Table(name = "USERS")
 @Entity
@@ -33,5 +38,13 @@ public class Users {
 
     @Column(name = "IS_ACTIVE")
     private Boolean isActive = false;
+
+    @Column(name = "CREDITS")
+    private long credits;
+
+    @OneToMany(mappedBy = "users", fetch = FetchType.LAZY)
+    @JsonIgnore
+    @JsonManagedReference
+    private List<UserAppointments> userAppointments = new ArrayList<>();
 
 }
