@@ -42,9 +42,12 @@ public class Users {
     @Column(name = "CREDITS")
     private long credits;
 
-    @OneToMany(mappedBy = "users", fetch = FetchType.LAZY)
-    @JsonIgnore
-    @JsonManagedReference
-    private List<UserAppointments> userAppointments = new ArrayList<>();
+    // Appointments where this user is the doctor
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
+    private List<Appointments> doctorAppointments;
+
+    // Appointments where this user is the patient
+    @OneToMany(mappedBy = "patient", fetch =  FetchType.LAZY)
+    private List<Appointments> patientAppointments;
 
 }
