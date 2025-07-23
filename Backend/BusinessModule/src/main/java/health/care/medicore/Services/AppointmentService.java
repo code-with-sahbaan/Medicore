@@ -8,4 +8,6 @@ public interface AppointmentService {
 
     List<PatientAppointment> getTop1AppointmentsByPatientId(long patientId);
 
+    long totalNumberOfAppointmentsByPatientId(long patientId);
+
 }

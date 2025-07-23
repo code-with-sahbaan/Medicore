@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Set;
 
 import static health.care.medicore.Utils.Constants.OWNER;
+import static health.care.medicore.Utils.Constants.PATIENT;
 
 @Configuration
 @EnableWebSecurity
@@ -116,7 +117,7 @@ public class WebConfiguration {
         http.authorizeHttpRequests(authorize -> {
             // Allowing all urls access for business owner
             authorize.requestMatchers("/**").hasAuthority(OWNER);
-
+            authorize.requestMatchers("/patient/**").hasAuthority(PATIENT);
         });
 
         // authenticating any other url.

@@ -1,2 +1,3 @@
 # Ignore Angular environment files
 /Frontend/src/environments/*.ts
+commit-message-pattern.txt

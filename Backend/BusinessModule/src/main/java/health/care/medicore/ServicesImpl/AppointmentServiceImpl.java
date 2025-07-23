@@ -30,4 +30,9 @@ public class AppointmentServiceImpl extends GenericServiceImpl<Appointments> imp
         Page<PatientAppointment> patientAppointments = appointmentsRepository.getTop1AppointmentsByPatientId(patientId, LocalDateTime.now(), pageable);
         return patientAppointments.getContent();
     }
+
+    @Override
+    public long totalNumberOfAppointmentsByPatientId(long patientId) {
+        return appointmentsRepository.totalNumberOfAppointmentsByPatientId(patientId);
+    }
 }

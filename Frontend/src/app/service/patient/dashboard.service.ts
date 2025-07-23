@@ -1,9 +1,13 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CalendarOptions } from '@fullcalendar/core/index.js';
 import timelinePlugin from '@fullcalendar/timeline';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class DashboardService {
+
+    constructor(private http: HttpClient) { }
 
     public workoutSchedules = [
         {
@@ -28,5 +32,9 @@ export class DashboardService {
         height: 'auto',
         nowIndicator: true
     };
-    
+
+    getDashboardData(): Observable<any> {
+        return this.http.get('/patient/getDashboardData').pipe();
+    }
+
 }
