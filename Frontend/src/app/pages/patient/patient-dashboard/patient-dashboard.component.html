@@ -20,7 +20,7 @@
               Expires at 12-Dec-2025</ng-template>
             <div class="flex flex-column gap-1 mt-4">
               <h2 class="text-primary-500 text-7xl font-bold" style="margin: 0">
-                300 $
+                {{credits}} $
               </h2>
               <a href="" style="text-decoration: underline">Buy More Credits</a>
             </div>
@@ -32,7 +32,7 @@
             <ng-template #subtitle class="m-0"> Since 01-Jan-2025</ng-template>
             <div class="flex flex-column gap-1 mt-4">
               <h2 class="text-primary-500 text-7xl font-bold" style="margin: 0">
-                20
+                {{totalAppointments}}
               </h2>
               <a href="" style="text-decoration: underline">View Schedule</a>
             </div>
@@ -46,8 +46,8 @@
             <ng-template #subtitle class="m-0"> Most Recent Appointment</ng-template>
             <div class="flex flex-column gap-2 mt-4">
               <p-accordion>
-                <div *ngFor="let data of appointments">
-                  <p-fieldset legend="{{data.appointmentDate}} - {{data.appointmentTime}}">
+                <div *ngFor="let data of patientAppointments">
+                  <p-fieldset legend="{{data.appointmentDate}} - {{convertTo12Hour(data.appointmentTime)}}">
                     <p class="m-0">
                       The appointment is set with {{data.doctorName}} for cough
                     </p>

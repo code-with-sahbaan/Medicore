@@ -115,9 +115,10 @@ public class WebConfiguration {
 
         // permitting urls with role-based access
         http.authorizeHttpRequests(authorize -> {
+            // Allowing specific pattern urls for patient role users
+            authorize.requestMatchers("/patient/**").hasAuthority(PATIENT);
             // Allowing all urls access for business owner
             authorize.requestMatchers("/**").hasAuthority(OWNER);
-            authorize.requestMatchers("/patient/**").hasAuthority(PATIENT);
         });
 
         // authenticating any other url.

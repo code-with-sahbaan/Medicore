@@ -35,6 +35,7 @@ import { AuthService } from '../../service/auth.service';
   standalone: true,
 })
 export class LoginComponent {
+
   loginForm: FormGroup;
 
   constructor(
@@ -84,6 +85,13 @@ export class LoginComponent {
           if(user.isActive == false){
             this.authService.email = user.email;
             this.router.navigate(['verifyOtp']);
+          }else{
+            localStorage.setItem("USER", JSON.stringify(user));
+            if(user.role == "PATIENT"){
+              this.router.navigate(['patient']);
+            }else{
+              this.router.navigate(['doctor']);
+            }
           }
         },
         error: (error) => {

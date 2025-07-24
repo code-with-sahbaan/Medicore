@@ -102,6 +102,8 @@ public class UserServiceImpl extends GenericServiceImpl<Users> implements UserDe
         if (!users.getEmailOTP().equals(verifyOtpRequest.getOtp())){
             throw new Exception("Verification failed due to incorrect OTP");
         }
+        users.setIsActive(true);
+        userRepository.save(users);
     }
 
     public void sendOTP(Users users) throws MessagingException, UnsupportedEncodingException {

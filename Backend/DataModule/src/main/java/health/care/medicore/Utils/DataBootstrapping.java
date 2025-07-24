@@ -1,9 +1,11 @@
 package health.care.medicore.Utils;
 
 import health.care.medicore.Entities.AppConfigs;
+import health.care.medicore.Entities.Appointments;
 import health.care.medicore.Entities.Role;
 import health.care.medicore.Entities.Users;
 import health.care.medicore.Repositories.AppConfigRepository;
+import health.care.medicore.Repositories.AppointmentsRepository;
 import health.care.medicore.Repositories.RoleRepository;
 import health.care.medicore.Repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +14,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +41,9 @@ public class DataBootstrapping implements CommandLineRunner {
     @Autowired
     private AppConfigRepository appConfigRepository;
 
+    @Autowired
+    private AppointmentsRepository appointmentsRepository;
+
     @Override
     public void run(String... args) throws Exception {
 
@@ -49,6 +55,45 @@ public class DataBootstrapping implements CommandLineRunner {
                 role.setRole(roles[i]);
                 roleRepository.save(role);
             }
+        }
+
+        log.info("*** INSERTING PATIENT AND DOCTOR WITH APPOINTMENT USER FOR TESTING ***");
+        if (
+                userRepository.findByEmail("sahbaanalam34@gmail.com").isEmpty()
+                && userRepository.findByEmail("sahbaanalam25@gmail.com").isEmpty()
+        ){
+
+            // Inserting Patient
+
+            Users user = new Users();
+            user.setIsActive(true);
+            user.setPassword(new BCryptPasswordEncoder().encode("123456789"));
+            user.setRole(roleRepository.findByRoleIgnoreCase(Constants.PATIENT));
+            user.setEmail("sahbaanalam34@gmail.com");
+            user.setCredits(200);
+            user.setFullName("Sahbaan Alam");
+            Users saved1 = userRepository.save(user);
+
+            // Inserting Doctor
+
+            Users user2 = new Users();
+            user2.setIsActive(true);
+            user2.setPassword(new BCryptPasswordEncoder().encode("123456789"));
+            user2.setRole(roleRepository.findByRoleIgnoreCase(Constants.PATIENT));
+            user2.setEmail("sahbaanalam25@gmail.com");
+            user2.setCredits(200);
+            user2.setFullName("Sahbaan Alam - Doctor");
+            Users saved2 = userRepository.save(user2);
+
+            // Inserting Appointment
+
+            Appointments appointments = new Appointments();
+            appointments.setAppointmentDateTime(LocalDateTime.now().plusHours(2));
+            appointments.setPatient(saved1);
+            appointments.setDoctor(saved2);
+            appointments.setAppointmentDuration(30);
+            appointmentsRepository.save(appointments);
+
         }
 
         log.info("*** INSERTING EMAIL OTP TEMPLATE ***");

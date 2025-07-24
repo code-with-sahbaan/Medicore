@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TabsModule } from 'primeng/tabs';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
@@ -13,6 +13,8 @@ import { DashboardService } from '../../../service/patient/dashboard.service';
 import { FormsModule } from '@angular/forms';
 import { DatePicker } from 'primeng/datepicker';
 import { FieldsetModule } from 'primeng/fieldset';
+import { UiService } from '../../../service/ui.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-patient-dashboard',
@@ -20,9 +22,14 @@ import { FieldsetModule } from 'primeng/fieldset';
   templateUrl: './patient-dashboard.component.html',
   styleUrl: './patient-dashboard.component.css',
 })
-export class PatientDashboardComponent {
+export class PatientDashboardComponent implements OnInit {
 
-  constructor(public dashboardService: DashboardService) { }
+  constructor(public dashboardService: DashboardService, public uiService: UiService) { }
+
+  ngOnInit(): void {
+    setTimeout(() => this.getDashboardData(), 0);
+  }
+
   workoutEvent = {
     title: '',
     start: new Date(),
@@ -30,7 +37,8 @@ export class PatientDashboardComponent {
   }
 
   visible: boolean = false;
-  appointments = [
+  
+  patientAppointments = [
     {
       appointmentId: 19654,
       doctorName: 'John Doe',
@@ -38,6 +46,9 @@ export class PatientDashboardComponent {
       appointmentTime: '11:05 AM',
     }
   ];
+
+  credits: number = 300;
+  totalAppointments: number = 20;
 
   showDialog() {
     this.visible = true;
@@ -78,5 +89,45 @@ export class PatientDashboardComponent {
       end: new Date()
     };
     this.visible = false
+  }
+
+  convertTo12Hour(time24: string): string {
+    const [hourStr, minute] = time24.split(':');
+    let hour = parseInt(hourStr, 10);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    hour = hour % 12 || 12;
+    return `${hour}:${minute} ${ampm}`;
+  }
+
+  getDashboardData() {
+    /**
+     * Showing Loader
+     */
+    this.uiService.showSpinner();
+    /**
+     * Calling API
+     */
+    this.dashboardService
+      .getDashboardData()
+      .pipe(
+        finalize(() => {
+          // Hiding Loader after API call completion
+          this.uiService.hideSpinner();
+        })
+      )
+      .subscribe({
+        next: (response) => {
+          // Showing success Toast
+          this.uiService.showSuccess(response.responseMessage);
+          const data = response.responseBody;
+          this.credits = data.credits;
+          this.totalAppointments = data.totalAppointments;
+          this.patientAppointments = data.patientAppointments;
+        },
+        error: (error) => {
+          // Showing error toast
+          this.uiService.showError(error.error.responseMessage);
+        },
+      });
   }
 }
