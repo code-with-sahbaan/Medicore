@@ -123,6 +123,7 @@ export class PatientDashboardComponent implements OnInit {
           this.credits = data.credits;
           this.totalAppointments = data.totalAppointments;
           this.patientAppointments = data.patientAppointments;
+          this.dashboardService.workoutSchedules = data.patientWorkouts;
         },
         error: (error) => {
           // Showing error toast

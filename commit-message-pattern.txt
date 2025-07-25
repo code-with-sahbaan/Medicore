@@ -1,1 +1,1 @@
-Frontend: Method Added for calling Patient Dashboard API — Backend: API Created for fetching Patient Dashboard Data
+Frontend: Implemented data fetching for workout — Backend: Added Entity, repository, and service for workout.

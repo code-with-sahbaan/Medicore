@@ -2,6 +2,7 @@ package health.care.medicore.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import health.care.medicore.Entities.Patient.Workout;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -49,5 +50,9 @@ public class Users {
     // Appointments where this user is the patient
     @OneToMany(mappedBy = "patient", fetch =  FetchType.LAZY)
     private List<Appointments> patientAppointments;
+
+    // Workout where this user is the patient
+    @OneToMany(mappedBy = "users", fetch =  FetchType.LAZY)
+    private List<Workout> workouts;
 
 }

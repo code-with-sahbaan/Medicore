@@ -14,11 +14,6 @@ export class DashboardService {
             title: 'Swimming',
             start: new Date().setHours(9, 0),
             end: new Date().setHours(10, 0)
-        },
-        {
-            title: 'Cycling',
-            start: new Date().setHours(9, 30),
-            end: new Date().setHours(12, 0)
         }
     ];
 

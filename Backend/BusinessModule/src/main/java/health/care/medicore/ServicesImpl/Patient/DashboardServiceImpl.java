@@ -5,14 +5,14 @@ import health.care.medicore.ResponseDTO.BaseResponse;
 import health.care.medicore.ResponseDTO.Patient.Dashboard;
 import health.care.medicore.Services.AppointmentService;
 import health.care.medicore.Services.Patient.DashboardService;
+import health.care.medicore.Services.Patient.WorkoutService;
 import health.care.medicore.Services.UserService;
-import health.care.medicore.ServicesImpl.GenericServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class DashboardServiceImpl extends GenericServiceImpl<DashboardServiceImpl> implements DashboardService {
+public class DashboardServiceImpl implements DashboardService {
 
     @Autowired
     private AppointmentService appointmentService;
@@ -20,9 +20,8 @@ public class DashboardServiceImpl extends GenericServiceImpl<DashboardServiceImp
     @Autowired
     private UserService userService;
 
-    public DashboardServiceImpl() {
-        super(DashboardServiceImpl.class);
-    }
+    @Autowired
+    private WorkoutService workoutService;
 
     @Override
     public BaseResponse<Dashboard> getDashboard() throws Exception {
@@ -32,6 +31,7 @@ public class DashboardServiceImpl extends GenericServiceImpl<DashboardServiceImp
         dashboard.setPatientAppointments(appointmentService.getTop1AppointmentsByPatientId(users.getUserId()));
         dashboard.setCredits(users.getCredits());
         dashboard.setTotalAppointments(appointmentService.totalNumberOfAppointmentsByPatientId(users.getUserId()));
+        dashboard.setPatientWorkouts(workoutService.getTodayWorkoutSchedule());
         return new BaseResponse<>("Dashboard Data has been fetched successfully", dashboard);
     }
 }

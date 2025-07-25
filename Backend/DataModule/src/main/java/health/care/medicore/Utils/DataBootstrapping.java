@@ -2,10 +2,12 @@ package health.care.medicore.Utils;
 
 import health.care.medicore.Entities.AppConfigs;
 import health.care.medicore.Entities.Appointments;
+import health.care.medicore.Entities.Patient.Workout;
 import health.care.medicore.Entities.Role;
 import health.care.medicore.Entities.Users;
 import health.care.medicore.Repositories.AppConfigRepository;
 import health.care.medicore.Repositories.AppointmentsRepository;
+import health.care.medicore.Repositories.Patient.WorkoutRepository;
 import health.care.medicore.Repositories.RoleRepository;
 import health.care.medicore.Repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +16,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,6 +48,9 @@ public class DataBootstrapping implements CommandLineRunner {
     @Autowired
     private AppointmentsRepository appointmentsRepository;
 
+    @Autowired
+    private WorkoutRepository workoutRepository;
+
     @Override
     public void run(String... args) throws Exception {
 
@@ -57,7 +64,7 @@ public class DataBootstrapping implements CommandLineRunner {
             }
         }
 
-        log.info("*** INSERTING PATIENT AND DOCTOR WITH APPOINTMENT USER FOR TESTING ***");
+        log.info("*** INSERTING PATIENT AND DOCTOR WITH APPOINTMENT AND WORKOUT USER FOR TESTING ***");
         if (
                 userRepository.findByEmail("sahbaanalam34@gmail.com").isEmpty()
                 && userRepository.findByEmail("sahbaanalam25@gmail.com").isEmpty()
@@ -93,6 +100,16 @@ public class DataBootstrapping implements CommandLineRunner {
             appointments.setDoctor(saved2);
             appointments.setAppointmentDuration(30);
             appointmentsRepository.save(appointments);
+
+            // Inserting Workout for Patient
+
+            Workout workout = new Workout();
+            workout.setWorkoutDate(LocalDate.now());
+            workout.setStart(LocalDateTime.now().plusHours(2));
+            workout.setEnd(workout.getStart().plusMinutes(40));
+            workout.setTitle("Swimming");
+            workout.setUsers(saved1);
+            workoutRepository.save(workout);
 
         }
 

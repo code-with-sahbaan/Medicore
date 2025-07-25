@@ -12,5 +12,5 @@ public class Dashboard {
     List<PatientAppointment> patientAppointments;
     long totalAppointments;
     long credits;
-
+    List<PatientWorkout> patientWorkouts;
 }
