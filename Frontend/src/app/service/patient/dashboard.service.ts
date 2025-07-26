@@ -4,24 +4,18 @@ import { CalendarOptions } from '@fullcalendar/core/index.js';
 import timelinePlugin from '@fullcalendar/timeline';
 import { Observable } from 'rxjs';
 
-
 interface Workout {
     title: string,
     start: number,
     end: number
 }
 
-
 @Injectable({ providedIn: 'root' })
 export class DashboardService {
 
     constructor(private http: HttpClient) { }
 
-    public workoutSchedules: Workout[] = [{
-        title: 'Swimming',
-        start: new Date().setHours(9, 0),
-        end: new Date().setHours(10, 0)
-    }];
+    public workoutSchedules: Workout[] = [];
 
     public calendarOptions: CalendarOptions = {
         plugins: [timelinePlugin],
@@ -36,6 +30,10 @@ export class DashboardService {
 
     getDashboardData(): Observable<any> {
         return this.http.get('/patient/v1/getDashboardData').pipe();
+    }
+
+    addWorkout(payload: Workout){
+        return this.http.post('/patient/v1/addWorkout', payload).pipe();
     }
 
 }

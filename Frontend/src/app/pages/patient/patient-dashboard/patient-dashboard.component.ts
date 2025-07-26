@@ -37,7 +37,7 @@ export class PatientDashboardComponent implements OnInit {
   }
 
   visible: boolean = false;
-  
+
   patientAppointments = [
     {
       appointmentId: 19654,
@@ -79,8 +79,28 @@ export class PatientDashboardComponent implements OnInit {
     }
 
     // Adding the object into arrays
-    // this.dashboardService.workoutSchedules = [...this.dashboardService.workoutSchedules, finalEvent];
-    this.dashboardService.calendarOptions.events = this.dashboardService.workoutSchedules;
+    this.dashboardService
+      .addWorkout(finalEvent)
+      .pipe(
+        finalize(() => {
+          // Hiding Loader after API call completion
+          this.uiService.hideSpinner();
+        })
+      )
+      .subscribe({
+        next: (response: any) => {
+          // Showing success Toast
+          this.uiService.showSuccess(response.responseMessage);
+          const data = response.responseBody;
+          this.dashboardService.workoutSchedules = [...this.dashboardService.workoutSchedules, data];
+          this.dashboardService.calendarOptions.events = [...this.dashboardService.workoutSchedules];
+        },
+        error: (error) => {
+          // Showing error toast
+          this.uiService.showError(error.error.responseMessage);
+        },
+      });
+
 
     // Disposing the Dialog
     this.workoutEvent = {
@@ -124,10 +144,7 @@ export class PatientDashboardComponent implements OnInit {
           this.totalAppointments = data.totalAppointments;
           this.patientAppointments = data.patientAppointments;
           this.dashboardService.workoutSchedules = [...data.patientWorkouts];
-          this.dashboardService.calendarOptions = {
-            ...this.dashboardService.calendarOptions,
-            events: [...this.dashboardService.workoutSchedules]
-          }
+          this.dashboardService.calendarOptions.events = [...this.dashboardService.workoutSchedules];
         },
         error: (error) => {
           // Showing error toast

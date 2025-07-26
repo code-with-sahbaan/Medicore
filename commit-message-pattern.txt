@@ -1,1 +1,1 @@
-Frontend: Implemented data fetching for workout — Backend: Added Entity, repository, and service for workout.
+Frontend: API versioning enabled. Workout Interface created — Backend: Query Fix for fetching workout. Slight change to pick today appointment first. API versioning added.

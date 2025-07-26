@@ -16,7 +16,7 @@ public class PatientWorkout {
 
     private LocalDate workoutDate;
 
-    private LocalDateTime start;
+    private long start;
 
-    private LocalDateTime end;
+    private long end;
 }

@@ -25,8 +25,7 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Override
     public BaseResponse<Dashboard> getDashboard() throws Exception {
-        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Users users = userService.getUserByEmail(email).get();
+        Users users = userService.getCurrentUser();
         Dashboard dashboard = new Dashboard();
         dashboard.setPatientAppointments(appointmentService.getTop1AppointmentsByPatientId(users.getUserId()));
         dashboard.setCredits(users.getCredits());

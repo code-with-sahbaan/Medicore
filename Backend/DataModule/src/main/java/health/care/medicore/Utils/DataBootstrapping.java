@@ -19,6 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -105,9 +106,10 @@ public class DataBootstrapping implements CommandLineRunner {
 
             Workout workout = new Workout();
             workout.setWorkoutDate(LocalDate.now());
-            workout.setStart(LocalDateTime.now().plusHours(2));
-            workout.setEnd(workout.getStart().plusMinutes(40));
-            workout.setTitle("Swimming");
+            LocalDateTime start = LocalDateTime.now().plusHours(2);
+            workout.setStart(start.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+            workout.setEnd(start.plusMinutes(40).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+            workout.setTitle("Running");
             workout.setUsers(saved1);
             workoutRepository.save(workout);
 

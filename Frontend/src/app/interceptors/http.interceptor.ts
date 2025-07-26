@@ -33,7 +33,6 @@ export class HttpConfigInterceptor implements HttpInterceptor {
         next: (event) => {
           if (event instanceof HttpResponse) {
             // ✅ Handle responses globally
-            // console.log('Response:', event);
           }
         },
         error: (error: HttpErrorResponse) => {

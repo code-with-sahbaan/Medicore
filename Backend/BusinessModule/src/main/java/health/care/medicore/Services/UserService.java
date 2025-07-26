@@ -15,4 +15,6 @@ public interface UserService{
     BaseResponse signup(SignupRequest signupRequest) throws Exception;
 
     void verifyOtp(VerifyOtpRequest verifyOtpRequest) throws Exception;
+
+    Users getCurrentUser();
 }

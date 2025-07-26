@@ -57,7 +57,6 @@ export class LoginComponent {
 
   onSubmit() {
     if (this.loginForm?.invalid) {
-      console.log(this.loginForm?.invalid);
       this.loginForm.markAllAsTouched();
       return;
     }

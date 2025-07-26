@@ -26,10 +26,10 @@ public class Workout {
     private LocalDate workoutDate;
 
     @Column(name = "WORKOUT_START_TIME")
-    private LocalDateTime start;
+    private long start;
 
     @Column(name = "WORKOUT_END_TIME")
-    private LocalDateTime end;
+    private long end;
 
     @ManyToOne
     @JoinColumn(name = "userId")

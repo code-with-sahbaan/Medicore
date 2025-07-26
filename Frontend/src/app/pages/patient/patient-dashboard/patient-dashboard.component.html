@@ -1,8 +1,13 @@
 <div>
-  <div id="header" class="pb-7">
-    <h2 class="text-800 text-primary-900 text-4xl font-semibold" style="margin: 0">
-      Dashboard
-    </h2>
+  <div id="header" class="pb-7 grid grid-nogutter justify-between">
+    <div class="col-12 md:col-6">
+      <h2 class="text-800 text-primary-900 text-4xl font-semibold">
+        Dashboard
+      </h2>
+    </div>
+    <div class="col-12 md:col-6">
+      <input placeholder="Search for doctors, appointments..." pInputText id="task-help" aria-describedby="task-help" />
+    </div>
   </div>
 
   <p-tabs value="0">
@@ -90,7 +95,8 @@
     <p-listbox [options]="dashboardService.workoutSchedules" [group]="true" class="w-full md:w-56">
       <ng-template let-group #group>
         <div class="flex items-center">
-          <span>{{ group.title }}</span> (<span>{{ convertTo12Hour(formatDate(group.start)) }} - {{ convertTo12Hour(formatDate(group.end)) }}</span>)
+          <span>{{ group.title }}</span> (<span>{{ convertTo12Hour(formatDate(group.start)) }} - {{
+            convertTo12Hour(formatDate(group.end)) }}</span>)
         </div>
       </ng-template>
     </p-listbox>
