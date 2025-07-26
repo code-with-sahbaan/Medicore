@@ -47,8 +47,8 @@ export class PatientDashboardComponent implements OnInit {
     }
   ];
 
-  credits: number = 300;
-  totalAppointments: number = 20;
+  credits: number = 0;
+  totalAppointments: number = 0;
 
   showDialog() {
     this.visible = true;
@@ -79,7 +79,7 @@ export class PatientDashboardComponent implements OnInit {
     }
 
     // Adding the object into arrays
-    this.dashboardService.workoutSchedules = [...this.dashboardService.workoutSchedules, finalEvent];
+    // this.dashboardService.workoutSchedules = [...this.dashboardService.workoutSchedules, finalEvent];
     this.dashboardService.calendarOptions.events = this.dashboardService.workoutSchedules;
 
     // Disposing the Dialog
@@ -123,7 +123,11 @@ export class PatientDashboardComponent implements OnInit {
           this.credits = data.credits;
           this.totalAppointments = data.totalAppointments;
           this.patientAppointments = data.patientAppointments;
-          this.dashboardService.workoutSchedules = data.patientWorkouts;
+          this.dashboardService.workoutSchedules = [...data.patientWorkouts];
+          this.dashboardService.calendarOptions = {
+            ...this.dashboardService.calendarOptions,
+            events: [...this.dashboardService.workoutSchedules]
+          }
         },
         error: (error) => {
           // Showing error toast

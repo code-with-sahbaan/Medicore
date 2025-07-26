@@ -17,7 +17,7 @@ public class DashboardController {
     @Autowired
     private DashboardService dashboardService;
 
-    @GetMapping("getDashboardData")
+    @GetMapping("v1/getDashboardData")
     public ResponseEntity<BaseResponse<Dashboard>> getDashboardData() throws Exception {
         log.info("Executing getDashboardData in DashboardController");
         BaseResponse<Dashboard> response = dashboardService.getDashboard();

@@ -31,7 +31,7 @@ public class DashboardServiceImpl implements DashboardService {
         dashboard.setPatientAppointments(appointmentService.getTop1AppointmentsByPatientId(users.getUserId()));
         dashboard.setCredits(users.getCredits());
         dashboard.setTotalAppointments(appointmentService.totalNumberOfAppointmentsByPatientId(users.getUserId()));
-        dashboard.setPatientWorkouts(workoutService.getTodayWorkoutSchedule());
+        dashboard.setPatientWorkouts(workoutService.getTodayWorkoutSchedule(users));
         return new BaseResponse<>("Dashboard Data has been fetched successfully", dashboard);
     }
 }

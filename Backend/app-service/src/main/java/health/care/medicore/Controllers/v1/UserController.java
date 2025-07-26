@@ -24,14 +24,14 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/signup")
+    @PostMapping("v1/signup")
     public ResponseEntity<BaseResponse> signup(@RequestBody SignupRequest signupRequest) throws Exception {
         log.info("Executing signup in UserController");
         BaseResponse response = userService.signup(signupRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping("/verifyOtp")
+    @PostMapping("v1/verifyOtp")
     public ResponseEntity<BaseResponse> verifyOtp(@RequestBody VerifyOtpRequest verifyOtpRequest) throws Exception {
         log.info("Executing verifyOtp in UserController");
         userService.verifyOtp(verifyOtpRequest);

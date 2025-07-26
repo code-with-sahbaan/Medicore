@@ -1,6 +1,7 @@
 package health.care.medicore.ServicesImpl.Patient;
 
 import health.care.medicore.Entities.Patient.Workout;
+import health.care.medicore.Entities.Users;
 import health.care.medicore.Repositories.Patient.WorkoutRepository;
 import health.care.medicore.ResponseDTO.Patient.PatientWorkout;
 import health.care.medicore.Services.Patient.WorkoutService;
@@ -23,8 +24,8 @@ public class WorkoutServiceImpl extends GenericServiceImpl<Workout> implements W
     }
 
     @Override
-    public List<PatientWorkout> getTodayWorkoutSchedule() {
-        List<Workout> workouts = workoutRepository.findWorkoutByWorkoutDate(LocalDate.now());
+    public List<PatientWorkout> getTodayWorkoutSchedule(Users users) {
+        List<Workout> workouts = workoutRepository.findWorkoutByUsersAndWorkoutDate(users, LocalDate.now());
         List<PatientWorkout> patientWorkouts = new ArrayList<>();
         for (Workout workout : workouts) {
             patientWorkouts.add(convertEntityToDto(workout, PatientWorkout.class));

@@ -16,7 +16,7 @@ public interface AppointmentsRepository extends JpaRepository<Appointments, Long
             "(ap.appointmentId, ap.appointmentDateTime, ap.appointmentDuration, ap.doctor.fullName) " +
             "FROM Appointments ap " +
             "WHERE ap.patient.userId = :patientId " +
-            "AND (ap.appointmentDateTime > :now OR ap.appointmentDateTime = :now) " +
+            "AND (ap.appointmentDateTime = :now OR ap.appointmentDateTime > :now) " +
             "ORDER BY ap.appointmentDateTime ASC")
     Page<PatientAppointment> getTop1AppointmentsByPatientId(@Param("patientId") long patientId, @Param("now") LocalDateTime now, Pageable pageable);
 
