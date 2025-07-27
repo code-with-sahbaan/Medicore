@@ -37,6 +37,9 @@ public class Users {
     @Column(name = "EMAIL_OTP")
     private String emailOTP;
 
+    @Column(name = "FORGOT_PASSWORD_OTP")
+    private String forgotPasswordOTP;
+
     @Column(name = "IS_ACTIVE")
     private Boolean isActive = false;
 

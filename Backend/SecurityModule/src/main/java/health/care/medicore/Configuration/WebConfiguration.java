@@ -109,6 +109,7 @@ public class WebConfiguration {
         http.authorizeHttpRequests(authorize->{
             authorize.requestMatchers("/h2-console/**").permitAll();
             authorize.requestMatchers("/user/v1/signup/**").permitAll();
+            authorize.requestMatchers("/user/v1/forgotPassword/**").permitAll();
             authorize.requestMatchers("/user/v1/logout/**").permitAll();
             authorize.requestMatchers("/user/v1/verifyOtp/**").permitAll();
         });

@@ -65,7 +65,6 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
             Date expirationTime = new Date(System.currentTimeMillis() + (Integer.parseInt(accessTokenExpiry) * 60L) * 60 * 1000);
             String accessToken = JWT.create().withSubject(user.getUsername()).withIssuer(request.getRequestURI()).withExpiresAt(expirationTime).withClaim("roles",user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                     .sign(algorithm);
-
         BaseResponse<LoginResponse> baseResponse = new BaseResponse<>();
         LoginResponse logInResponse = new LoginResponse();
         logInResponse = userService.convertEntityToDto(users, logInResponse.getClass());

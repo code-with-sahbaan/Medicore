@@ -1,1 +1,1 @@
-Frontend: API versioning enabled. Workout Interface created — Backend: Query Fix for fetching workout. Slight change to pick today appointment first. API versioning added.
+Frontend: Reset password flow has been added. — Backend: API and method has been added to Reset Password.

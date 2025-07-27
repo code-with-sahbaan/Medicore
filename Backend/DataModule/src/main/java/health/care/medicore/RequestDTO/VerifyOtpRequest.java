@@ -9,4 +9,7 @@ public class VerifyOtpRequest {
 
     private String email;
     private String otp;
+    private String verificationType;
+    // for Forgot Password
+    private String password;
 }

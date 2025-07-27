@@ -122,5 +122,13 @@ public class DataBootstrapping implements CommandLineRunner {
             appConfigs.setValue(Constants.EMAIL_OTP_TEMPLATE);
             appConfigRepository.save(appConfigs);
         }
+
+        log.info("*** INSERTING FORGOT PASSWORD OTP TEMPLATE ***");
+        if (appConfigRepository.findByName(Constants.FORGOT_PASSWORD_OTP_TEMPLATE_NAME) == null){
+            AppConfigs appConfigs = new AppConfigs();
+            appConfigs.setName(Constants.FORGOT_PASSWORD_OTP_TEMPLATE_NAME);
+            appConfigs.setValue(Constants.FORGOT_PASSWORD_OTP_TEMPLATE);
+            appConfigRepository.save(appConfigs);
+        }
     }
 }

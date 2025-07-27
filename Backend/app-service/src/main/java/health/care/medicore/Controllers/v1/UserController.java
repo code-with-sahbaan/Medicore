@@ -1,5 +1,6 @@
 package health.care.medicore.Controllers.v1;
 
+import health.care.medicore.RequestDTO.ForgotPassword;
 import health.care.medicore.RequestDTO.SignupRequest;
 import health.care.medicore.RequestDTO.VerifyOtpRequest;
 import health.care.medicore.ResponseDTO.BaseResponse;
@@ -25,16 +26,23 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("v1/signup")
-    public ResponseEntity<BaseResponse> signup(@RequestBody SignupRequest signupRequest) throws Exception {
+    public ResponseEntity<BaseResponse<?>> signup(@RequestBody SignupRequest signupRequest) throws Exception {
         log.info("Executing signup in UserController");
-        BaseResponse response = userService.signup(signupRequest);
+        BaseResponse<?> response = userService.signup(signupRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("v1/verifyOtp")
-    public ResponseEntity<BaseResponse> verifyOtp(@RequestBody VerifyOtpRequest verifyOtpRequest) throws Exception {
+    public ResponseEntity<BaseResponse<?>> verifyOtp(@RequestBody VerifyOtpRequest verifyOtpRequest) throws Exception {
         log.info("Executing verifyOtp in UserController");
         userService.verifyOtp(verifyOtpRequest);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("v1/forgotPassword")
+    public ResponseEntity<BaseResponse<?>> forgotPassword(@RequestBody ForgotPassword forgotPassword) throws Exception {
+        log.info("Executing forgotPassword in UserController");
+        userService.forgotPassword(forgotPassword);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -9,7 +9,7 @@ import { ButtonModule } from 'primeng/button';
 import { Dialog } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { Listbox } from 'primeng/listbox';
-import { DashboardService } from '../../../service/patient/dashboard.service';
+import { DashboardService, Workout } from '../../../service/patient/dashboard.service';
 import { FormsModule } from '@angular/forms';
 import { DatePicker } from 'primeng/datepicker';
 import { FieldsetModule } from 'primeng/fieldset';
@@ -72,7 +72,7 @@ export class PatientDashboardComponent implements OnInit {
     const endMinutes = this.workoutEvent.end.getMinutes();
 
     // Preparing Object
-    const finalEvent = {
+    const finalEvent : Workout = {
       title: this.workoutEvent.title,
       start: new Date().setHours(startHours, startMinutes),
       end: new Date().setHours(endHours, endMinutes)

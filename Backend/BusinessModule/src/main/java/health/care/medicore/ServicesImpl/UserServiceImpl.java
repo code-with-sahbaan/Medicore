@@ -5,6 +5,7 @@ import health.care.medicore.Entities.Role;
 import health.care.medicore.Entities.Users;
 import health.care.medicore.Repositories.AppConfigRepository;
 import health.care.medicore.Repositories.UserRepository;
+import health.care.medicore.RequestDTO.ForgotPassword;
 import health.care.medicore.RequestDTO.SignupRequest;
 import health.care.medicore.RequestDTO.VerifyOtpRequest;
 import health.care.medicore.ResponseDTO.BaseResponse;
@@ -81,29 +82,42 @@ public class UserServiceImpl extends GenericServiceImpl<Users> implements UserDe
 
     @Override
     @Transactional
-    public BaseResponse signup(SignupRequest signupRequest) throws Exception {
+    public BaseResponse<?> signup(SignupRequest signupRequest) throws Exception {
         /*
         * Checking if user exists with this email
         * */
         if (userRepository.findByEmail(signupRequest.getEmail()).isPresent()){
             throw new IllegalArgumentException("User Already Exists with this Email");
         }
-        Users users = convertDtoToEntity(signupRequest);
-        users.setPassword(new BCryptPasswordEncoder().encode(signupRequest.getPassword()));
-        Role role = roleService.getByRole(signupRequest.getRole());
-        users.setRole(role);
-        Users savedUser = userRepository.save(users);
-        sendOTP(savedUser);
-        return new BaseResponse("Account Created Successfully", null);
+        try{
+            Users users = convertDtoToEntity(signupRequest);
+            users.setPassword(new BCryptPasswordEncoder().encode(signupRequest.getPassword()));
+            Role role = roleService.getByRole(signupRequest.getRole());
+            users.setRole(role);
+            Users savedUser = userRepository.save(users);
+            sendOTP(savedUser);
+            return new BaseResponse<>("Account Created Successfully", null);
+        } catch (Exception e) {
+            throw new Exception("failed to signup");
+        }
     }
 
     @Override
     public void verifyOtp(VerifyOtpRequest verifyOtpRequest) throws Exception {
         Users users = userRepository.findByEmail(verifyOtpRequest.getEmail()).get();
-        if (!users.getEmailOTP().equals(verifyOtpRequest.getOtp())){
-            throw new Exception("Verification failed due to incorrect OTP");
+        if (verifyOtpRequest.getVerificationType().equalsIgnoreCase("profileActivation")){
+            // Profile Verification
+            if (!users.getEmailOTP().equals(verifyOtpRequest.getOtp())){
+                throw new Exception("Verification failed due to incorrect OTP");
+            }
+            users.setIsActive(true);
+        }else{
+            // Password Reset
+            if (!users.getForgotPasswordOTP().equals(verifyOtpRequest.getOtp())){
+                throw new Exception("Verification failed due to incorrect OTP");
+            }
+            users.setPassword(new BCryptPasswordEncoder().encode(verifyOtpRequest.getPassword()));
         }
-        users.setIsActive(true);
         userRepository.save(users);
     }
 
@@ -113,20 +127,41 @@ public class UserServiceImpl extends GenericServiceImpl<Users> implements UserDe
         return getUserByEmail(email).get();
     }
 
+    @Override
+    public void forgotPassword(ForgotPassword forgotPassword) throws Exception {
+        try{
+            sendForgotPasswordOTP(getUserByEmail(forgotPassword.getEmail()).get());
+        } catch (Exception e) {
+            throw new Exception("failed to reset password");
+        }
+    }
+
     public void sendOTP(Users users) throws MessagingException, UnsupportedEncodingException {
         // Creating OTP
-        Random r = new Random(System.currentTimeMillis());
-        int RandomCode = (10000 + r.nextInt(20000));
-        String otp = Integer.toString(RandomCode);
+        String otp = Integer.toString(generateRandomNumber());
         users.setEmailOTP(otp);
         userRepository.save(users);
         // Sending Email
         /* GENERATING EMAIL */
         AppConfigs appConfigs = appConfigRepository.findByName(Constants.EMAIL_OTP_TEMPLATE_NAME);
+        sendEmail(users, appConfigs, "User Activation", otp);
+    }
+
+    private void sendForgotPasswordOTP(Users users) throws MessagingException, UnsupportedEncodingException {
+        // Creating OTP
+        String otp = Integer.toString(generateRandomNumber());
+        users.setForgotPasswordOTP(otp);
+        userRepository.save(users);
+        // Sending Email
+        /* GENERATING EMAIL */
+        AppConfigs appConfigs = appConfigRepository.findByName(Constants.FORGOT_PASSWORD_OTP_TEMPLATE_NAME);
+        sendEmail(users, appConfigs, "Reset Password", otp);
+    }
+
+    private void sendEmail(Users users, AppConfigs appConfigs, String subject, String randomCode) throws MessagingException, UnsupportedEncodingException {
         String fullName = users.getFullName();
         String toEmail = users.getEmail();
         String fromEmail = emailSender;
-        String subject = "User Activation";
         String content = appConfigs.getValue();
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
@@ -134,8 +169,13 @@ public class UserServiceImpl extends GenericServiceImpl<Users> implements UserDe
         mimeMessageHelper.setSubject(subject);
         mimeMessageHelper.setTo(toEmail);
         content = content.replace("[[name]]", fullName);
-        content = content.replace("[[code]]", Integer.toString(RandomCode));
+        content = content.replace("[[code]]", randomCode);
         mimeMessageHelper.setText(content, true);
         mailSender.send(mimeMessage);
+    }
+
+    private int generateRandomNumber() {
+        Random r = new Random(System.currentTimeMillis());
+        return (10000 + r.nextInt(20000));
     }
 }

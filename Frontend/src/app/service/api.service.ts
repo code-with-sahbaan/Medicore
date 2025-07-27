@@ -17,4 +17,8 @@ export class ApiService {
   verifyOtp(payload: any): Observable<any> {
     return this.http.post('/user/v1/verifyOtp', payload).pipe();
   }
+
+  forgotPassword(payload: any): Observable<any> {
+    return this.http.post('/user/v1/forgotPassword', payload).pipe();
+  }
 }

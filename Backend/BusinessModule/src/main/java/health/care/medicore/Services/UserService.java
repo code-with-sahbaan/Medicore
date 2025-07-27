@@ -2,6 +2,7 @@ package health.care.medicore.Services;
 
 
 import health.care.medicore.Entities.Users;
+import health.care.medicore.RequestDTO.ForgotPassword;
 import health.care.medicore.RequestDTO.SignupRequest;
 import health.care.medicore.RequestDTO.VerifyOtpRequest;
 import health.care.medicore.ResponseDTO.BaseResponse;
@@ -12,9 +13,11 @@ public interface UserService{
 
     Optional<Users> getUserByEmail(String email);
 
-    BaseResponse signup(SignupRequest signupRequest) throws Exception;
+    BaseResponse<?> signup(SignupRequest signupRequest) throws Exception;
 
     void verifyOtp(VerifyOtpRequest verifyOtpRequest) throws Exception;
 
     Users getCurrentUser();
+
+    void forgotPassword(ForgotPassword forgotPassword) throws Exception;
 }

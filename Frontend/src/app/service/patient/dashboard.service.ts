@@ -4,7 +4,7 @@ import { CalendarOptions } from '@fullcalendar/core/index.js';
 import timelinePlugin from '@fullcalendar/timeline';
 import { Observable } from 'rxjs';
 
-interface Workout {
+export interface Workout {
     title: string,
     start: number,
     end: number

@@ -25,12 +25,16 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Override
     public BaseResponse<Dashboard> getDashboard() throws Exception {
-        Users users = userService.getCurrentUser();
-        Dashboard dashboard = new Dashboard();
-        dashboard.setPatientAppointments(appointmentService.getTop1AppointmentsByPatientId(users.getUserId()));
-        dashboard.setCredits(users.getCredits());
-        dashboard.setTotalAppointments(appointmentService.totalNumberOfAppointmentsByPatientId(users.getUserId()));
-        dashboard.setPatientWorkouts(workoutService.getTodayWorkoutSchedule(users));
-        return new BaseResponse<>("Dashboard Data has been fetched successfully", dashboard);
+        try{
+            Users users = userService.getCurrentUser();
+            Dashboard dashboard = new Dashboard();
+            dashboard.setPatientAppointments(appointmentService.getTop1AppointmentsByPatientId(users.getUserId()));
+            dashboard.setCredits(users.getCredits());
+            dashboard.setTotalAppointments(appointmentService.totalNumberOfAppointmentsByPatientId(users.getUserId()));
+            dashboard.setPatientWorkouts(workoutService.getTodayWorkoutSchedule(users));
+            return new BaseResponse<>("Dashboard Data has been fetched successfully", dashboard);
+        }catch (Exception e){
+            throw new Exception("Failed to fetch Dashboard Data");
+        }
     }
 }

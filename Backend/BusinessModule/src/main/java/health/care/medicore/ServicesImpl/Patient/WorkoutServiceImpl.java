@@ -41,12 +41,16 @@ public class WorkoutServiceImpl extends GenericServiceImpl<Workout> implements W
 
     @Override
     public BaseResponse<PatientWorkout> addWorkout(AddWorkout workout) throws  Exception {
-        Workout newWorkout;
-        Users users = userService.getCurrentUser();
-        newWorkout = convertDtoToEntity(workout);
-        newWorkout.setWorkoutDate(LocalDate.now());
-        newWorkout.setUsers(users);
-        PatientWorkout patientWorkout =  convertEntityToDto(workoutRepository.save(newWorkout), PatientWorkout.class);
-        return new BaseResponse<PatientWorkout>("Workout Added Successfully", patientWorkout);
+        try{
+            Workout newWorkout;
+            Users users = userService.getCurrentUser();
+            newWorkout = convertDtoToEntity(workout);
+            newWorkout.setWorkoutDate(LocalDate.now());
+            newWorkout.setUsers(users);
+            PatientWorkout patientWorkout =  convertEntityToDto(workoutRepository.save(newWorkout), PatientWorkout.class);
+            return new BaseResponse<>("Workout Added Successfully", patientWorkout);
+        } catch (Exception e) {
+            throw new Exception("Failed to add workout");
+        }
     }
 }
