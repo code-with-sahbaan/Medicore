@@ -1,6 +1,10 @@
 package health.care.medicore.ServicesImpl;
 
+import health.care.medicore.RequestDTO.PageableRequest;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 public class GenericServiceImpl<E> {
     private final Class<E> entityClass;
@@ -27,5 +31,11 @@ public class GenericServiceImpl<E> {
         } catch (Exception e) {
             throw new RuntimeException("Failed to convert DTO to entity", e);
         }
+    }
+
+    public Pageable getPageable(PageableRequest pageableRequest) {
+        Sort.Direction sortDirection = pageableRequest.getOrder() == 1 ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(sortDirection, pageableRequest.getSort());
+        return PageRequest.of(pageableRequest.getPage(), pageableRequest.getSize(), sort);
     }
 }

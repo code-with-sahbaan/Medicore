@@ -6,9 +6,11 @@ import health.care.medicore.Entities.Users;
 import health.care.medicore.Repositories.AppConfigRepository;
 import health.care.medicore.Repositories.UserRepository;
 import health.care.medicore.RequestDTO.ForgotPassword;
+import health.care.medicore.RequestDTO.PageableRequest;
 import health.care.medicore.RequestDTO.SignupRequest;
 import health.care.medicore.RequestDTO.VerifyOtpRequest;
 import health.care.medicore.ResponseDTO.BaseResponse;
+import health.care.medicore.ResponseDTO.Patient.GetAllConsultants;
 import health.care.medicore.Services.RoleService;
 import health.care.medicore.Services.UserService;
 import health.care.medicore.Utils.Constants;
@@ -17,6 +19,10 @@ import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -28,10 +34,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class UserServiceImpl extends GenericServiceImpl<Users> implements UserDetailsService, UserService {
@@ -134,6 +137,17 @@ public class UserServiceImpl extends GenericServiceImpl<Users> implements UserDe
         } catch (Exception e) {
             throw new Exception("failed to reset password");
         }
+    }
+
+    @Override
+    public BaseResponse<Page<GetAllConsultants>> getUsersByDoctorRole(PageableRequest pageableRequest) throws Exception {
+        try{
+            Pageable pageable = getPageable(pageableRequest);
+            return new BaseResponse<>("Consultants fetched successfully", userRepository.getUsersByDoctorRole(roleService.getByRole(Constants.DOCTOR), pageable));
+        }catch (Exception e){
+            throw new Exception("Failed to fetch Consultants");
+        }
+
     }
 
     public void sendOTP(Users users) throws MessagingException, UnsupportedEncodingException {

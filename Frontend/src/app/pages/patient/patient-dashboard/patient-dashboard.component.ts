@@ -72,7 +72,7 @@ export class PatientDashboardComponent implements OnInit {
     const endMinutes = this.workoutEvent.end.getMinutes();
 
     // Preparing Object
-    const finalEvent : Workout = {
+    const finalEvent: Workout = {
       title: this.workoutEvent.title,
       start: new Date().setHours(startHours, startMinutes),
       end: new Date().setHours(endHours, endMinutes)
