@@ -6,6 +6,7 @@ import { PatientSideDrawerComponent } from './components/patient/patient-side-dr
 import { PatientDashboardComponent } from './pages/patient/patient-dashboard/patient-dashboard.component';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
+import { BookAppointmentComponent } from './pages/patient/book-appointment/book-appointment.component';
 
 export const routes: Routes = [
   {
@@ -48,7 +49,20 @@ export const routes: Routes = [
   {
     path: 'patient',
     component: PatientSideDrawerComponent,
-    children: [{ path: 'home', component: PatientDashboardComponent }],
+    children: [
+      {
+        path: 'home', component: PatientDashboardComponent, data: {
+          title: 'Home',
+        },
+      },
+      {
+        path: 'bookAppointment',
+        component: BookAppointmentComponent,
+        data: {
+          title: 'Book Your Appointment',
+        },
+      }
+    ],
   },
   // Default Fallback
   {

@@ -1,0 +1,39 @@
+<div>
+    <div id="header" class="pb-7 grid grid-nogutter justify-between">
+        <div class="col-12 md:col-6">
+            <h2 class="text-800 text-primary-900 text-4xl font-semibold">
+                Book Appointment
+            </h2>
+        </div>
+    </div>
+
+    <div class="card">
+        <p-table [value]="customers" [paginator]="true" [rows]="1" (sortFunction)="customSort($event)" [customSort]="true" [first]="first" [showCurrentPageReport]="true"
+            [tableStyle]="{ 'min-width': '50rem' }"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            (onPage)="pageChange($event)" [rowsPerPageOptions]="[1, 5]">
+            <ng-template #header>
+                <tr>
+                    <th pSortableColumn="name" style="width:25%">
+                        <div class="flex items-center gap-2">
+                            Name
+                            <p-sortIcon field="name" />
+                        </div>
+                    </th>
+                    <th style="width:25%">Country</th>
+                    <th style="width:25%">Company</th>
+                    <th style="width:25%">Action</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-customer>
+                <tr>
+                    <td>{{ customer.name }}</td>
+                    <td>{{ customer.country.name }}</td>
+                    <td>{{ customer.company }}</td>
+                    <td><p-button variant="text">Book Consultation</p-button></td>
+                </tr>
+            </ng-template>
+            <ng-template #paginatorright />
+        </p-table>
+    </div>
+</div>

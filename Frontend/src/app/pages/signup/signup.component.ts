@@ -39,7 +39,7 @@ import { AuthService } from '../../service/auth.service';
 })
 export class SignupComponent {
   singupForm: FormGroup;
-  roles: string[] = ['Owner', 'Doctor', 'Patient'];
+  roles: string[] = ['Doctor', 'Patient'];
 
   constructor(private fb: FormBuilder, private api: ApiService, private router: Router, private uiService: UiService, private authService : AuthService) {
     this.singupForm = fb.group({
