@@ -31,23 +31,16 @@ public class WorkoutServiceImpl extends GenericServiceImpl<Workout> implements W
 
     @Override
     public List<PatientWorkout> getTodayWorkoutSchedule(Users users) {
-        List<Workout> workouts = workoutRepository.findWorkoutByUsersAndWorkoutDate(users, LocalDate.now());
-        List<PatientWorkout> patientWorkouts = new ArrayList<>();
-        for (Workout workout : workouts) {
-            patientWorkouts.add(convertEntityToDto(workout, PatientWorkout.class));
-        }
-        return patientWorkouts;
+        return workoutRepository.getWorkoutForToday(users, LocalDate.now());
     }
 
     @Override
     public BaseResponse<PatientWorkout> addWorkout(AddWorkout workout) throws  Exception {
         try{
-            Workout newWorkout;
+            Workout newWorkout = new Workout(workout);
             Users users = userService.getCurrentUser();
-            newWorkout = convertDtoToEntity(workout);
-            newWorkout.setWorkoutDate(LocalDate.now());
             newWorkout.setUsers(users);
-            PatientWorkout patientWorkout =  convertEntityToDto(workoutRepository.save(newWorkout), PatientWorkout.class);
+            PatientWorkout patientWorkout = new PatientWorkout(workoutRepository.save(newWorkout));
             return new BaseResponse<>("Workout Added Successfully", patientWorkout);
         } catch (Exception e) {
             throw new Exception("Failed to add workout");

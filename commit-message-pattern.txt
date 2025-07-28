@@ -1,1 +1,0 @@
-Frontend: Reset password flow has been added. — Backend: API and method has been added to Reset Password.
