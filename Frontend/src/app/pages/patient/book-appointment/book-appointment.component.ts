@@ -7,10 +7,14 @@ import { TableModule } from 'primeng/table';
 import { BookAppointmentService, Pageable } from '../../../service/patient/bookAppointment.service';
 import { finalize } from 'rxjs';
 import { UiService } from '../../../service/ui.service';
+import { Dialog } from 'primeng/dialog';
+import { DatePicker } from 'primeng/datepicker';
+import { FormsModule } from '@angular/forms';
+import { SelectButtonModule } from 'primeng/selectbutton';
 
 @Component({
   selector: 'app-book-appointment',
-  imports: [InputTextModule, TableModule, CommonModule, ButtonModule],
+  imports: [InputTextModule, TableModule, CommonModule, ButtonModule, Dialog, DatePicker, FormsModule, SelectButtonModule],
   templateUrl: './book-appointment.component.html',
   styleUrl: './book-appointment.component.css'
 })
@@ -33,11 +37,45 @@ export class BookAppointmentComponent {
 
   isSorted: boolean = false;
 
+  visible: boolean = false;
+
+  appointmentDate: Date = new Date();
+
+  minDate: Date = new Date();
+
+  availableTimes: { label: string; value: string }[] = [];
+  appointmentTime: string | null = null;
+
+  loadAvailableTimes() {
+    const day = this.appointmentDate?.getDate();
+
+    if (day === 12) {
+      this.availableTimes = [
+        { label: '9:00 AM', value: '09:00' },
+        { label: '11:00 AM', value: '11:00' },
+      ];
+    } else {
+      this.availableTimes = [
+        { label: '10:00 AM', value: '10:00' },
+        { label: '1:00 PM', value: '13:00' },
+        { label: '3:00 PM', value: '15:00' },
+      ];
+    }
+
+    this.appointmentTime = null;
+  }
+
   pageable: Pageable = {
     page: this.first,
     size: this.size,
     order: this.order,
     sort: this.sort
+  }
+
+  isDisabled = (date: Date): boolean => {
+    const day = date.getDate();
+    // Disable days 11 to 14 of any month
+    return day > 10 && day < 15;
   }
 
   getAllActiveConsultants(event: any) {
