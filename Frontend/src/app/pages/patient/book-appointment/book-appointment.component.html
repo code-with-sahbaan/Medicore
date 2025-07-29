@@ -29,7 +29,11 @@
                 <tr>
                     <td>{{ consultants.fullName }}</td>
                     <td>{{ consultants.email }}</td>
-                    <td><p-button variant="text" (click)="this.visible = true;">Book Consultation</p-button></td>
+                    <td>
+                        <div class="w-4">
+                            <p-button variant="text" (click)="showDialog()">Book Consultation</p-button>
+                        </div>
+                    </td>
                 </tr>
             </ng-template>
             <ng-template #paginatorright />
@@ -40,16 +44,16 @@
     <p-dialog header="Book Your Appointment" [modal]="true" [(visible)]="visible"
         [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }">
         <div class="flex items-center gap-4 mb-4">
-            <p-datepicker (onSelect)="loadAvailableTimes()" size="large" [minDate]="minDate"
+            <p-datepicker (onSelect)="loadAvailableTimes()" size="large" [minDate]="minDate" [disabledDays]="[0,6]"
                 [(ngModel)]="appointmentDate" [inline]="true" />
             <!-- Show available time slots in chip/button style -->
             <p-selectButton [options]="availableTimes" [(ngModel)]="appointmentTime" optionLabel="label" [multiple]="false"
                 styleClass="time-chip-group">
             </p-selectButton>
         </div>
-        <div class="flex justify-between w-full gap-2 mb-4">
-            <p-button class="w-full" label="Cancel" severity="secondary" (click)="visible = false" />
-            <p-button class="w-full" label="Book Appointment" />
+        <div class="flex w-full gap-2 mb-4">
+            <p-button class="w-6" label="Cancel" severity="secondary" (click)="visible = false" />
+            <p-button class="w-6" label="Book Appointment" />
         </div>
     </p-dialog>
 </div>

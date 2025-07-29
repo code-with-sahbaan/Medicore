@@ -90,7 +90,7 @@
     </div>
     <div class="flex justify-between w-full gap-2 mb-4">
       <p-button class="w-full" label="Cancel" severity="secondary" (click)="visible = false" />
-      <p-button class="w-full" label="Add" (click)="addWorkout()" />
+      <p-button class="w-full" label="Add" [disabled]="workoutEvent.title.length == 0" (click)="addWorkout()" />
     </div>
     <p-listbox [options]="dashboardService.workoutSchedules" [group]="true" class="w-full md:w-56">
       <ng-template let-group #group>

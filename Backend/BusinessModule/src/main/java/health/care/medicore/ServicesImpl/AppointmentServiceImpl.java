@@ -10,7 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -27,7 +27,7 @@ public class AppointmentServiceImpl extends GenericServiceImpl<Appointments> imp
     @Override
     public List<PatientAppointment> getTop1AppointmentsByPatientId(long patientId) {
         Pageable pageable = PageRequest.of(0,1);
-        Page<PatientAppointment> patientAppointments = appointmentsRepository.getTop1AppointmentsByPatientId(patientId, LocalDateTime.now(), pageable);
+        Page<PatientAppointment> patientAppointments = appointmentsRepository.getTop1AppointmentsByPatientId(patientId, LocalDate.now(), pageable);
         return patientAppointments.getContent();
     }
 

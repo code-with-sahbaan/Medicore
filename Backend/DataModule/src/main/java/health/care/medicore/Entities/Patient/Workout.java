@@ -2,16 +2,14 @@ package health.care.medicore.Entities.Patient;
 
 import health.care.medicore.Entities.Users;
 import health.care.medicore.RequestDTO.Patient.AddWorkout;
-import health.care.medicore.ResponseDTO.Patient.PatientWorkout;
+import health.care.medicore.Utils.DateTimeUtil;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 @Table(name = "WORKOUT")
 @Entity
@@ -44,13 +42,7 @@ public class Workout {
     public Workout(AddWorkout workout) {
         this.title = workout.getTitle();
         this.workoutDate = LocalDate.now();
-        this.start = convertEpochMillitoLocalDateTime(workout.getStart());
-        this.end = convertEpochMillitoLocalDateTime(workout.getEnd());
-    }
-
-    private LocalDateTime convertEpochMillitoLocalDateTime(long epochMilli){
-        return Instant.ofEpochMilli(epochMilli)
-                .atZone(ZoneId.systemDefault())
-                .toLocalDateTime();
+        this.start = DateTimeUtil.convertEpochMillitoLocalDateTime(workout.getStart());
+        this.end = DateTimeUtil.convertEpochMillitoLocalDateTime(workout.getEnd());
     }
 }

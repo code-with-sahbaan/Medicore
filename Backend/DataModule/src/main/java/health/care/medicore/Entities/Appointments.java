@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Table(name = "APPOINTMENTS")
 @Entity
@@ -17,8 +18,14 @@ public class Appointments {
     @Column(name = "APPOINTMENT_ID")
     private long appointmentId;
 
-    @Column(name = "APPOINTMENT_DATE_TIME")
-    private LocalDateTime appointmentDateTime;
+    @Column(name = "APPOINTMENT_DATE")
+    private LocalDate appointmentDate;
+
+    @Column(name = "APPOINTMENT_START_TIME")
+    private LocalTime appointmentStartTime;
+
+    @Column(name = "APPOINTMENT_END_TIME")
+    private LocalTime appointmentEndTime;
 
     @Column(name = "APPOINTMENT_DURATION")
     private long appointmentDuration;
@@ -30,4 +37,10 @@ public class Appointments {
     @ManyToOne
     @JoinColumn(name = "patientId")
     private Users patient;
+
+    @PrePersist
+    protected void updateAppointmentEndTime()
+    {
+        this.appointmentEndTime = appointmentStartTime.plusMinutes(appointmentDuration);
+    }
 }

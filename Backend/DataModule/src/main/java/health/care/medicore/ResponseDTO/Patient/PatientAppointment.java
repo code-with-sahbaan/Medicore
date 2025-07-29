@@ -22,10 +22,10 @@ public class PatientAppointment {
 
     private String doctorName;
 
-    public PatientAppointment(long appointmentId, LocalDateTime appointmentDateTime, long appointmentDuration, String doctorName) {
+    public PatientAppointment(long appointmentId, LocalDate appointmentDate, LocalTime appointmentTime, long appointmentDuration, String doctorName) {
         this.appointmentId = appointmentId;
-        this.appointmentDate = appointmentDateTime.toLocalDate();
-        this.appointmentTime = appointmentDateTime.toLocalTime();
+        this.appointmentDate = appointmentDate;
+        this.appointmentTime = appointmentTime;
         this.appointmentDuration = appointmentDuration;
         this.doctorName = doctorName;
     }

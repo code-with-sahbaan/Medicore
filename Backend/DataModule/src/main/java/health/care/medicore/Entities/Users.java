@@ -1,13 +1,11 @@
 package health.care.medicore.Entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import health.care.medicore.Entities.Patient.Workout;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
+import java.time.LocalTime;
 import java.util.List;
 
 @Table(name = "USERS")
@@ -45,6 +43,12 @@ public class Users {
 
     @Column(name = "CREDITS")
     private long credits;
+
+    @Column(name = "WORKING_HOUR_START")
+    private LocalTime workingHourStart;
+
+    @Column(name = "WORKING_HOUR_END")
+    private LocalTime workingHourEnd;
 
     // Appointments where this user is the doctor
     @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
