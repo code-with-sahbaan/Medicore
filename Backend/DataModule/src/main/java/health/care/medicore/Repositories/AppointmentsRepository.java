@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 public interface AppointmentsRepository extends JpaRepository<Appointments, Long> {
 
@@ -16,9 +17,9 @@ public interface AppointmentsRepository extends JpaRepository<Appointments, Long
             "(ap.appointmentId, ap.appointmentDate, ap.appointmentStartTime, ap.appointmentDuration, ap.doctor.fullName) " +
             "FROM Appointments ap " +
             "WHERE ap.patient.userId = :patientId " +
-            "AND ap.appointmentDate >= :now " +
-            "ORDER BY ap.appointmentStartTime ASC")
-    Page<PatientAppointment> getTop1AppointmentsByPatientId(@Param("patientId") long patientId, @Param("now") LocalDate now, Pageable pageable);
+            "AND ((ap.appointmentDate = :currentDate AND ap.appointmentStartTime >= :currentTime) OR ap.appointmentDate > :currentDate) " +
+            "ORDER BY ap.appointmentDate ASC, ap.appointmentStartTime ASC")
+    Page<PatientAppointment> getTop1AppointmentsByPatientId(@Param("patientId") long patientId, @Param("currentDate") LocalDate currentDate, @Param("currentTime")LocalTime currentTime, Pageable pageable);
 
     @Query("SELECT COUNT(ap.appointmentId) FROM Appointments ap WHERE ap.patient.userId = :patientId")
     long totalNumberOfAppointmentsByPatientId(@Param("patientId") long patientId);
