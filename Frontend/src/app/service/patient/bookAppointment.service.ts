@@ -9,6 +9,11 @@ export interface Pageable{
     order: number
 }
 
+export interface GetSlots{
+    doctorEmail: string,
+    appointmentDate: Date
+}
+
 @Injectable({ providedIn: 'root' })
 export class BookAppointmentService {
 
@@ -16,6 +21,10 @@ export class BookAppointmentService {
 
     getAllConsultants(payload: Pageable): Observable<any> {
         return this.http.post('/user/v1/getAllConsultants', payload).pipe();
+    }
+
+    getAvailableSlots(payload: GetSlots): Observable<any> {
+        return this.http.post('/appointment/v1/getAvailableSlots', payload).pipe();
     }
 
 }

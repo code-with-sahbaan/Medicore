@@ -5,6 +5,7 @@ import health.care.medicore.Entities.Users;
 import health.care.medicore.Repositories.AppointmentsRepository;
 import health.care.medicore.RequestDTO.Patient.GetAvailableTimeSlots;
 import health.care.medicore.ResponseDTO.BaseResponse;
+import health.care.medicore.ResponseDTO.Patient.GetAllTimeSlots;
 import health.care.medicore.ResponseDTO.Patient.PatientAppointment;
 import health.care.medicore.Services.AppointmentService;
 import health.care.medicore.Services.UserService;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -47,17 +49,19 @@ public class AppointmentServiceImpl extends GenericServiceImpl<Appointments> imp
     }
 
     @Override
-    public BaseResponse<List<LocalTime>> getAvailableTimeSlots(GetAvailableTimeSlots getAvailableTimeSlots) throws Exception {
+    public BaseResponse<List<GetAllTimeSlots>> getAvailableTimeSlots(GetAvailableTimeSlots getAvailableTimeSlots) throws Exception {
         try{
             Users doctor = userService.getUserByEmail(getAvailableTimeSlots.getDoctorEmail()).get();
             Set<LocalTime> bookedSlots = appointmentsRepository.getAppointmentTimesByDoctorId(doctor, getAvailableTimeSlots.getAppointmentDate());
             LocalTime startTime = doctor.getWorkingHourStart();
             LocalTime endTime = doctor.getWorkingHourEnd();
-            List<LocalTime> availableSlots = new ArrayList<>();
+            List<GetAllTimeSlots> availableSlots = new ArrayList<>();
 
             while (!startTime.plusMinutes(30).isAfter(endTime)) {
                 if (!bookedSlots.contains(startTime)) {
-                    availableSlots.add(startTime);
+                    availableSlots.add(
+                            new GetAllTimeSlots(startTime, startTime)
+                    );
                 }
                 startTime = startTime.plusMinutes(30);
             }

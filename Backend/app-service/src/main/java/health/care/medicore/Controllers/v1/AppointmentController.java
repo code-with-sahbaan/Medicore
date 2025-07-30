@@ -2,6 +2,7 @@ package health.care.medicore.Controllers.v1;
 
 import health.care.medicore.RequestDTO.Patient.GetAvailableTimeSlots;
 import health.care.medicore.ResponseDTO.BaseResponse;
+import health.care.medicore.ResponseDTO.Patient.GetAllTimeSlots;
 import health.care.medicore.Services.AppointmentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +22,9 @@ public class AppointmentController {
     private AppointmentService appointmentService;
 
     @PostMapping("v1/getAvailableSlots")
-    public ResponseEntity<BaseResponse<List<LocalTime>>> getAvailableSlots(@RequestBody GetAvailableTimeSlots getAvailableTimeSlots) throws Exception {
+    public ResponseEntity<BaseResponse<List<GetAllTimeSlots>>> getAvailableSlots(@RequestBody GetAvailableTimeSlots getAvailableTimeSlots) throws Exception {
         log.info("Executing getAvailableSlots in AppointmentController");
-        BaseResponse<List<LocalTime>> response = appointmentService.getAvailableTimeSlots(getAvailableTimeSlots);
+        BaseResponse<List<GetAllTimeSlots>> response = appointmentService.getAvailableTimeSlots(getAvailableTimeSlots);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

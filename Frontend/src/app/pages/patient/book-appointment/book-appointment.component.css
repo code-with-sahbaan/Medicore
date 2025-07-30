@@ -1,7 +1,22 @@
-:host ::ng-deep .p-select{
+:host ::ng-deep .p-select {
     width: auto !important;
 }
 
-:host ::ng-deep .p-button{
+:host ::ng-deep .p-button {
     width: 100% !important;
+}
+
+:host ::ng-deep .p-selectbutton {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+:host ::ng-deep .p-togglebutton{
+    background: none;
+    color: var(--primary-color);
+    background-color: rgba(59, 130, 246, 0.1);
+    border: none;
+    padding: 9px;
+    border-radius: var(--input-radius);
 }

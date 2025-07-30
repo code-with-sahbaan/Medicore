@@ -4,7 +4,7 @@ import { SortEvent } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
-import { BookAppointmentService, Pageable } from '../../../service/patient/bookAppointment.service';
+import { BookAppointmentService, GetSlots, Pageable } from '../../../service/patient/bookAppointment.service';
 import { finalize } from 'rxjs';
 import { UiService } from '../../../service/ui.service';
 import { Dialog } from 'primeng/dialog';
@@ -44,22 +44,20 @@ export class BookAppointmentComponent {
   minDate: Date = new Date();
 
   availableTimes: { label: string; value: string }[] = [];
+  
   appointmentTime: string | null = null;
+
+  doctorEmail: string = "";
 
   loadAvailableTimes() {
     const day = this.appointmentDate?.getDate();
-
-    this.availableTimes = [
-      { label: '10:00 AM', value: '10:00' },
-      { label: '1:00 PM', value: '13:00' },
-      { label: '3:00 PM', value: '15:00' },
-    ];
-
+    this.getAllAvailableSlots(this.appointmentDate);
     this.appointmentTime = null;
   }
 
-  showDialog() {
+  showDialog(email: string) {
     this.visible = true;
+    this.doctorEmail = email;
     this.loadAvailableTimes();
   }
 
@@ -97,6 +95,35 @@ export class BookAppointmentComponent {
           this.rows = page.totalElements;
           this.first = page.number;
           this.size = page.size;
+        },
+        error: (error) => {
+          // Showing error toast
+          this.uiService.showError(error.error.responseMessage);
+        },
+      });
+  }
+
+  getAllAvailableSlots(date: Date) {
+
+    const getSlot: GetSlots = {
+      doctorEmail: this.doctorEmail,
+      appointmentDate: date
+    }
+    // this.uiService.showSpinner();
+    this.bookAppointmentService
+      .getAvailableSlots(getSlot)
+      .pipe(
+        finalize(() => {
+          // Hiding Loader after API call completion
+          // this.uiService.hideSpinner();
+        })
+      )
+      .subscribe({
+        next: (response: any) => {
+          // Showing success Toast
+          this.uiService.showSuccess(response.responseMessage);
+          const data = response.responseBody;
+          this.availableTimes = [...data];
         },
         error: (error) => {
           // Showing error toast
