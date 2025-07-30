@@ -43,17 +43,19 @@
     <!-- Book Appointment Dialog -->
     <p-dialog header="Book Your Appointment" [modal]="true" [(visible)]="visible"
         [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }">
+        <p class="text-primary-600">In order book appointment for more than 30 min, book multiple slots in series.</p>
+        <br>
         <div class="flex items-center gap-4 mb-4">
             <p-datepicker (onSelect)="loadAvailableTimes()" size="large" [minDate]="minDate" [disabledDays]="[0,6]"
                 [(ngModel)]="appointmentDate" [inline]="true" />
             <!-- Show available time slots in chip/button style -->
-            <p-selectButton [options]="availableTimes" [multiple]="true" [(ngModel)]="appointmentTime" optionLabel="label" [multiple]="false"
+            <p-selectButton [options]="availableTimes" [multiple]="true" [(ngModel)]="appointmentTime" optionLabel="label"
                 styleClass="time-chip-group">
             </p-selectButton>
         </div>
         <div class="flex w-full gap-2 mb-4">
             <p-button class="w-6" label="Cancel" severity="secondary" (click)="visible = false" />
-            <p-button class="w-6" label="Book Appointment" />
+            <p-button class="w-6" label="Book Appointment" (click)="bookAppointment()"/>
         </div>
     </p-dialog>
 </div>

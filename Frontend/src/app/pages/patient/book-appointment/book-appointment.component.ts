@@ -45,20 +45,24 @@ export class BookAppointmentComponent {
 
   availableTimes: { label: string; value: string }[] = [];
   
-  appointmentTime: string | null = null;
+  appointmentTime: { label: string; value: string }[] = [];
 
   doctorEmail: string = "";
 
   loadAvailableTimes() {
     const day = this.appointmentDate?.getDate();
     this.getAllAvailableSlots(this.appointmentDate);
-    this.appointmentTime = null;
+    this.appointmentTime = [];
   }
 
   showDialog(email: string) {
     this.visible = true;
     this.doctorEmail = email;
     this.loadAvailableTimes();
+  }
+
+  bookAppointment(){
+    console.log(this.appointmentTime);
   }
 
   pageable: Pageable = {
@@ -103,11 +107,15 @@ export class BookAppointmentComponent {
       });
   }
 
+  getCurrentTimeZoneDate(date: Date){
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes() - date.getTimezoneOffset());
+  }
+
   getAllAvailableSlots(date: Date) {
 
     const getSlot: GetSlots = {
       doctorEmail: this.doctorEmail,
-      appointmentDate: date
+      appointmentDate: this.getCurrentTimeZoneDate(date)
     }
     // this.uiService.showSpinner();
     this.bookAppointmentService
