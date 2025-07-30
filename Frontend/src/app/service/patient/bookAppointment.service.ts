@@ -15,7 +15,7 @@ export class BookAppointmentService {
     constructor(private http: HttpClient) { }
 
     getAllConsultants(payload: Pageable): Observable<any> {
-        return this.http.post('/patient/v1/getAllConsultants', payload).pipe();
+        return this.http.post('/user/v1/getAllConsultants', payload).pipe();
     }
 
 }

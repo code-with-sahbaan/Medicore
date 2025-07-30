@@ -1,12 +1,15 @@
 package health.care.medicore.Controllers.v1;
 
 import health.care.medicore.RequestDTO.ForgotPassword;
+import health.care.medicore.RequestDTO.PageableRequest;
 import health.care.medicore.RequestDTO.SignupRequest;
 import health.care.medicore.RequestDTO.VerifyOtpRequest;
 import health.care.medicore.ResponseDTO.BaseResponse;
+import health.care.medicore.ResponseDTO.Patient.GetAllConsultants;
 import health.care.medicore.Services.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,5 +47,15 @@ public class UserController {
         log.info("Executing forgotPassword in UserController");
         userService.forgotPassword(forgotPassword);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+    // Above this line all the APIs are non-tokenized. Always add non-tokenized APIs before this line
+
+    @PostMapping("v1/getAllConsultants")
+    public ResponseEntity<BaseResponse<Page<GetAllConsultants>>> getAllConsultants(@RequestBody PageableRequest pageableRequest) throws Exception {
+        log.info("Executing getAllConsultants in UserController");
+        BaseResponse<Page<GetAllConsultants>> response = userService.getUsersByDoctorRole(pageableRequest);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

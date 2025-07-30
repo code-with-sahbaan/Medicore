@@ -27,8 +27,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 import java.util.Set;
 
-import static health.care.medicore.Utils.Constants.OWNER;
-import static health.care.medicore.Utils.Constants.PATIENT;
+import static health.care.medicore.Utils.Constants.*;
 
 @Configuration
 @EnableWebSecurity
@@ -118,6 +117,10 @@ public class WebConfiguration {
         http.authorizeHttpRequests(authorize -> {
             // Allowing specific pattern urls for patient role users
             authorize.requestMatchers("/patient/**").hasAuthority(PATIENT);
+            // Allowing specific pattern urls for patient and doctor role users
+            authorize.requestMatchers("/appointment/**").hasAnyAuthority(PATIENT, DOCTOR);
+            // Allowing specific pattern urls for patient and doctor role users
+            authorize.requestMatchers("/user/**").hasAnyAuthority(PATIENT, DOCTOR);
             // Allowing all urls access for business owner
             authorize.requestMatchers("/**").hasAuthority(OWNER);
         });
