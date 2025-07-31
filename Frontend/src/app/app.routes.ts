@@ -7,6 +7,7 @@ import { PatientDashboardComponent } from './pages/patient/patient-dashboard/pat
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 import { BookAppointmentComponent } from './pages/patient/book-appointment/book-appointment.component';
+import { MyAppointmentsComponent } from './pages/patient/my-appointments/my-appointments.component';
 
 export const routes: Routes = [
   {
@@ -60,6 +61,13 @@ export const routes: Routes = [
         component: BookAppointmentComponent,
         data: {
           title: 'Book Your Appointment',
+        },
+      },
+      {
+        path: 'appointments',
+        component: MyAppointmentsComponent,
+        data: {
+          title: 'My Appointments',
         },
       }
     ],

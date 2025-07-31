@@ -1,0 +1,5 @@
+:host ::ng-deep .fc-button{
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 10px;
+}

@@ -17,10 +17,9 @@ export class CalendarComponent {
     initialView: 'dayGridMonth',
     plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
     headerToolbar: {
-      // left: 'prev,next today',
-      // center: 'title',
-      right: 'timeGridWeek',
-      // right: 'dayGridMonth,timeGridWeek,timeGridDay',
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,timeGridDay',
     },
     events: [
       { title: 'Appointment', date: '2025-07-20' },
