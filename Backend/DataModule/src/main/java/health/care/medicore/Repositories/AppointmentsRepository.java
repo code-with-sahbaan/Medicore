@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Optional;
 import java.util.Set;
 
 public interface AppointmentsRepository extends JpaRepository<Appointments, Long> {
@@ -28,4 +29,7 @@ public interface AppointmentsRepository extends JpaRepository<Appointments, Long
 
     @Query("SELECT ap.appointmentStartTime FROM Appointments ap WHERE ap.doctor = :doctor AND ap.appointmentDate = :today")
     Set<LocalTime> getAppointmentTimesByDoctorId(@Param("doctor") Users doctor, @Param("today") LocalDate today);
+
+    @Query("SELECT ap.appointmentId FROM Appointments ap WHERE ap.appointmentDate = :today AND ap.doctor = :doctor AND ap.appointmentStartTime = :time")
+    Optional<Long> isAppointmentAvailable(@Param("today") LocalDate today, @Param("doctor") Users doctor, @Param("time") LocalTime time);
 }

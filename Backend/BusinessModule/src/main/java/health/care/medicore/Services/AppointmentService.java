@@ -1,5 +1,6 @@
 package health.care.medicore.Services;
 
+import health.care.medicore.RequestDTO.Patient.BookAppointment;
 import health.care.medicore.RequestDTO.Patient.GetAvailableTimeSlots;
 import health.care.medicore.ResponseDTO.BaseResponse;
 import health.care.medicore.ResponseDTO.Patient.GetAllTimeSlots;
@@ -15,4 +16,6 @@ public interface AppointmentService {
     long totalNumberOfAppointmentsByPatientId(long patientId);
 
     BaseResponse<List<GetAllTimeSlots>> getAvailableTimeSlots(GetAvailableTimeSlots getAvailableTimeSlots) throws Exception;
+
+    void bookAppointment(BookAppointment  bookAppointment) throws Exception;
 }

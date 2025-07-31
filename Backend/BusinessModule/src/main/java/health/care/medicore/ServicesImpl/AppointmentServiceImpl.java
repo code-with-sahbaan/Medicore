@@ -3,12 +3,14 @@ package health.care.medicore.ServicesImpl;
 import health.care.medicore.Entities.Appointments;
 import health.care.medicore.Entities.Users;
 import health.care.medicore.Repositories.AppointmentsRepository;
+import health.care.medicore.RequestDTO.Patient.BookAppointment;
 import health.care.medicore.RequestDTO.Patient.GetAvailableTimeSlots;
 import health.care.medicore.ResponseDTO.BaseResponse;
 import health.care.medicore.ResponseDTO.Patient.GetAllTimeSlots;
 import health.care.medicore.ResponseDTO.Patient.PatientAppointment;
 import health.care.medicore.Services.AppointmentService;
 import health.care.medicore.Services.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -68,6 +70,30 @@ public class AppointmentServiceImpl extends GenericServiceImpl<Appointments> imp
             return new BaseResponse<>("Time Slots Fetched", availableSlots);
         }catch (Exception e){
             throw new  Exception("Failed to get Available Time Slots");
+        }
+    }
+
+    @Override
+    @Transactional
+    public void bookAppointment(BookAppointment bookAppointment) throws Exception {
+        try{
+            Users patient = userService.getCurrentUser();
+            Users doctor = userService.getUserByEmail(bookAppointment.getDoctorEmail()).get();
+            for (int i = 0; i < bookAppointment.getAppointmentTimes().size(); i++) {
+                // Checking if appointment is already booked
+                if (appointmentsRepository.isAppointmentAvailable(bookAppointment.getAppointmentDate(), doctor, bookAppointment.getAppointmentTimes().get(i).getValue()).isPresent()){
+                    throw new Exception("Appointment does not available on " + bookAppointment.getAppointmentTimes().get(i).getValue() + ". Please try different time");
+                }
+                Appointments appointments = new  Appointments();
+                appointments.setAppointmentDate(bookAppointment.getAppointmentDate());
+                appointments.setAppointmentDuration(30);
+                appointments.setAppointmentStartTime(bookAppointment.getAppointmentTimes().get(i).getValue());
+                appointments.setDoctor(doctor);
+                appointments.setPatient(patient);
+                appointmentsRepository.save(appointments);
+            }
+        }catch (Exception e){
+            throw new  Exception("Failed to book Appointment");
         }
     }
 }

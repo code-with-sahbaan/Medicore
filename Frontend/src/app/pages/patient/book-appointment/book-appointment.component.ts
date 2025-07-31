@@ -4,7 +4,7 @@ import { SortEvent } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
-import { BookAppointmentService, GetSlots, Pageable } from '../../../service/patient/bookAppointment.service';
+import { BookAppointment, BookAppointmentService, GetSlots, Pageable } from '../../../service/patient/bookAppointment.service';
 import { finalize } from 'rxjs';
 import { UiService } from '../../../service/ui.service';
 import { Dialog } from 'primeng/dialog';
@@ -41,28 +41,54 @@ export class BookAppointmentComponent {
 
   appointmentDate: Date = new Date();
 
-  minDate: Date = new Date();
+  minDate: Date = this.getCurrentTimeZoneDate(new Date());
 
   availableTimes: { label: string; value: string }[] = [];
-  
+
   appointmentTime: { label: string; value: string }[] = [];
 
   doctorEmail: string = "";
 
+  selectedConsultant: any = {};
+
   loadAvailableTimes() {
-    const day = this.appointmentDate?.getDate();
     this.getAllAvailableSlots(this.appointmentDate);
     this.appointmentTime = [];
   }
 
-  showDialog(email: string) {
+  showDialog(consultant: any) {
     this.visible = true;
-    this.doctorEmail = email;
+    this.selectedConsultant = consultant;
+    this.doctorEmail = consultant.email;
     this.loadAvailableTimes();
   }
 
-  bookAppointment(){
-    console.log(this.appointmentTime);
+  bookAppointment() {
+    const payload: BookAppointment = {
+      doctorEmail: this.doctorEmail,
+      appointmentDate: this.appointmentDate,
+      appointmentTimes: this.appointmentTime
+    }
+    this.uiService.showSpinner();
+    this.bookAppointmentService
+      .bookAppointment(payload)
+      .pipe(
+        finalize(() => {
+          // Hiding Loader after API call completion
+          this.uiService.hideSpinner();
+        })
+      )
+      .subscribe({
+        next: () => {
+          // Showing success Toast
+          this.uiService.showSuccess("Appointment(s) Booked Successfully!");
+          this.visible = false;
+        },
+        error: (error) => {
+          // Showing error toast
+          this.uiService.showError(error.error.responseMessage);
+        },
+      });
   }
 
   pageable: Pageable = {
@@ -107,7 +133,7 @@ export class BookAppointmentComponent {
       });
   }
 
-  getCurrentTimeZoneDate(date: Date){
+  getCurrentTimeZoneDate(date: Date) {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes() - date.getTimezoneOffset());
   }
 
@@ -117,19 +143,10 @@ export class BookAppointmentComponent {
       doctorEmail: this.doctorEmail,
       appointmentDate: this.getCurrentTimeZoneDate(date)
     }
-    // this.uiService.showSpinner();
     this.bookAppointmentService
       .getAvailableSlots(getSlot)
-      .pipe(
-        finalize(() => {
-          // Hiding Loader after API call completion
-          // this.uiService.hideSpinner();
-        })
-      )
       .subscribe({
         next: (response: any) => {
-          // Showing success Toast
-          this.uiService.showSuccess(response.responseMessage);
           const data = response.responseBody;
           this.availableTimes = [...data];
         },

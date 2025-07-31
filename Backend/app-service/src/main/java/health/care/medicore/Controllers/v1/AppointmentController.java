@@ -1,5 +1,6 @@
 package health.care.medicore.Controllers.v1;
 
+import health.care.medicore.RequestDTO.Patient.BookAppointment;
 import health.care.medicore.RequestDTO.Patient.GetAvailableTimeSlots;
 import health.care.medicore.ResponseDTO.BaseResponse;
 import health.care.medicore.ResponseDTO.Patient.GetAllTimeSlots;
@@ -26,6 +27,13 @@ public class AppointmentController {
         log.info("Executing getAvailableSlots in AppointmentController");
         BaseResponse<List<GetAllTimeSlots>> response = appointmentService.getAvailableTimeSlots(getAvailableTimeSlots);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping("v1/bookAppointment")
+    public ResponseEntity<?> bookAppointment(@RequestBody BookAppointment bookAppointment) throws Exception {
+        log.info("Executing bookAppointment in AppointmentController");
+        appointmentService.bookAppointment(bookAppointment);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

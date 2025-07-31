@@ -14,6 +14,12 @@ export interface GetSlots{
     appointmentDate: Date
 }
 
+export interface BookAppointment{
+    doctorEmail: string,
+    appointmentDate: Date,
+    appointmentTimes: { label: string; value: string }[]
+}
+
 @Injectable({ providedIn: 'root' })
 export class BookAppointmentService {
 
@@ -25,6 +31,10 @@ export class BookAppointmentService {
 
     getAvailableSlots(payload: GetSlots): Observable<any> {
         return this.http.post('/appointment/v1/getAvailableSlots', payload).pipe();
+    }
+
+    bookAppointment(payload: BookAppointment): Observable<any> {
+        return this.http.post('/appointment/v1/bookAppointment', payload).pipe();
     }
 
 }
