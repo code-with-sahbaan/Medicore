@@ -46,7 +46,7 @@
         <p class="text-primary-600">In order book appointment for more than 30 min, book multiple slots in series.</p>
         <br>
         <div class="grid justify-center items-center gap-4 mb-4">
-            <p-datepicker (onSelect)="loadAvailableTimes()" size="large" [minDate]="minDate" [disabledDays]="[0,6]"
+            <p-datepicker (onSelect)="loadAvailableTimes()" size="large" [minDate]="minDate"
                 [(ngModel)]="appointmentDate" [inline]="true" />
             <!-- Show available time slots in chip/button style -->
             <p-selectButton [options]="availableTimes" [multiple]="true" [(ngModel)]="appointmentTime" optionLabel="label"

@@ -39,9 +39,9 @@ export class BookAppointmentComponent {
 
   visible: boolean = false;
 
-  appointmentDate: Date = new Date();
-
   minDate: Date = this.getCurrentTimeZoneDate(new Date());
+
+  appointmentDate: Date = this.minDate;
 
   availableTimes: { label: string; value: string }[] = [];
 

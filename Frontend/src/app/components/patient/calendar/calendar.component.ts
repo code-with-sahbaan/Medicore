@@ -22,9 +22,18 @@ export class CalendarComponent {
       right: 'dayGridMonth,timeGridWeek,timeGridDay',
     },
     events: [
-      { title: 'Appointment', date: '2025-07-20' },
-      { title: 'Consultation', date: '2025-07-21' }
+      {
+        title: 'My Event',
+        start: '2025-08-02T14:30:00',
+        allDay: false
+      },
     ],
+    eventTimeFormat: {
+      hour: 'numeric',
+      minute: '2-digit',
+      second: undefined,
+      meridiem: true
+    },
     selectable: true,
     editable: true,
   };
