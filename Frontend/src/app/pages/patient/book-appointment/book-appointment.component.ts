@@ -66,7 +66,7 @@ export class BookAppointmentComponent {
   bookAppointment() {
     const payload: BookAppointment = {
       doctorEmail: this.doctorEmail,
-      appointmentDate: this.appointmentDate,
+      appointmentDate: this.getCurrentTimeZoneDate(this.appointmentDate),
       appointmentTimes: this.appointmentTime
     }
     this.uiService.showSpinner();

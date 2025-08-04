@@ -36,4 +36,10 @@ public class AppointmentController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping("v1/getAllAppointments")
+    public ResponseEntity<?> getAllAppointments() throws Exception {
+        log.info("Executing getAllAppointments in AppointmentController");
+        return new ResponseEntity<>(appointmentService.getAllAppointments(), HttpStatus.OK);
+    }
+
 }

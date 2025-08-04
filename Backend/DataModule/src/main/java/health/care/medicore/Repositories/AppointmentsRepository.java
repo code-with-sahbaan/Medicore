@@ -2,15 +2,18 @@ package health.care.medicore.Repositories;
 
 import health.care.medicore.Entities.Appointments;
 import health.care.medicore.Entities.Users;
+import health.care.medicore.ResponseDTO.Patient.MyAppointments;
 import health.care.medicore.ResponseDTO.Patient.PatientAppointment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -32,4 +35,12 @@ public interface AppointmentsRepository extends JpaRepository<Appointments, Long
 
     @Query("SELECT ap.appointmentId FROM Appointments ap WHERE ap.appointmentDate = :today AND ap.doctor = :doctor AND ap.appointmentStartTime = :time")
     Optional<Long> isAppointmentAvailable(@Param("today") LocalDate today, @Param("doctor") Users doctor, @Param("time") LocalTime time);
+
+    @Query("SELECT NEW health.care.medicore.ResponseDTO.Patient.MyAppointments(" +
+            "ap.appointmentId, " +
+            "ap.doctor.fullName, " +
+            "ap.appointmentDate, " +
+            "ap.appointmentStartTime, " +
+            "ap.appointmentEndTime) FROM Appointments ap WHERE ap.patient = :user")
+    List<MyAppointments> getAllAppointments(@RequestParam("user") Users user);
 }

@@ -7,6 +7,7 @@ import health.care.medicore.RequestDTO.Patient.BookAppointment;
 import health.care.medicore.RequestDTO.Patient.GetAvailableTimeSlots;
 import health.care.medicore.ResponseDTO.BaseResponse;
 import health.care.medicore.ResponseDTO.Patient.GetAllTimeSlots;
+import health.care.medicore.ResponseDTO.Patient.MyAppointments;
 import health.care.medicore.ResponseDTO.Patient.PatientAppointment;
 import health.care.medicore.Services.AppointmentService;
 import health.care.medicore.Services.UserService;
@@ -19,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -93,7 +93,18 @@ public class AppointmentServiceImpl extends GenericServiceImpl<Appointments> imp
                 appointmentsRepository.save(appointments);
             }
         }catch (Exception e){
-            throw new  Exception("Failed to book Appointment");
+            throw new  Exception("Failed to book Appointment. May be the appointment is already booked on that time slot. Try refreshing page!");
+        }
+    }
+
+    @Override
+    public BaseResponse<List<MyAppointments>> getAllAppointments() throws Exception {
+        try{
+            Users user = userService.getCurrentUser();
+            List<MyAppointments> myAppointments = appointmentsRepository.getAllAppointments(user);
+            return new BaseResponse<>("Appointments Fetched", myAppointments);
+        }catch (Exception e){
+            throw new  Exception("Failed to get All Appointments");
         }
     }
 }

@@ -4,9 +4,9 @@ import health.care.medicore.RequestDTO.Patient.BookAppointment;
 import health.care.medicore.RequestDTO.Patient.GetAvailableTimeSlots;
 import health.care.medicore.ResponseDTO.BaseResponse;
 import health.care.medicore.ResponseDTO.Patient.GetAllTimeSlots;
+import health.care.medicore.ResponseDTO.Patient.MyAppointments;
 import health.care.medicore.ResponseDTO.Patient.PatientAppointment;
 
-import java.time.LocalTime;
 import java.util.List;
 
 public interface AppointmentService {
@@ -18,4 +18,6 @@ public interface AppointmentService {
     BaseResponse<List<GetAllTimeSlots>> getAvailableTimeSlots(GetAvailableTimeSlots getAvailableTimeSlots) throws Exception;
 
     void bookAppointment(BookAppointment  bookAppointment) throws Exception;
+
+    BaseResponse<List<MyAppointments>> getAllAppointments() throws Exception;
 }
