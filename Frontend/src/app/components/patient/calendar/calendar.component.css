@@ -3,3 +3,7 @@
     border: none;
     border-radius: 10px;
 }
+
+:host ::ng-deep .p-button{
+    width: 100% !important;
+}

@@ -4,18 +4,33 @@ import { FullCalendarModule } from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { CalendarOptions } from '@fullcalendar/core';
-import { CalendarService } from '../../../service/calendar.service';
+import { CalendarOptions, EventClickArg, EventSourceInput } from '@fullcalendar/core';
+import { CalendarService, Event } from '../../../service/calendar.service';
 import { UiService } from '../../../service/ui.service';
 import { finalize } from 'rxjs';
+import { DialogModule } from 'primeng/dialog';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { Timeline, TimelineModule } from 'primeng/timeline';
 
 @Component({
   selector: 'app-calendar',
-  imports: [CommonModule, FullCalendarModule],
+  imports: [CommonModule, FullCalendarModule, DialogModule, FormsModule, ReactiveFormsModule, ButtonModule, Timeline],
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.css'
 })
 export class CalendarComponent implements OnInit {
+
+  visible: boolean = false;
+
+  timeline: any[] = [];
+
+  event: Event = {
+    title: '',
+    start: new Date(),
+    end: new Date(),
+    allDay: false
+  }
 
   calendarOptions: CalendarOptions = {}
 
@@ -38,8 +53,32 @@ export class CalendarComponent implements OnInit {
         minute: '2-digit',
         second: undefined,
         meridiem: true
-      }
+      },
+      eventClick: this.viewEventDetail.bind(this)
     }
+  }
+
+  viewEventDetail(arg: EventClickArg) {
+    const fetchedEvent = arg.event;
+    this.event = {
+      title: fetchedEvent.title,
+      start: fetchedEvent.start ?? new Date(),
+      end: fetchedEvent.end ?? new Date(),
+      allDay: fetchedEvent.allDay,
+    }
+
+    this.timeline = [
+      { date: this.event.start },
+      { date: this.event.end }
+    ]
+    this.visible = true;
+  }
+
+  formatDate(dateInput: Date): string {
+    const date = new Date(dateInput);
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    return `${date.getDay()}-${date.getMonth()}-${date.getFullYear()} ${hours}:${minutes}`;
   }
 
   getAllAppointments() {

@@ -44,9 +44,9 @@ export class PatientSideDrawerComponent {
       route: '/patient/aiChecker',
     },
     {
-      icon: 'pi pi-history',
-      label: 'My Health Records',
-      route: '/patient/healthRecords',
+      icon: 'pi pi-dollar',
+      label: 'Manage Credits',
+      route: '/patient/manageCredits',
     },
     {
       icon: 'pi pi-question-circle',
