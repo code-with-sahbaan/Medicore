@@ -2,15 +2,19 @@
 <!-- Event Detail Dialog -->
 <p-dialog header="{{event.title}}" [modal]="true" [(visible)]="visible"
     [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }">
-    <div class="grid gap-4 mt-4">
+    <div class="grid flex-column gap-4 mt-4">
         <p-timeline [value]="timeline" align="alternate">
+            <ng-template #opposite let-timeline>
+                <small class="text-surface-500 dark:text-surface-400">{{ timeline.state }}</small>
+            </ng-template>
             <ng-template #content let-timeline>
                 {{ timeline.date }}
             </ng-template>
         </p-timeline>
+        <small class="text-primary-600 text-1xl font-light">If your appointment time stars and <span class="font-semibold">Join the Conversation button</span> is still disabled then try refreshing the page.</small>
         <div class="flex justify-between w-full gap-2 mb-4">
-            <p-button class="w-full" label="Cancel Appointment" severity="danger" (click)="visible = false" />
-            <p-button class="w-full" label="Join the Conversation" [disabled]="event.title.length == 0" />
+            <p-button class="w-full" label="Cancel Appointment" severity="danger" (click)="cancelAppointment(event)" />
+            <p-button class="w-full" label="Join the Conversation" [disabled]="joinConversation"/>
         </div>
     </div>
 </p-dialog>

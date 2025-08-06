@@ -16,14 +16,18 @@ public class MyAppointments {
     private LocalDateTime start;
     private LocalDateTime end;
     private Boolean allDay;
-    private String constraint; // this is for putting doctor ID in constraint parameter in event object on frontend.
+    private Boolean isAppointmentTimeOccurred; // this is for enabling or disabling Join Conversation button on UI
 
-    public MyAppointments(long appointmentId, String doctorName, LocalDate date, LocalTime start, LocalTime end, long doctorId) {
+    public MyAppointments(long appointmentId, String doctorName, LocalDate date, LocalTime start, LocalTime end) {
         this.appointmentId = appointmentId;
         this.title = "Appointment with " + doctorName;
         this.start = LocalDateTime.of(date, start);
         this.end = LocalDateTime.of(date, end);
         this.allDay = false;
-        this.constraint = String.valueOf(doctorId);
+        this.isAppointmentTimeOccurred = checkAppointmentTimeOccurred(LocalDateTime.of(date, start), LocalDateTime.of(date, end));
+    }
+
+    private Boolean checkAppointmentTimeOccurred(LocalDateTime start, LocalDateTime end) {
+        return (LocalDateTime.now().isEqual(start) || LocalDateTime.now().isAfter(start)) && LocalDateTime.now().isBefore(end);
     }
 }

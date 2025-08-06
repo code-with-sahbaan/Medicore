@@ -25,6 +25,8 @@ export class CalendarComponent implements OnInit {
 
   timeline: any[] = [];
 
+  joinConversation : boolean = true;
+
   event: Event = {
     title: '',
     start: new Date(),
@@ -67,11 +69,21 @@ export class CalendarComponent implements OnInit {
       allDay: fetchedEvent.allDay,
     }
 
+    const extraProps = fetchedEvent.extendedProps;
+    this.joinConversation = !(extraProps['isAppointmentTimeOccurred']);
     this.timeline = [
-      { date: this.event.start },
-      { date: this.event.end }
+      { date: this.event.start, state: "Appointment Start" },
+      { date: this.event.end, state: "Appointment End" }
     ]
     this.visible = true;
+  }
+
+  cancelAppointment(data: Event){
+    if(confirm('Are you sure you wanna cancel appointment')){
+      this.visible = false;
+    }else{
+      this.visible = true;
+    }
   }
 
   formatDate(dateInput: Date): string {

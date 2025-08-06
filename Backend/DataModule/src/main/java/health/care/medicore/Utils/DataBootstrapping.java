@@ -111,7 +111,7 @@ public class DataBootstrapping implements CommandLineRunner {
             // Inserting Appointment
 
             Appointments appointments = new Appointments();
-            appointments.setAppointmentStartTime(LocalTime.of(13,0));
+            appointments.setAppointmentStartTime(LocalTime.of(12,50));
             appointments.setPatient(saved1);
             appointments.setDoctor(saved2);
             appointments.setAppointmentDuration(30);
