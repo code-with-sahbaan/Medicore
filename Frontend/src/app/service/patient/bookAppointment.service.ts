@@ -20,6 +20,10 @@ export interface BookAppointment{
     appointmentTimes: { label: string; value: string }[]
 }
 
+export interface CancelAppointment{
+    appointmentId: number
+}
+
 @Injectable({ providedIn: 'root' })
 export class BookAppointmentService {
 
@@ -36,5 +40,10 @@ export class BookAppointmentService {
     bookAppointment(payload: BookAppointment): Observable<any> {
         return this.http.post('/appointment/v1/bookAppointment', payload).pipe();
     }
+
+    cancelAppointment(payload: CancelAppointment): Observable<any> {
+        return this.http.post('/appointment/v1/cancelAppointment', payload).pipe();
+    }
+    
 
 }

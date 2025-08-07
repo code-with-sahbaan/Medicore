@@ -1,6 +1,7 @@
 package health.care.medicore.Services;
 
 import health.care.medicore.RequestDTO.Patient.BookAppointment;
+import health.care.medicore.RequestDTO.Patient.CancelAppointment;
 import health.care.medicore.RequestDTO.Patient.GetAvailableTimeSlots;
 import health.care.medicore.ResponseDTO.BaseResponse;
 import health.care.medicore.ResponseDTO.Patient.GetAllTimeSlots;
@@ -18,6 +19,8 @@ public interface AppointmentService {
     BaseResponse<List<GetAllTimeSlots>> getAvailableTimeSlots(GetAvailableTimeSlots getAvailableTimeSlots) throws Exception;
 
     void bookAppointment(BookAppointment  bookAppointment) throws Exception;
+
+    BaseResponse<List<MyAppointments>> cancelAppointment(CancelAppointment cancelAppointment) throws Exception;
 
     BaseResponse<List<MyAppointments>> getAllAppointments() throws Exception;
 }

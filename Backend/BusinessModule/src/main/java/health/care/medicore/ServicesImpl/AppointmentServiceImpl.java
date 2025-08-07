@@ -4,6 +4,7 @@ import health.care.medicore.Entities.Appointments;
 import health.care.medicore.Entities.Users;
 import health.care.medicore.Repositories.AppointmentsRepository;
 import health.care.medicore.RequestDTO.Patient.BookAppointment;
+import health.care.medicore.RequestDTO.Patient.CancelAppointment;
 import health.care.medicore.RequestDTO.Patient.GetAvailableTimeSlots;
 import health.care.medicore.ResponseDTO.BaseResponse;
 import health.care.medicore.ResponseDTO.Patient.GetAllTimeSlots;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -106,5 +108,18 @@ public class AppointmentServiceImpl extends GenericServiceImpl<Appointments> imp
         }catch (Exception e){
             throw new  Exception("Failed to get All Appointments");
         }
+    }
+
+    @Override
+    public BaseResponse<List<MyAppointments>> cancelAppointment(CancelAppointment cancelAppointment) throws Exception {
+        Appointments appointments = appointmentsRepository.findById(cancelAppointment.getAppointmentId()).get();
+        boolean isCancellable = LocalDate.now().isBefore(appointments.getAppointmentDate()) && LocalDateTime.now().plusHours(24).isBefore(LocalDateTime.of(appointments.getAppointmentDate(), appointments.getAppointmentStartTime()));
+        if (!isCancellable) {
+            throw new Exception("Appointment cannot be cancelled as either it is passed or within 24 hours");
+        }
+        appointmentsRepository.delete(appointments);
+        BaseResponse<List<MyAppointments>> listBaseResponse = getAllAppointments();
+        listBaseResponse.setResponseMessage("Appointment Cancelled Successfully");
+        return listBaseResponse;
     }
 }

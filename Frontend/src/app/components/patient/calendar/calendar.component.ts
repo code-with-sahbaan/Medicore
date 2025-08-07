@@ -12,6 +12,7 @@ import { DialogModule } from 'primeng/dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { Timeline, TimelineModule } from 'primeng/timeline';
+import { BookAppointmentService } from '../../../service/patient/bookAppointment.service';
 
 @Component({
   selector: 'app-calendar',
@@ -25,7 +26,9 @@ export class CalendarComponent implements OnInit {
 
   timeline: any[] = [];
 
-  joinConversation : boolean = true;
+  joinConversation: boolean = true;
+
+  selectedAppointmentId: number = 0;
 
   event: Event = {
     title: '',
@@ -40,7 +43,7 @@ export class CalendarComponent implements OnInit {
     setTimeout(() => this.getAllAppointments(), 0);
   }
 
-  constructor(public calendarService: CalendarService, public uiService: UiService) {
+  constructor(public calendarService: CalendarService, public uiService: UiService, public bookAppointmentService: BookAppointmentService) {
     this.calendarOptions = {
       initialView: 'dayGridMonth',
       plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
@@ -68,9 +71,9 @@ export class CalendarComponent implements OnInit {
       end: fetchedEvent.end ?? new Date(),
       allDay: fetchedEvent.allDay,
     }
-
     const extraProps = fetchedEvent.extendedProps;
     this.joinConversation = !(extraProps['isAppointmentTimeOccurred']);
+    this.selectedAppointmentId = extraProps['appointmentId'];
     this.timeline = [
       { date: this.event.start, state: "Appointment Start" },
       { date: this.event.end, state: "Appointment End" }
@@ -78,10 +81,11 @@ export class CalendarComponent implements OnInit {
     this.visible = true;
   }
 
-  cancelAppointment(data: Event){
-    if(confirm('Are you sure you wanna cancel appointment')){
+  cancelAppointment(data: Event) {
+    if (confirm('Are you sure you wanna cancel appointment')) {
       this.visible = false;
-    }else{
+      this.cancelAppointmentAPI()
+    } else {
       this.visible = true;
     }
   }
@@ -103,6 +107,40 @@ export class CalendarComponent implements OnInit {
      */
     this.calendarService
       .getAllAppointments()
+      .pipe(
+        finalize(() => {
+          // Hiding Loader after API call completion
+          this.uiService.hideSpinner();
+        })
+      )
+      .subscribe({
+        next: (response) => {
+          // Showing success Toast
+          this.uiService.showSuccess(response.responseMessage);
+          const data = response.responseBody;
+          this.calendarOptions.events = [...data]
+        },
+        error: (error) => {
+          // Showing error toast
+          this.uiService.showError(error.error.responseMessage);
+        },
+      });
+  }
+
+  cancelAppointmentAPI() {
+
+    const payload = {
+      appointmentId: this.selectedAppointmentId
+    }
+    /**
+     * Showing Loader
+     */
+    this.uiService.showSpinner();
+    /**
+     * Calling API
+     */
+    this.bookAppointmentService
+      .cancelAppointment(payload)
       .pipe(
         finalize(() => {
           // Hiding Loader after API call completion

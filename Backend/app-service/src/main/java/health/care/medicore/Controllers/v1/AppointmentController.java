@@ -1,9 +1,11 @@
 package health.care.medicore.Controllers.v1;
 
 import health.care.medicore.RequestDTO.Patient.BookAppointment;
+import health.care.medicore.RequestDTO.Patient.CancelAppointment;
 import health.care.medicore.RequestDTO.Patient.GetAvailableTimeSlots;
 import health.care.medicore.ResponseDTO.BaseResponse;
 import health.care.medicore.ResponseDTO.Patient.GetAllTimeSlots;
+import health.care.medicore.ResponseDTO.Patient.MyAppointments;
 import health.care.medicore.Services.AppointmentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +42,13 @@ public class AppointmentController {
     public ResponseEntity<?> getAllAppointments() throws Exception {
         log.info("Executing getAllAppointments in AppointmentController");
         return new ResponseEntity<>(appointmentService.getAllAppointments(), HttpStatus.OK);
+    }
+
+    @PostMapping("v1/cancelAppointment")
+    public ResponseEntity<?> cancelAppointment(@RequestBody CancelAppointment cancelAppointment) throws Exception {
+        log.info("Executing cancelAppointment in AppointmentController");
+        BaseResponse<List<MyAppointments>> listBaseResponse = appointmentService.cancelAppointment(cancelAppointment);
+        return new ResponseEntity<>(listBaseResponse, HttpStatus.OK);
     }
 
 }
