@@ -111,6 +111,8 @@ public class WebConfiguration {
             authorize.requestMatchers("/user/v1/forgotPassword/**").permitAll();
             authorize.requestMatchers("/user/v1/logout/**").permitAll();
             authorize.requestMatchers("/user/v1/verifyOtp/**").permitAll();
+            // Allowing Web Socket URL
+            authorize.requestMatchers("/ws/**").permitAll();
         });
 
         // permitting urls with role-based access

@@ -9,6 +9,7 @@ import { ResetPasswordComponent } from './pages/reset-password/reset-password.co
 import { BookAppointmentComponent } from './pages/patient/book-appointment/book-appointment.component';
 import { MyAppointmentsComponent } from './pages/patient/my-appointments/my-appointments.component';
 import { AiBotComponent } from './pages/patient/ai-bot/ai-bot.component';
+import { AppointmentConversationComponent } from './pages/appointment-conversation/appointment-conversation.component';
 
 export const routes: Routes = [
   {
@@ -44,6 +45,13 @@ export const routes: Routes = [
     component: ResetPasswordComponent,
     data: {
       title: 'Reset Password',
+    },
+  },
+  {
+    path: 'appointmentConversation',
+    component: AppointmentConversationComponent,
+    data: {
+      title: 'Appointment Conversation',
     },
   },
   // Patients Dashboard Menu

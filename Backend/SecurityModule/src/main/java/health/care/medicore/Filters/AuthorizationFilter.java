@@ -59,6 +59,10 @@ public class AuthorizationFilter extends OncePerRequestFilter {
         } else {
             // or if it is tokenized url then checking the url in header and checking it.
             String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+            if (authorizationHeader == null){
+                // allowing this for Web socket signal
+                authorizationHeader = request.getParameter("token");
+            }
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
                 try {
                     String token = authorizationHeader.substring("Bearer ".length());
