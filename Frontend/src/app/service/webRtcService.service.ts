@@ -19,7 +19,7 @@ export class WebRtcService {
         ]
     };
 
-    async init(token: string, roomId: string, onRemoteStream: (s: MediaStream) => void) {
+    async init(roomId: string, onRemoteStream: (s: MediaStream) => void) {
         this.roomId = roomId;
         this.pc = new RTCPeerConnection(this.rtcConfig);
 
@@ -50,7 +50,7 @@ export class WebRtcService {
                     await this.pc.setRemoteDescription({ type: 'offer', sdp: data.sdp });
                     const answer = await this.pc.createAnswer();
                     await this.pc.setLocalDescription(answer);
-                    this.send({ type: 'answer', roomId, sdp: answer.sdp });
+                    this.send({ type: 'answer', roomId: roomId, sdp: answer.sdp });
 
                     // process buffered candidates
                     this.pendingCandidates.forEach(c => this.pc.addIceCandidate(c));

@@ -14,10 +14,9 @@ export class AppointmentConversationComponent {
   constructor(private webRtc: WebRtcService) { }
 
   async ngOnInit() {
-    const token = '<JWT_FROM_LOGIN>'; // Get from your AuthService
     const roomId = 'room123';
 
-    await this.webRtc.init(token, roomId, (remoteStream) => {
+    await this.webRtc.init(roomId, (remoteStream) => {
       this.remoteRef.nativeElement.srcObject = remoteStream;
     });
 
