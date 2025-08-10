@@ -6,10 +6,12 @@ import { getJWTtoken } from '../core/auth.utils';
 export class WebRtcService {
 
     private pc!: RTCPeerConnection;
-    private localStream!: MediaStream;
+    public localStream!: MediaStream;
     private ws!: WebSocket;
     private roomId!: string;
     private pendingCandidates: RTCIceCandidateInit[] = [];
+    public isVideo: boolean = true;
+    public isAudio: boolean = true;
 
     // Replace with your TURN/STUN servers
     private rtcConfig: RTCConfiguration = {
@@ -36,7 +38,7 @@ export class WebRtcService {
         };
 
         // get local media
-        this.localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+        this.localStream = await navigator.mediaDevices.getUserMedia({ audio: this.isAudio, video: this.isVideo });
         // add tracks
         this.localStream.getTracks().forEach(track => this.pc.addTrack(track, this.localStream));
 

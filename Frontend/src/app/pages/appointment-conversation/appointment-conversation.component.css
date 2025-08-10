@@ -1,8 +1,9 @@
 .local-video, .remote-video {
   width: 100%;
-  height: auto;
+  height: 100%;
   background: #000;
-  
+  border-radius: 40px;
+  object-fit: cover;
   /* Mirror effect */
   transform: scaleX(-1);
 }
