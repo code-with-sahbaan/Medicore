@@ -13,6 +13,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { Timeline, TimelineModule } from 'primeng/timeline';
 import { BookAppointmentService } from '../../../service/patient/bookAppointment.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-calendar',
@@ -43,7 +44,7 @@ export class CalendarComponent implements OnInit {
     setTimeout(() => this.getAllAppointments(), 0);
   }
 
-  constructor(public calendarService: CalendarService, public uiService: UiService, public bookAppointmentService: BookAppointmentService) {
+  constructor(public calendarService: CalendarService, public uiService: UiService, public bookAppointmentService: BookAppointmentService, public router: Router) {
     this.calendarOptions = {
       initialView: 'dayGridMonth',
       plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
@@ -61,6 +62,11 @@ export class CalendarComponent implements OnInit {
       },
       eventClick: this.viewEventDetail.bind(this)
     }
+  }
+
+  joinMeeting(){
+    this.calendarService.roomId = this.selectedAppointmentId.toString();
+    this.router.navigate(['appointmentConversation']);
   }
 
   viewEventDetail(arg: EventClickArg) {

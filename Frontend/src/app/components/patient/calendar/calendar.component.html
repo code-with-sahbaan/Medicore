@@ -14,7 +14,7 @@
         <small class="text-primary-600 text-1xl font-light">If your appointment time stars and <span class="font-semibold">Join the Conversation button</span> is still disabled then try refreshing the page.</small>
         <div class="flex justify-between w-full gap-2 mb-4">
             <p-button class="w-full" label="Cancel Appointment" severity="danger" (click)="cancelAppointment(event)" />
-            <p-button class="w-full" label="Join the Conversation" [disabled]="joinConversation"/>
+            <p-button class="w-full" label="Join the Conversation" [disabled]="joinConversation" (click)="joinMeeting()"/>
         </div>
     </div>
 </p-dialog>

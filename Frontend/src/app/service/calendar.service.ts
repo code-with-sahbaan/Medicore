@@ -16,6 +16,8 @@ export class CalendarService {
 
     public events: Event[] = [];
 
+    public roomId: string = "";
+
     getAllAppointments(): Observable<any> {
         return this.http.get('/appointment/v1/getAllAppointments').pipe();
     }

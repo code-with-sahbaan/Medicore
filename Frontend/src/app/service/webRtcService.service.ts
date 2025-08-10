@@ -31,7 +31,7 @@ export class WebRtcService {
         // send ICE candidates to signaling server
         this.pc.onicecandidate = (evt) => {
             if (evt.candidate) {
-                this.send({ type: 'ice', roomId, candidate: evt.candidate });
+                this.send({ type: 'ice', rid: roomId, candidate: evt.candidate });
             }
         };
 
@@ -42,7 +42,7 @@ export class WebRtcService {
 
         // connect signaling WebSocket (token as query param)
         this.ws = new WebSocket(`http://localhost:5000/ws/signal?token=Bearer ${getJWTtoken()}`);
-        this.ws.onopen = () => this.send({ type: 'join', roomId });
+        this.ws.onopen = () => this.send({ type: 'join', rid: roomId });
         this.ws.onmessage = async (msg) => {
             const data = JSON.parse(msg.data);
             switch (data.type) {
@@ -50,7 +50,7 @@ export class WebRtcService {
                     await this.pc.setRemoteDescription({ type: 'offer', sdp: data.sdp });
                     const answer = await this.pc.createAnswer();
                     await this.pc.setLocalDescription(answer);
-                    this.send({ type: 'answer', roomId: roomId, sdp: answer.sdp });
+                    this.send({ type: 'answer', rid: roomId, sdp: answer.sdp });
 
                     // process buffered candidates
                     this.pendingCandidates.forEach(c => this.pc.addIceCandidate(c));

@@ -1,13 +1,23 @@
-<div class="call-container">
-  <!-- Local video -->
-  <video #localVideo autoplay playsinline muted class="local-video"></video>
+<div class="h-screen grid grid-nogutter flex-column p-30">
+  <h2 class="text-800 text-primary-900 text-4xl font-semibold">
+    Dashboard
+  </h2>
+  <div class="grid grid-nogutter justify-between pt-15 pb-15">
+    <div class="col-9">
+      Heelo
+    </div>
+    <div class="col-3 grid grid-nogutter flex-column gap-5">
+      <!-- Local video -->
+      <video #localVideo autoplay playsinline muted class="local-video"></video>
 
-  <!-- Remote video -->
-  <video #remoteVideo autoplay playsinline class="remote-video"></video>
+      <!-- Remote video -->
+      <video #remoteVideo autoplay playsinline class="remote-video"></video>
 
-  <!-- Call controls -->
-  <div class="controls">
-    <button (click)="startCall()">Start Call</button>
-    <button (click)="hangup()">Hang Up</button>
+      <!-- Call controls -->
+      <div class="grid grid-nogutter flex-column gap-5">
+        <p-button severity="primary" [disabled]="isCallJoined" (click)="startCall()">Join Call</p-button>
+        <p-button severity="danger" (click)="hangup()">Hang Up</p-button>
+      </div>
+    </div>
   </div>
 </div>

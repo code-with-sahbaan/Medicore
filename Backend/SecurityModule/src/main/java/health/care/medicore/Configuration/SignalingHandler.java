@@ -28,23 +28,18 @@ public class SignalingHandler extends TextWebSocketHandler {
 
         switch (type) {
             case "join" -> {
-                String room = node.get("roomId").asText();
+                String room = node.get("rid").asText();
                 rooms.computeIfAbsent(room, k -> ConcurrentHashMap.newKeySet()).add(session);
                 // Optionally respond with current participants count
             }
             case "leave" -> {
-                String room = node.get("roomId").asText();
+                String room = node.get("rid").asText();
                 leaveRoom(session, room);
             }
             case "offer", "answer", "ice" -> {
                 // forward to the other participant(s) in same room
-                String roomId = null;
-                if (node.has("roomId")) {
-                    roomId = node.get("roomId").asText();
-                } else if (node.has("rid")) {
-                    roomId = node.get("rid").asText();
-                }
-                for (WebSocketSession s : rooms.getOrDefault(roomId, Set.of())) {
+                String room = node.get("rid").asText();
+                for (WebSocketSession s : rooms.getOrDefault(room, Set.of())) {
                     if (!s.equals(session) && s.isOpen()) {
                         s.sendMessage(message);
                     }

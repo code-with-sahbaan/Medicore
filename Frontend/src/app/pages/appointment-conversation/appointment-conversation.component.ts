@@ -1,9 +1,11 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { WebRtcService } from '../../service/webRtcService.service';
+import { CalendarService } from '../../service/calendar.service';
+import { Button, ButtonModule } from "primeng/button";
 
 @Component({
   selector: 'app-appointment-conversation',
-  imports: [],
+  imports: [ButtonModule],
   templateUrl: './appointment-conversation.component.html',
   styleUrl: './appointment-conversation.component.css'
 })
@@ -11,10 +13,15 @@ export class AppointmentConversationComponent {
   @ViewChild('localVideo', { static: true }) localRef!: ElementRef<HTMLVideoElement>;
   @ViewChild('remoteVideo', { static: true }) remoteRef!: ElementRef<HTMLVideoElement>;
 
-  constructor(private webRtc: WebRtcService) { }
+  isCallJoined: boolean = false;
+
+  constructor(private webRtc: WebRtcService, private calendarService: CalendarService) { }
 
   async ngOnInit() {
-    const roomId = 'room123';
+    if(!this.calendarService.roomId) {
+      history.back();
+    }
+    const roomId = this.calendarService.roomId;
 
     await this.webRtc.init(roomId, (remoteStream) => {
       this.remoteRef.nativeElement.srcObject = remoteStream;
@@ -26,9 +33,11 @@ export class AppointmentConversationComponent {
 
   async startCall() {
     await this.webRtc.call();
+    this.isCallJoined = true;
   }
 
   hangup() {
     this.webRtc.hangup();
+    history.back();
   }
 }
