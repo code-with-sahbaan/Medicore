@@ -7,3 +7,27 @@
   /* Mirror effect */
   transform: scaleX(-1);
 }
+
+:host ::ng-deep .p-editor-toolbar{
+  border-radius: 20px;
+  margin-bottom: 20px;
+  padding: 20px;
+}
+
+:host ::ng-deep .ql-snow.ql-toolbar button, .ql-snow .ql-toolbar button{
+  padding-inline: 0;
+}
+
+:host ::ng-deep .p-editor-content{
+  border-radius: 20px;
+  border: none;
+  background-color: aliceblue;
+}
+
+:host ::ng-deep .ql-editor{
+  border-radius: 20px;
+  border: none;
+  background-color: aliceblue;
+  padding: 40px;
+  font-size: 18px;
+}

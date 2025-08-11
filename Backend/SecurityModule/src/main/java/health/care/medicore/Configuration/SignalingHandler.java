@@ -36,7 +36,7 @@ public class SignalingHandler extends TextWebSocketHandler {
                 String room = node.get("rid").asText();
                 leaveRoom(session, room);
             }
-            case "offer", "answer", "ice" -> {
+            case "offer", "answer", "ice", "prescription" -> {
                 // forward to the other participant(s) in same room
                 String room = node.get("rid").asText();
                 for (WebSocketSession s : rooms.getOrDefault(room, Set.of())) {

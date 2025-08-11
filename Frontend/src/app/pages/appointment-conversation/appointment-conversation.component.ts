@@ -3,10 +3,12 @@ import { WebRtcService } from '../../service/webRtcService.service';
 import { CalendarService } from '../../service/calendar.service';
 import { Button, ButtonModule } from "primeng/button";
 import { NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Editor, EditorTextChangeEvent } from 'primeng/editor';
 
 @Component({
   selector: 'app-appointment-conversation',
-  imports: [ButtonModule, NgIf],
+  imports: [ButtonModule, NgIf, FormsModule, Editor],
   templateUrl: './appointment-conversation.component.html',
   styleUrl: './appointment-conversation.component.css'
 })
@@ -19,19 +21,23 @@ export class AppointmentConversationComponent {
   videoText: string = 'Stop Video';
   audioText: string = 'Mute';
 
-  constructor(private webRtc: WebRtcService, private calendarService: CalendarService) { }
+  text: string = '';
+
+  constructor(public webRtc: WebRtcService, private calendarService: CalendarService) { }
 
   ngOnDestroy() {
     this.webRtc.hangup();
   }
 
+  roomId: string = "";
+
   async ngOnInit() {
     if (!this.calendarService.roomId) {
       history.back();
     }
-    const roomId = this.calendarService.roomId;
+    this.roomId = this.calendarService.roomId;
 
-    await this.webRtc.init(roomId, (remoteStream) => {
+    await this.webRtc.init(this.roomId, (remoteStream) => {
       this.remoteRef.nativeElement.srcObject = remoteStream;
     });
 
@@ -42,6 +48,11 @@ export class AppointmentConversationComponent {
   async startCall() {
     await this.webRtc.call();
     this.isCallJoined = true;
+  }
+
+  textChange(e: EditorTextChangeEvent) {
+    console.log(e);
+    this.webRtc.send({ type: 'prescription', rid: this.roomId, message: e.htmlValue });
   }
 
   async updateVideo() {

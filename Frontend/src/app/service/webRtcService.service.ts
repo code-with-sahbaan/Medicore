@@ -12,6 +12,7 @@ export class WebRtcService {
     private pendingCandidates: RTCIceCandidateInit[] = [];
     public isVideo: boolean = true;
     public isAudio: boolean = true;
+    public prescription: string = "";
 
     // Replace with your TURN/STUN servers
     private rtcConfig: RTCConfiguration = {
@@ -76,11 +77,13 @@ export class WebRtcService {
                         }
                     }
                     break;
+                case 'prescription':
+                    this.prescription = data.message;    
             }
         };
     }
 
-    private send(obj: any) {
+    public send(obj: any) {
         if (this.ws?.readyState === WebSocket.OPEN) {
             this.ws.send(JSON.stringify(obj));
         }
