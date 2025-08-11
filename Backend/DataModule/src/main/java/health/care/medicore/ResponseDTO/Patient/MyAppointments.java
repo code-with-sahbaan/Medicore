@@ -24,10 +24,15 @@ public class MyAppointments {
         this.start = LocalDateTime.of(date, start);
         this.end = LocalDateTime.of(date, end);
         this.allDay = false;
-        this.isAppointmentTimeOccurred = checkAppointmentTimeOccurred(LocalDateTime.of(date, start), LocalDateTime.of(date, end));
+        this.isAppointmentTimeOccurred = checkAppointmentTimeOccurred(start, end, date);
     }
 
-    private Boolean checkAppointmentTimeOccurred(LocalDateTime start, LocalDateTime end) {
-        return (LocalDateTime.now().isEqual(start) || LocalDateTime.now().isAfter(start)) && LocalDateTime.now().isBefore(end);
+    private Boolean checkAppointmentTimeOccurred(LocalTime start, LocalTime end, LocalDate date) {
+        if (start.isAfter(end)) {
+            date = date.plusDays(1);
+        }
+        LocalDateTime startTime =  LocalDateTime.of(date, start);
+        LocalDateTime endTime =  LocalDateTime.of(date, end);
+        return (LocalDateTime.now().isEqual(startTime) || LocalDateTime.now().isAfter(startTime)) && LocalDateTime.now().isBefore(endTime);
     }
 }

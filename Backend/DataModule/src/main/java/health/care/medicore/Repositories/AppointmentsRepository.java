@@ -43,4 +43,9 @@ public interface AppointmentsRepository extends JpaRepository<Appointments, Long
             "ap.appointmentStartTime, " +
             "ap.appointmentEndTime) FROM Appointments ap WHERE ap.patient = :user")
     List<MyAppointments> getAllAppointments(@RequestParam("user") Users user);
+
+    @Query("SELECT ap FROM Appointments ap " +
+            "WHERE ap.appointmentDate = :today " +
+            "AND ap.appointmentEndTime <= :endTime")
+    List<Appointments> getAllTodayAppointments(@Param("today") LocalDate today, @Param("endTime") LocalTime endTime);
 }

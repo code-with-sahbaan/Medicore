@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Table(name = "APPOINTMENTS")
@@ -41,6 +42,6 @@ public class Appointments {
     @PrePersist
     protected void updateAppointmentEndTime()
     {
-        this.appointmentEndTime = appointmentStartTime.plusMinutes(appointmentDuration);
+        this.appointmentEndTime = LocalDateTime.of(appointmentDate, appointmentStartTime).plusMinutes(appointmentDuration).toLocalTime();
     }
 }

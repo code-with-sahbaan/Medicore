@@ -1,5 +1,6 @@
 package health.care.medicore.Services;
 
+import health.care.medicore.Entities.Appointments;
 import health.care.medicore.RequestDTO.Patient.BookAppointment;
 import health.care.medicore.RequestDTO.Patient.CancelAppointment;
 import health.care.medicore.RequestDTO.Patient.GetAvailableTimeSlots;
@@ -23,4 +24,6 @@ public interface AppointmentService {
     BaseResponse<List<MyAppointments>> cancelAppointment(CancelAppointment cancelAppointment) throws Exception;
 
     BaseResponse<List<MyAppointments>> getAllAppointments() throws Exception;
+
+    List<Appointments> getAllTodayAppointments();
 }

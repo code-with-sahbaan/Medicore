@@ -79,6 +79,5 @@ export class AppointmentConversationComponent {
 
   hangup() {
     this.webRtc.hangup();
-    history.back();
   }
 }

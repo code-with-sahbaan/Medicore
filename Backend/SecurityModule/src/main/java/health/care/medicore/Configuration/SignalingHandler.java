@@ -1,23 +1,29 @@
 package health.care.medicore.Configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import health.care.medicore.Entities.Appointments;
+import health.care.medicore.Services.AppointmentService;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SignalingHandler extends TextWebSocketHandler {
     // roomId -> List<WebSocketSession> (max 2)
-    private final Map<String, Set<WebSocketSession>> rooms = new ConcurrentHashMap<>();
+    private final Map<String, Set<WebSocketSession>> rooms;
 
-    @Override
-    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        // Optionally validate JWT from query param: session.getUri().getQuery()
-        // or from headers: session.getHandshakeHeaders()
+    private final AppointmentService appointmentService;
+
+    public SignalingHandler(Map<String, Set<WebSocketSession>> rooms, AppointmentService appointmentService) {
+        this.rooms = rooms;
+        this.appointmentService = appointmentService;
     }
 
     @Override
@@ -55,7 +61,10 @@ public class SignalingHandler extends TextWebSocketHandler {
         Set<WebSocketSession> set = rooms.get(room);
         if (set != null) {
             set.remove(session);
-            if (set.isEmpty()) rooms.remove(room);
+            if (set.isEmpty()) {
+                rooms.remove(room);
+                // TODO: Add PDF Generation Logic for Prescription
+            }
         }
     }
 

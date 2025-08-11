@@ -122,4 +122,9 @@ public class AppointmentServiceImpl extends GenericServiceImpl<Appointments> imp
         listBaseResponse.setResponseMessage("Appointment Cancelled Successfully");
         return listBaseResponse;
     }
+
+    @Override
+    public List<Appointments> getAllTodayAppointments() {
+        return appointmentsRepository.getAllTodayAppointments(LocalDate.now(), LocalTime.now());
+    }
 }

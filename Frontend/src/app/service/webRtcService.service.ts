@@ -78,7 +78,10 @@ export class WebRtcService {
                     }
                     break;
                 case 'prescription':
-                    this.prescription = data.message;    
+                    this.prescription = data.message;
+                    break;
+                case 'endCall':
+                    this.hangup();       
             }
         };
     }
@@ -105,5 +108,6 @@ export class WebRtcService {
         this.pc?.close();
         this.localStream?.getTracks().forEach(t => t.stop());
         this.ws?.close();
+        history.back();
     }
 }
