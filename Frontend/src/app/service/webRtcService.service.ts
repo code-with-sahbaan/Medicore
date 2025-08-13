@@ -13,6 +13,7 @@ export class WebRtcService {
     public isVideo: boolean = true;
     public isAudio: boolean = true;
     public prescription: string = "";
+    public remoteCallActive = true;
 
     // Replace with your TURN/STUN servers
     private rtcConfig: RTCConfiguration = {
@@ -81,7 +82,11 @@ export class WebRtcService {
                     this.prescription = data.message;
                     break;
                 case 'endCall':
-                    this.hangup();       
+                    this.hangup();
+                    break;
+                case 'remoteCallEnd':
+                    this.remoteCallActive = false;
+                    break;        
             }
         };
     }

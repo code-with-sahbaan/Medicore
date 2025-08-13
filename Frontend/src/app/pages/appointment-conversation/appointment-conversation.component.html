@@ -2,7 +2,7 @@
   <div class="col-12 h-screen mb-3" style="position: relative; ">
     <div style="position: absolute; z-index: 5; background-color: black; top: 0; left: 0; border-radius: 40px;"
       class="w-full h-full">
-      <video #remoteVideo autoplay playsinline class="remote-video w-full h-full"></video>
+      <video [hidden]="!webRtc.remoteCallActive" #remoteVideo autoplay playsinline class="remote-video w-full h-full"></video>
     </div>
     <div
       style="position: absolute; z-index: 10; background-color: blue; width: 250px; height: 250px; top: 0; right: 0; margin-top: 20px; margin-right: 20px; border-radius: 40px;">

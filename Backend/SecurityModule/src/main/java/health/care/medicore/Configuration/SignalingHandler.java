@@ -57,13 +57,17 @@ public class SignalingHandler extends TextWebSocketHandler {
         }
     }
 
-    private void leaveRoom(WebSocketSession session, String room) {
+    private void leaveRoom(WebSocketSession session, String room) throws IOException {
         Set<WebSocketSession> set = rooms.get(room);
         if (set != null) {
             set.remove(session);
             if (set.isEmpty()) {
                 rooms.remove(room);
                 // TODO: Add PDF Generation Logic for Prescription
+            }else{
+                for (WebSocketSession s: set){
+                    s.sendMessage(new TextMessage("{\"type\":\"remoteCallEnd\"}"));
+                }
             }
         }
     }
