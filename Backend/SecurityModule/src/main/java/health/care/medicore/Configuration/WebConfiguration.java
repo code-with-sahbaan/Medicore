@@ -122,7 +122,7 @@ public class WebConfiguration {
             // Allowing specific pattern urls for patient and doctor role users
             authorize.requestMatchers("/appointment/**").hasAnyAuthority(PATIENT, DOCTOR);
             // Allowing specific pattern urls for patient and doctor role users
-            authorize.requestMatchers("/user/**").hasAnyAuthority(PATIENT, DOCTOR);
+            authorize.requestMatchers("/user/**", "/payment/**").hasAnyAuthority(PATIENT, DOCTOR);
             // Allowing all urls access for business owner
             authorize.requestMatchers("/**").hasAuthority(OWNER);
         });

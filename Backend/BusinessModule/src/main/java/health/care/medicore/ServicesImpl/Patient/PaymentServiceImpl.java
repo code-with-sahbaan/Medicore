@@ -2,6 +2,7 @@ package health.care.medicore.ServicesImpl.Patient;
 
 import com.stripe.model.PaymentIntent;
 import com.stripe.param.PaymentIntentCreateParams;
+import com.stripe.param.PaymentLinkCreateParams;
 import health.care.medicore.Entities.Users;
 import health.care.medicore.RequestDTO.Patient.BuyCredits;
 import health.care.medicore.ResponseDTO.BaseResponse;
@@ -23,7 +24,7 @@ public class PaymentServiceImpl implements PaymentService {
 
 
     @Override
-    public BuyCreditsDetails buyCredits(BuyCredits buyCredits) throws Exception {
+    public BaseResponse<BuyCreditsDetails> buyCredits(BuyCredits buyCredits) throws Exception {
         try{
             long quantity = buyCredits.getCredits();
             long amount = quantity * 100L; // $1 = 100 cents
@@ -39,7 +40,7 @@ public class PaymentServiceImpl implements PaymentService {
             PaymentIntent intent = PaymentIntent.create(params);
             BuyCreditsDetails buyCreditsDetails = new BuyCreditsDetails();
             buyCreditsDetails.setClientSecret(intent.getClientSecret());
-            return buyCreditsDetails;
+            return new BaseResponse<>("Payment Intent Created", buyCreditsDetails);
         }catch (Exception e){
             throw new Exception("Failed to Buy Credits");
         }

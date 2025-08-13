@@ -2,6 +2,7 @@ package health.care.medicore;
 
 import com.stripe.Stripe;
 import com.stripe.StripeClient;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,8 +41,8 @@ public class AppConfigurations {
         return mailSender1;
     }
 
-    @Bean
-    public StripeClient stripeClient(){
-        return new StripeClient(secret);
+    @PostConstruct
+    public void stripeClient(){
+        Stripe.apiKey = secret;
     }
 }

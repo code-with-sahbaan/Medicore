@@ -1,0 +1,37 @@
+package health.care.medicore.Controllers.v1;
+
+import health.care.medicore.RequestDTO.Patient.BuyCredits;
+import health.care.medicore.ResponseDTO.BaseResponse;
+import health.care.medicore.ResponseDTO.Patient.BuyCreditsDetails;
+import health.care.medicore.Services.Patient.PaymentService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("payment")
+@Slf4j
+public class PaymentController {
+
+    @Autowired
+    private PaymentService paymentService;
+
+    @PostMapping("v1/buyCredits")
+    public ResponseEntity<BaseResponse<BuyCreditsDetails>> buyCredits(@RequestBody BuyCredits buyCredits) throws Exception {
+        log.info("Executing buyCredits in AppointmentController");
+        BaseResponse<BuyCreditsDetails> response = paymentService.buyCredits(buyCredits);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping("v1/updateCredits")
+    public ResponseEntity<BaseResponse<BuyCreditsDetails>> updateCredits(@RequestBody BuyCredits buyCredits) throws Exception {
+        log.info("Executing updateCredits in AppointmentController");
+        paymentService.updateCredits(buyCredits);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+}
