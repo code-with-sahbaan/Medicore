@@ -12,4 +12,5 @@ public class GetAllConsultants {
     private long userId;
     private String email;
     private String fullName;
+    private long consultationRates;
 }

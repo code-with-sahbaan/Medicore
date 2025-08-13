@@ -26,4 +26,8 @@ public interface AppointmentService {
     BaseResponse<List<MyAppointments>> getAllAppointments() throws Exception;
 
     List<Appointments> getAllTodayAppointments();
+
+    void updateAppointment(Appointments appointments) throws Exception;
+
+    List<Appointments> getAllPreviousDayAppointments() throws Exception;
 }

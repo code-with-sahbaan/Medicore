@@ -31,6 +31,12 @@ public class Appointments {
     @Column(name = "APPOINTMENT_DURATION")
     private long appointmentDuration;
 
+    @Column(name = "APPOINTMENT_CHARGES")
+    private long appointmentCharges;
+
+    @Column(name = "IS_PAID")
+    private Boolean isPaid = Boolean.FALSE;
+
     @ManyToOne
     @JoinColumn(name = "doctorId")
     private Users doctor;

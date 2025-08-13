@@ -91,8 +91,9 @@ public class DataBootstrapping implements CommandLineRunner {
             user2.setEmail("sahbaanalam25@gmail.com");
             user2.setCredits(200);
             user2.setFullName("Sahbaan Alam - Doctor");
-            user2.setWorkingHourStart(LocalTime.of(9, 0));
-            user2.setWorkingHourEnd(LocalTime.of(18, 0));
+            user2.setWorkingHourStart(LocalTime.of(11, 0));
+            user2.setWorkingHourEnd(LocalTime.of(20, 0));
+            user2.setConsultationRates(150);
             Users saved2 = userRepository.save(user2);
 
             // Inserting Doctor 02
@@ -106,6 +107,7 @@ public class DataBootstrapping implements CommandLineRunner {
             user3.setFullName("John Doe");
             user3.setWorkingHourStart(LocalTime.of(10, 50));
             user3.setWorkingHourEnd(LocalTime.of(15, 20));
+            user3.setConsultationRates(200);
             Users saved3 = userRepository.save(user3);
 
             // Inserting Appointment
@@ -114,7 +116,8 @@ public class DataBootstrapping implements CommandLineRunner {
             appointments.setAppointmentStartTime(LocalTime.now());
             appointments.setPatient(saved1);
             appointments.setDoctor(saved2);
-            appointments.setAppointmentDuration(30);
+            appointments.setAppointmentDuration(1);
+            appointments.setAppointmentCharges(saved2.getConsultationRates());
             appointments.setAppointmentDate(LocalDate.now());
             appointmentsRepository.save(appointments);
 

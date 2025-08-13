@@ -87,6 +87,7 @@ export class BookAppointmentComponent {
         error: (error) => {
           // Showing error toast
           this.uiService.showError(error.error.responseMessage);
+          this.visible = false;
         },
       });
   }

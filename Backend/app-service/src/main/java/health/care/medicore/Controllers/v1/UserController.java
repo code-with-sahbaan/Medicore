@@ -5,6 +5,7 @@ import health.care.medicore.RequestDTO.PageableRequest;
 import health.care.medicore.RequestDTO.SignupRequest;
 import health.care.medicore.RequestDTO.VerifyOtpRequest;
 import health.care.medicore.ResponseDTO.BaseResponse;
+import health.care.medicore.ResponseDTO.GetCredits;
 import health.care.medicore.ResponseDTO.Patient.GetAllConsultants;
 import health.care.medicore.Services.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -12,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /*
  *A Controller that is accessible to every type of role
@@ -49,13 +47,19 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
     // Above this line all the APIs are non-tokenized. Always add non-tokenized APIs before this line
 
     @PostMapping("v1/getAllConsultants")
     public ResponseEntity<BaseResponse<Page<GetAllConsultants>>> getAllConsultants(@RequestBody PageableRequest pageableRequest) throws Exception {
         log.info("Executing getAllConsultants in UserController");
         BaseResponse<Page<GetAllConsultants>> response = userService.getUsersByDoctorRole(pageableRequest);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("v1/getMyCredits")
+    public ResponseEntity<BaseResponse<GetCredits>> getMyCredits() throws Exception {
+        log.info("Executing getMyCredits in UserController");
+        BaseResponse<GetCredits> response = userService.getCredits();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

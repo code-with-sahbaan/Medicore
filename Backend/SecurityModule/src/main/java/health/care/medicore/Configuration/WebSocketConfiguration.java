@@ -1,7 +1,9 @@
 package health.care.medicore.Configuration;
 
 import health.care.medicore.Entities.Appointments;
+import health.care.medicore.Entities.Users;
 import health.care.medicore.Services.AppointmentService;
+import health.care.medicore.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +31,9 @@ public class WebSocketConfiguration implements WebSocketConfigurer {
     @Autowired
     private AppointmentService appointmentService;
 
+    @Autowired
+    private UserService userService;
+
     private final Map<String, Set<WebSocketSession>> rooms = new ConcurrentHashMap<>();
 
     @Override
@@ -38,11 +43,15 @@ public class WebSocketConfiguration implements WebSocketConfigurer {
     }
 
     @Scheduled(fixedRate = 60000)
-    public void cleanupExpiredCalls() throws IOException {
+    public void cleanupExpiredCalls() throws Exception {
         List<Appointments> appointments = appointmentService.getAllTodayAppointments();
         for (int i = 0; i < appointments.size(); i++) {
             String roomId = String.valueOf(appointments.get(i).getAppointmentId());
+            Appointments appointment = appointments.get(i);
             Set<WebSocketSession> webSocketSessions = rooms.get(roomId);
+            // Adding Amount to Doctor if the consultation is un-paid
+            resolveUnpaidAppointments(appointment);
+            // closing web sockets
             if (webSocketSessions != null) {
                 for (int j = 0; j < webSocketSessions.size(); j++) {
                     // Removing each participant from the call
@@ -60,6 +69,14 @@ public class WebSocketConfiguration implements WebSocketConfigurer {
         }
     }
 
+    @Scheduled(cron = "0 10 0 * * *")
+    public void resolvedLateUnpaidAppointments() throws Exception {
+        List<Appointments> appointments = appointmentService.getAllPreviousDayAppointments();
+        for(Appointments appointment : appointments) {
+            resolveUnpaidAppointments(appointment);
+        }
+    }
+
     private void leaveRoom(WebSocketSession session, String room) {
         Set<WebSocketSession> set = rooms.get(room);
         if (set != null) {
@@ -68,6 +85,17 @@ public class WebSocketConfiguration implements WebSocketConfigurer {
                 rooms.remove(room);
                 // TODO: Add PDF Generation Logic for Prescription
             }
+        }
+    }
+
+    private void resolveUnpaidAppointments(Appointments appointment) throws Exception {
+        if (!appointment.getIsPaid()){
+            appointment.setIsPaid(true);
+            appointmentService.updateAppointment(appointment);
+            Users doctor = appointment.getDoctor();
+            long updatedCredits = doctor.getCredits() + appointment.getAppointmentCharges();
+            doctor.setCredits(updatedCredits);
+            userService.updateUser(doctor);
         }
     }
 }

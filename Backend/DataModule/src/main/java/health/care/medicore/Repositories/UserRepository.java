@@ -16,6 +16,6 @@ public interface UserRepository extends JpaRepository<Users, Long> {
 
     Optional<Users> findByEmail(String email);
 
-    @Query("SELECT new health.care.medicore.ResponseDTO.Patient.GetAllConsultants(u.userId, u.email, u.fullName) FROM Users u WHERE u.role = :role")
+    @Query("SELECT new health.care.medicore.ResponseDTO.Patient.GetAllConsultants(u.userId, u.email, u.fullName, u.consultationRates) FROM Users u WHERE u.role = :role")
     Page<GetAllConsultants> getUsersByDoctorRole(@Param("role") Role role, Pageable pageable);
 }

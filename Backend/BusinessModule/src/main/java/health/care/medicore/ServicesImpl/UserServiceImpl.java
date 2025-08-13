@@ -10,6 +10,7 @@ import health.care.medicore.RequestDTO.PageableRequest;
 import health.care.medicore.RequestDTO.SignupRequest;
 import health.care.medicore.RequestDTO.VerifyOtpRequest;
 import health.care.medicore.ResponseDTO.BaseResponse;
+import health.care.medicore.ResponseDTO.GetCredits;
 import health.care.medicore.ResponseDTO.Patient.GetAllConsultants;
 import health.care.medicore.Services.RoleService;
 import health.care.medicore.Services.UserService;
@@ -148,6 +149,19 @@ public class UserServiceImpl extends GenericServiceImpl<Users> implements UserDe
             throw new Exception("Failed to fetch Consultants");
         }
 
+    }
+
+    @Override
+    public void updateUser(Users users) throws Exception {
+        userRepository.save(users);
+    }
+
+    @Override
+    public BaseResponse<GetCredits> getCredits() throws Exception {
+        GetCredits getCredits = new GetCredits();
+        long credits = getCurrentUser().getCredits();
+        getCredits.setCredits(credits);
+        return new BaseResponse<>("Credits fetched successfully", getCredits);
     }
 
     public void sendOTP(Users users) throws MessagingException, UnsupportedEncodingException {

@@ -22,6 +22,7 @@
                         </div>
                     </th>
                     <th style="width:25%">Email</th>
+                    <th style="width:25%">Consultation Rates (Credits / 30 min)</th>
                     <th style="width:25%">Action</th>
                 </tr>
             </ng-template>
@@ -29,6 +30,7 @@
                 <tr>
                     <td>{{ consultants.fullName }}</td>
                     <td>{{ consultants.email }}</td>
+                    <td>{{ consultants.consultationRates }}</td>
                     <td>
                         <div class="w-12 lg:w-4">
                             <p-button variant="text" (click)="showDialog(consultants)">Book Consultation</p-button>
@@ -52,6 +54,7 @@
             <p-selectButton [options]="availableTimes" [multiple]="true" [(ngModel)]="appointmentTime" optionLabel="label"
                 styleClass="time-chip-group">
             </p-selectButton>
+            <p *ngIf="availableTimes.length == 0" style="width: 200px; color: dimgrey;">No Slots Available for {{appointmentDate}}</p>
         </div>
         <div class="flex w-full gap-2 mb-4">
             <p-button class="w-6" label="Cancel" severity="secondary" (click)="visible = false" />

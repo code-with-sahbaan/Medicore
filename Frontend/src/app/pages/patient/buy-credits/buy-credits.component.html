@@ -1,0 +1,71 @@
+<div>
+    <div id="header" class="pb-7 grid grid-nogutter justify-between">
+        <div class="col-12 md:col-6">
+            <h2 class="text-800 text-primary-900 text-4xl font-semibold">
+                Manage Your Credits
+            </h2>
+        </div>
+    </div>
+
+    <div>
+        <div class="grid grid-nogutter justify-between">
+            <p-card class="col-12 md:col-4 h-15rem">
+                <ng-template #title class="m-0"> Available Credits </ng-template>
+                <ng-template #subtitle class="m-0">
+                    Expires at 12-Dec-2025</ng-template>
+                <div class="flex flex-column gap-1 mt-4">
+                    <h2 class="text-primary-500 text-7xl font-bold" style="margin: 0">
+                        {{credits}} $
+                    </h2>
+                </div>
+            </p-card>
+        </div>
+        <p-stepper [value]="1" class="basis-[50rem]" [linear]="true">
+            <p-step-list>
+                <p-step [value]="1">Checkout Overview</p-step>
+                <p-step [value]="2">Payment</p-step>
+            </p-step-list>
+            <p-step-panels>
+                <p-step-panel [value]="1">
+                    <ng-template #content let-activateCallback="activateCallback">
+                        <div class="flex flex-column gap-4 p-5">
+                            <p-inputnumber [(ngModel)]="newCredits" mode="decimal" [format]="false"/>
+                            <p-message severity="error" variant="simple" size="small" *ngIf="newCredits < 5">Minimum Credits must be 5</p-message>
+                            <!-- Previous balance -->
+                            <p class="font-semibold">Previous Balance:</p>
+                            <p>{{credits}}</p>
+                            <!-- New balance -->
+                            <p class="font-semibold">New Balance:</p>
+                            <p>{{credits + newCredits}}</p>
+                            <!-- Amount To be Charged -->
+                            <p class="font-semibold">Amount to be Charged:</p>
+                            <p>{{credits + newCredits}} + 10% (Platform Fee) = {{getAmountCharged()}}</p>
+
+                        </div>
+                        <div class="flex pt-6 justify-end">
+                            <p-button [disabled]="newCredits < 5" label="Proceed to Payment" icon="pi pi-arrow-right" iconPos="right"
+                                (onClick)="activateCallback(2);" />
+                        </div>
+                    </ng-template>
+                </p-step-panel>
+
+                <p-step-panel [value]="2">
+                    <ng-template #content let-activateCallback="activateCallback">
+                        <div class="flex flex-col h-48">
+                            <div
+                                class="border-2 border-dashed border-surface-200 dark:border-surface-700 rounded bg-surface-50 dark:bg-surface-950 flex-auto flex justify-center items-center font-medium">
+                                Content II
+                            </div>
+                        </div>
+                        <div class="flex pt-6 justify-between">
+                            <p-button label="Back" severity="secondary" icon="pi pi-arrow-left"
+                                (onClick)="activateCallback(1)" />
+                            <p-button label="Next" icon="pi pi-arrow-right" iconPos="right"
+                                (onClick)="activateCallback(3)" />
+                        </div>
+                    </ng-template>
+                </p-step-panel>
+            </p-step-panels>
+        </p-stepper>
+    </div>
+</div>

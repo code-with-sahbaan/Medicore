@@ -50,6 +50,9 @@ public class Users {
     @Column(name = "WORKING_HOUR_END")
     private LocalTime workingHourEnd;
 
+    @Column(name = "CONSULTATION_RATES")
+    private long consultationRates;
+
     // Appointments where this user is the doctor
     @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
     private List<Appointments> doctorAppointments;

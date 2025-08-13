@@ -61,7 +61,21 @@ public class AppointmentServiceImpl extends GenericServiceImpl<Appointments> imp
             LocalTime endTime = doctor.getWorkingHourEnd();
             List<GetAllTimeSlots> availableSlots = new ArrayList<>();
 
+            if (getAvailableTimeSlots.getAppointmentDate().isBefore(LocalDate.now())){
+                return new BaseResponse<>("Time Slots Fetched", availableSlots);
+            }
+
             while (!startTime.plusMinutes(30).isAfter(endTime)) {
+
+                // If the Day the is Today then check if the start time has already passed or not
+                if (getAvailableTimeSlots.getAppointmentDate().equals(LocalDate.now())) {
+                    if (startTime.isBefore(LocalTime.now())) {
+                        startTime = startTime.plusMinutes(30);
+                        continue;
+                    }
+                }
+
+                // Else check for other dates
                 if (!bookedSlots.contains(startTime)) {
                     availableSlots.add(
                             new GetAllTimeSlots(startTime, startTime)
@@ -78,24 +92,30 @@ public class AppointmentServiceImpl extends GenericServiceImpl<Appointments> imp
     @Override
     @Transactional
     public void bookAppointment(BookAppointment bookAppointment) throws Exception {
-        try{
-            Users patient = userService.getCurrentUser();
-            Users doctor = userService.getUserByEmail(bookAppointment.getDoctorEmail()).get();
-            for (int i = 0; i < bookAppointment.getAppointmentTimes().size(); i++) {
-                // Checking if appointment is already booked
-                if (appointmentsRepository.isAppointmentAvailable(bookAppointment.getAppointmentDate(), doctor, bookAppointment.getAppointmentTimes().get(i).getValue()).isPresent()){
-                    throw new Exception("Appointment does not available on " + bookAppointment.getAppointmentTimes().get(i).getValue() + ". Please try different time");
-                }
-                Appointments appointments = new  Appointments();
-                appointments.setAppointmentDate(bookAppointment.getAppointmentDate());
-                appointments.setAppointmentDuration(30);
-                appointments.setAppointmentStartTime(bookAppointment.getAppointmentTimes().get(i).getValue());
-                appointments.setDoctor(doctor);
-                appointments.setPatient(patient);
-                appointmentsRepository.save(appointments);
+        Users patient = userService.getCurrentUser();
+        Users doctor = userService.getUserByEmail(bookAppointment.getDoctorEmail()).get();
+        int successfulAppointments = 0;
+        for (int i = 0; i < bookAppointment.getAppointmentTimes().size(); i++) {
+            // Checking if appointment is already booked
+            if (appointmentsRepository.isAppointmentAvailable(bookAppointment.getAppointmentDate(), doctor, bookAppointment.getAppointmentTimes().get(i).getValue()).isPresent()){
+                throw new Exception("Appointment does not available on " + bookAppointment.getAppointmentTimes().get(i).getValue() + ". Please try different time");
             }
-        }catch (Exception e){
-            throw new  Exception("Failed to book Appointment. May be the appointment is already booked on that time slot. Try refreshing page!");
+            if (patient.getCredits() < doctor.getConsultationRates()){
+                String message = successfulAppointments + " Appointments has been added successfully, but others did not. Reason: Insufficient funds to book appointment";
+                throw new Exception(message);
+            }
+            Appointments appointments = new  Appointments();
+            appointments.setAppointmentDate(bookAppointment.getAppointmentDate());
+            appointments.setAppointmentDuration(30);
+            appointments.setAppointmentStartTime(bookAppointment.getAppointmentTimes().get(i).getValue());
+            appointments.setDoctor(doctor);
+            appointments.setPatient(patient);
+            appointments.setAppointmentCharges(doctor.getConsultationRates());
+            appointmentsRepository.save(appointments);
+            long remainingCredits = patient.getCredits() - doctor.getConsultationRates();
+            patient.setCredits(remainingCredits);
+            userService.updateUser(patient);
+            successfulAppointments += 1;
         }
     }
 
@@ -117,6 +137,13 @@ public class AppointmentServiceImpl extends GenericServiceImpl<Appointments> imp
         if (!isCancellable) {
             throw new Exception("Appointment cannot be cancelled as either it is passed or within 24 hours");
         }
+
+        Users users = userService.getCurrentUser();
+        // Returning credits back to Users
+        long updatedCredits = users.getCredits() + appointments.getAppointmentCharges();
+        users.setCredits(updatedCredits);
+        userService.updateUser(users);
+        // Deleting the Appointment
         appointmentsRepository.delete(appointments);
         BaseResponse<List<MyAppointments>> listBaseResponse = getAllAppointments();
         listBaseResponse.setResponseMessage("Appointment Cancelled Successfully");
@@ -126,5 +153,15 @@ public class AppointmentServiceImpl extends GenericServiceImpl<Appointments> imp
     @Override
     public List<Appointments> getAllTodayAppointments() {
         return appointmentsRepository.getAllTodayAppointments(LocalDate.now(), LocalTime.now());
+    }
+
+    @Override
+    public void updateAppointment(Appointments appointments) throws Exception {
+        appointmentsRepository.save(appointments);
+    }
+
+    @Override
+    public List<Appointments> getAllPreviousDayAppointments() throws Exception {
+        return appointmentsRepository.getAllPreviousDayAppointments(LocalDate.now().minusDays(1));
     }
 }
