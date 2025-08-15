@@ -45,12 +45,7 @@ export class PatientSideDrawerComponent {
       icon: 'pi pi-dollar',
       label: 'Manage Credits',
       route: '/patient/manageCredits',
-    },
-    {
-      icon: 'pi pi-question-circle',
-      label: 'Support & Help',
-      route: '/patient/help',
-    },
+    }
   ];
 
   constructor(private router: Router) {

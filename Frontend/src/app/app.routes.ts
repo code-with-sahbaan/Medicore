@@ -8,9 +8,9 @@ import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 import { BookAppointmentComponent } from './pages/patient/book-appointment/book-appointment.component';
 import { MyAppointmentsComponent } from './pages/patient/my-appointments/my-appointments.component';
-import { AiBotComponent } from './pages/patient/ai-bot/ai-bot.component';
 import { AppointmentConversationComponent } from './pages/appointment-conversation/appointment-conversation.component';
 import { BuyCreditsComponent } from './pages/patient/buy-credits/buy-credits.component';
+import { AiSymptomCheckerComponent } from './pages/patients/ai-symptom-checker/ai-symptom-checker.component';
 
 export const routes: Routes = [
   {
@@ -81,17 +81,17 @@ export const routes: Routes = [
         },
       },
       {
-        path: 'aiChecker',
-        component: AiBotComponent,
-        data: {
-          title: 'AI Checker',
-        },
-      },
-      {
         path: 'manageCredits',
         component: BuyCreditsComponent,
         data: {
           title: 'Buy Credits',
+        },
+      },
+      {
+        path: 'aiChecker',
+        component: AiSymptomCheckerComponent,
+        data: {
+          title: 'AI Checker',
         },
       }
     ],

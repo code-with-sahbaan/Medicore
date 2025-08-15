@@ -1,0 +1,14 @@
+.user-message{
+    color: white;
+    background-color: var(--primary-color);
+    border-radius: 20px;
+    margin-bottom: 10px;
+}
+
+.assistant-message{
+    color: var(--primary-color);
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 20px;
+    margin-bottom: 10px;
+}

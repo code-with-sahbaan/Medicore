@@ -1,0 +1,36 @@
+<div>
+    <div id="header" class="pb-7 grid grid-nogutter justify-between">
+        <div class="col-12 md:col-6">
+            <h2 class="text-800 text-primary-900 text-4xl font-semibold">
+                AI Symptom Checker
+            </h2>
+        </div>
+    </div>
+
+    <div class="grid grid-nogutter flex-column justify-between relative">
+        <div class="flex flex-column flex-wrap pb-5">
+            <div style="height: auto; max-height: 60vh; overflow: auto;" class="p-4">
+                @for (item of messageList; track $index) {
+                <div class="w-full">
+                    <div class="p-4 {{$index % 2 == 0 ? 'user-message' : 'assistant-message'}}">
+                        <markdown [data]="item"></markdown>
+                    </div>
+                </div>
+                }
+            </div>
+            <br>
+            <div id="skeleton" *ngIf="isLoading" class="grid grid-nogutter flex-column gap-2">
+                <p-skeleton height="2rem" class="mb-2" />
+                <p-skeleton width="10rem" height="4rem" />
+            </div>
+        </div>
+        <div class="col-12 absolute" style="top: 75vh;">
+            <div class="relative inline-block w-full">
+                <input pInputText type="text" placeholder="Search..." [(ngModel)]="message" class="pr-10 w-full" />
+                <p-button [disabled]="message.length == 0 || isLoading" (click)="sendMessage()" size="large"
+                    icon="pi pi-send" [text]="true"
+                    class="absolute right-1 top-1/2 -translate-y-1/2 p-button-sm p-button-rounded"></p-button>
+            </div>
+        </div>
+    </div>
+</div>

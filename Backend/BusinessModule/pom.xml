@@ -32,6 +32,11 @@
             <artifactId>stripe-java</artifactId>
             <version>29.5.0-beta.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-model-openai</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
 </project>
