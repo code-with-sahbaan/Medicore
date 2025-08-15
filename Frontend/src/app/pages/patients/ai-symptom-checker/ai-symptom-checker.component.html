@@ -9,7 +9,7 @@
 
     <div class="grid grid-nogutter flex-column justify-between relative">
         <div class="flex flex-column flex-wrap pb-5">
-            <div style="height: auto; max-height: 60vh; overflow: auto;" class="p-4">
+            <div id="chatContainer" style="height: auto; max-height: 75vh; overflow: auto;" class="p-4">
                 @for (item of messageList; track $index) {
                 <div class="w-full">
                     <div class="p-4 {{$index % 2 == 0 ? 'user-message' : 'assistant-message'}}">
@@ -17,11 +17,11 @@
                     </div>
                 </div>
                 }
-            </div>
-            <br>
-            <div id="skeleton" *ngIf="isLoading" class="grid grid-nogutter flex-column gap-2">
-                <p-skeleton height="2rem" class="mb-2" />
-                <p-skeleton width="10rem" height="4rem" />
+                <br>
+                <div id="skeleton" *ngIf="isLoading" class="grid grid-nogutter flex-column gap-2">
+                    <p-skeleton height="2rem" class="mb-2" />
+                    <p-skeleton width="10rem" height="4rem" />
+                </div>
             </div>
         </div>
         <div class="col-12 absolute" style="top: 75vh;">

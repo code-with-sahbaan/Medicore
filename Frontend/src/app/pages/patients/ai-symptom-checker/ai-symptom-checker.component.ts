@@ -58,6 +58,14 @@ export class AiSymptomCheckerComponent {
     const list = this.messageList;
     this.messageList.push(msg);
     this.messageList = [...list];
+    this.scrollToBotton();
+  }
+
+  scrollToBotton(){
+    const ele = document.getElementById('chatContainer');
+    if (ele) {
+      ele.scroll(0, document.body.scrollHeight)
+    }
   }
 
 }
