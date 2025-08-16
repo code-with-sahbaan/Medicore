@@ -7,6 +7,7 @@ import health.care.medicore.Repositories.AppConfigRepository;
 import health.care.medicore.Repositories.UserRepository;
 import health.care.medicore.RequestDTO.ForgotPassword;
 import health.care.medicore.RequestDTO.PageableRequest;
+import health.care.medicore.ResponseDTO.Doctor.DoctorProfile;
 import health.care.medicore.ResponseDTO.Patient.PatientProfile;
 import health.care.medicore.RequestDTO.SignupRequest;
 import health.care.medicore.RequestDTO.VerifyOtpRequest;
@@ -19,6 +20,7 @@ import health.care.medicore.Utils.Constants;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -174,6 +176,18 @@ public class UserServiceImpl extends GenericServiceImpl<Users> implements UserDe
             }
         } catch (Exception e) {
             throw new RuntimeException("Failed to retrieve user profile");
+        }
+    }
+
+    @Override
+    public BaseResponse<?> updateProfile(DoctorProfile doctorProfile) throws Exception {
+        try{
+            Users users = getCurrentUser();
+            BeanUtils.copyProperties(doctorProfile, users);
+            userRepository.save(users);
+            return new BaseResponse<>("Profile Updated successfully", null);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to update user profile");
         }
     }
 

@@ -5,6 +5,7 @@ import health.care.medicore.RequestDTO.PageableRequest;
 import health.care.medicore.RequestDTO.SignupRequest;
 import health.care.medicore.RequestDTO.VerifyOtpRequest;
 import health.care.medicore.ResponseDTO.BaseResponse;
+import health.care.medicore.ResponseDTO.Doctor.DoctorProfile;
 import health.care.medicore.ResponseDTO.GetCredits;
 import health.care.medicore.ResponseDTO.Patient.GetAllConsultants;
 import health.care.medicore.ResponseDTO.Patient.PatientProfile;
@@ -68,6 +69,13 @@ public class UserController {
     public ResponseEntity<BaseResponse<PatientProfile>> getMyProfile() throws Exception {
         log.info("Executing getMyProfile in UserController");
         BaseResponse<PatientProfile> response = userService.getUserProfile();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping("v1/updateProfile")
+    public ResponseEntity<BaseResponse<?>> updateProfile(@RequestBody DoctorProfile doctorProfile) throws Exception {
+        log.info("Executing updateProfile in UserController");
+        BaseResponse<?> response = userService.updateProfile(doctorProfile);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

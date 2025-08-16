@@ -4,6 +4,7 @@ package health.care.medicore.Services;
 import health.care.medicore.Entities.Users;
 import health.care.medicore.RequestDTO.ForgotPassword;
 import health.care.medicore.RequestDTO.PageableRequest;
+import health.care.medicore.ResponseDTO.Doctor.DoctorProfile;
 import health.care.medicore.ResponseDTO.Patient.PatientProfile;
 import health.care.medicore.RequestDTO.SignupRequest;
 import health.care.medicore.RequestDTO.VerifyOtpRequest;
@@ -33,4 +34,6 @@ public interface UserService{
     BaseResponse<GetCredits> getCredits() throws Exception;
 
     BaseResponse<PatientProfile> getUserProfile() throws Exception;
+
+    BaseResponse<?> updateProfile(DoctorProfile doctorProfile) throws Exception;
 }

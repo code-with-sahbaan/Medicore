@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Getter
@@ -14,16 +16,16 @@ import java.time.LocalTime;
 @NoArgsConstructor
 public class DoctorProfile extends PatientProfile {
 
-    private LocalTime workingHourStart;
+    private LocalDateTime workingHourStart;
 
-    private LocalTime workingHourEnd;
+    private LocalDateTime workingHourEnd;
 
     private long consultationRates;
 
     public DoctorProfile(String email, String fullName, LocalTime workingHourStart, LocalTime workingHourEnd, long consultationRates) {
         super(email, fullName);
-        this.workingHourStart = workingHourStart;
-        this.workingHourEnd = workingHourEnd;
+        this.workingHourStart = LocalDateTime.of(LocalDate.now(), workingHourStart);
+        this.workingHourEnd = LocalDateTime.of(LocalDate.now(), workingHourEnd);
         this.consultationRates = consultationRates;
     }
 }

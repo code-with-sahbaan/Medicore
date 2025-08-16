@@ -4,7 +4,6 @@ import health.care.medicore.RequestDTO.Patient.AiUserMessage;
 import health.care.medicore.ResponseDTO.BaseResponse;
 import health.care.medicore.ResponseDTO.Patient.AiAssistantResponse;
 import health.care.medicore.ResponseDTO.Patient.GetAllChatMessages;
-import health.care.medicore.ResponseDTO.Patient.PatientWorkout;
 import health.care.medicore.Services.Patient.ChatService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
