@@ -5,6 +5,7 @@ import { Ripple } from 'primeng/ripple';
 import { AvatarModule } from 'primeng/avatar';
 import { Router, RouterModule } from '@angular/router';
 import { NgStyle } from '@angular/common';
+import { getCurrentUserData } from '../../../core/auth.utils';
 
 @Component({
   selector: 'app-patient-side-drawer',
@@ -24,6 +25,7 @@ export class PatientSideDrawerComponent {
   visible = false;
   isDesktop = true;
   currentUrl : string = 'patient/home';
+  fullName: string = getCurrentUserData()?.fullName;
   menuItems = [
     { icon: 'pi pi-home', label: 'Dashboard', route: '/patient/home' },
     {

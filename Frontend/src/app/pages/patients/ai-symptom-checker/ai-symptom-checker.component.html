@@ -13,7 +13,7 @@
                 @for (item of messageList; track $index) {
                 <div class="w-full">
                     <div class="p-4 {{$index % 2 == 0 ? 'user-message' : 'assistant-message'}}">
-                        <markdown [data]="item"></markdown>
+                        <markdown [data]="item.message"></markdown>
                     </div>
                 </div>
                 }

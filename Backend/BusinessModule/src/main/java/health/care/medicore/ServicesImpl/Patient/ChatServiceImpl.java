@@ -6,6 +6,7 @@ import health.care.medicore.Repositories.Patient.ChatMessageRepository;
 import health.care.medicore.RequestDTO.Patient.AiUserMessage;
 import health.care.medicore.ResponseDTO.BaseResponse;
 import health.care.medicore.ResponseDTO.Patient.AiAssistantResponse;
+import health.care.medicore.ResponseDTO.Patient.GetAllChatMessages;
 import health.care.medicore.Services.Patient.ChatService;
 import health.care.medicore.Services.UserService;
 import health.care.medicore.ServicesImpl.GenericServiceImpl;
@@ -77,5 +78,12 @@ public class ChatServiceImpl extends GenericServiceImpl<ChatMessages> implements
         } catch (Exception e) {
             throw new Exception("Failed to get response from Symptom Checker");
         }
+    }
+
+    @Override
+    public BaseResponse<List<GetAllChatMessages>> getAllChatMessages() throws Exception {
+        Users users = userService.getCurrentUser();
+        List<GetAllChatMessages> getAllChatMessagesList = chatMessageRepository.getAllChatMessages(users.getUserId());
+        return new BaseResponse<>("Messages fetched successfully", getAllChatMessagesList);
     }
 }

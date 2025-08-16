@@ -7,6 +7,7 @@ import health.care.medicore.Repositories.AppConfigRepository;
 import health.care.medicore.Repositories.UserRepository;
 import health.care.medicore.RequestDTO.ForgotPassword;
 import health.care.medicore.RequestDTO.PageableRequest;
+import health.care.medicore.ResponseDTO.Patient.PatientProfile;
 import health.care.medicore.RequestDTO.SignupRequest;
 import health.care.medicore.RequestDTO.VerifyOtpRequest;
 import health.care.medicore.ResponseDTO.BaseResponse;
@@ -21,9 +22,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -162,6 +161,20 @@ public class UserServiceImpl extends GenericServiceImpl<Users> implements UserDe
         long credits = getCurrentUser().getCredits();
         getCredits.setCredits(credits);
         return new BaseResponse<>("Credits fetched successfully", getCredits);
+    }
+
+    @Override
+    public BaseResponse<PatientProfile> getUserProfile() throws Exception {
+        try{
+            Users users = getCurrentUser();
+            if (users.getRole().getRole().equals(Constants.DOCTOR)){
+                return new BaseResponse<>("User data fetched successfully", userRepository.getDoctorProfile(users.getUserId()));
+            }else{
+                return new BaseResponse<>("User data fetched successfully", userRepository.getPatientProfile(users.getUserId()));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to retrieve user profile");
+        }
     }
 
     public void sendOTP(Users users) throws MessagingException, UnsupportedEncodingException {

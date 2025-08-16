@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputGroupModule } from 'primeng/inputgroup';
@@ -16,13 +16,21 @@ import { MarkdownModule } from 'ngx-markdown';
   templateUrl: './ai-symptom-checker.component.html',
   styleUrl: './ai-symptom-checker.component.css'
 })
-export class AiSymptomCheckerComponent {
+export class AiSymptomCheckerComponent implements OnInit {
 
   message: string = "";
-  messageList: string[] = [];
+  messageList: any[] = [];
   isLoading: boolean = false;
 
   constructor(public aiService: AiService, private uiService: UiService) { }
+
+  ngOnInit(): void {
+    setTimeout(() => this.getAllMessages(), 0);
+  }
+
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
 
   sendMessage() {
     // pushing message in array
@@ -54,17 +62,47 @@ export class AiSymptomCheckerComponent {
       });
   }
 
-  insertMessageinList(msg: string) {
-    const list = this.messageList;
-    this.messageList.push(msg);
-    this.messageList = [...list];
-    this.scrollToBotton();
+  getAllMessages() {
+    this.uiService.showSpinner();
+    this.aiService
+      .getAllChatMessages()
+      .pipe(
+        finalize(() => {
+          // Hiding Loader after API call completion
+          this.uiService.hideSpinner();
+          this.scrollToBottom();
+        })
+      )
+      .subscribe({
+        next: (response) => {
+          // Showing success Toast
+          this.uiService.showSuccess(response.responseMessage);
+          const data = response.responseBody;
+          this.messageList = [...data];
+        },
+        error: (error) => {
+          // Showing error toast
+          this.uiService.showError(error.error.responseMessage);
+        },
+      });
   }
 
-  scrollToBotton(){
+  insertMessageinList(msg: string) {
+    const list = this.messageList;
+    this.messageList.push({
+      message: msg
+    });
+    this.messageList = [...list];
+    this.scrollToBottom();
+  }
+
+  scrollToBottom() {
     const ele = document.getElementById('chatContainer');
     if (ele) {
-      ele.scroll(0, document.body.scrollHeight)
+      ele.scrollTo({
+        top: ele.scrollHeight,
+        behavior: 'smooth'
+      })
     }
   }
 

@@ -7,6 +7,7 @@ import health.care.medicore.RequestDTO.VerifyOtpRequest;
 import health.care.medicore.ResponseDTO.BaseResponse;
 import health.care.medicore.ResponseDTO.GetCredits;
 import health.care.medicore.ResponseDTO.Patient.GetAllConsultants;
+import health.care.medicore.ResponseDTO.Patient.PatientProfile;
 import health.care.medicore.Services.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,13 @@ public class UserController {
     public ResponseEntity<BaseResponse<GetCredits>> getMyCredits() throws Exception {
         log.info("Executing getMyCredits in UserController");
         BaseResponse<GetCredits> response = userService.getCredits();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("v1/getMyProfile")
+    public ResponseEntity<BaseResponse<PatientProfile>> getMyProfile() throws Exception {
+        log.info("Executing getMyProfile in UserController");
+        BaseResponse<PatientProfile> response = userService.getUserProfile();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

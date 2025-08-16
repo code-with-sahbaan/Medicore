@@ -11,6 +11,7 @@ import { MyAppointmentsComponent } from './pages/patient/my-appointments/my-appo
 import { AppointmentConversationComponent } from './pages/appointment-conversation/appointment-conversation.component';
 import { BuyCreditsComponent } from './pages/patient/buy-credits/buy-credits.component';
 import { AiSymptomCheckerComponent } from './pages/patients/ai-symptom-checker/ai-symptom-checker.component';
+import { UserProfileComponent } from './pages/user-profile/user-profile.component';
 
 export const routes: Routes = [
   {
@@ -92,6 +93,13 @@ export const routes: Routes = [
         component: AiSymptomCheckerComponent,
         data: {
           title: 'AI Checker',
+        },
+      },
+      {
+        path: 'userProfile',
+        component: UserProfileComponent,
+        data: {
+          title: 'User Profile',
         },
       }
     ],

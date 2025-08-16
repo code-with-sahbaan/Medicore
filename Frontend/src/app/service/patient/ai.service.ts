@@ -14,4 +14,8 @@ export class AiService {
     askAi(payload: AiUserMessage): Observable<any> {
         return this.http.post('/aiChat/v1/askAi', payload).pipe();
     }
+
+    getAllChatMessages(): Observable<any> {
+        return this.http.get('/aiChat/v1/getAllChatMessages').pipe();
+    }
 }

@@ -19,10 +19,10 @@
           </li>
           }
           <li>
-            <a pRipple
+            <a pRipple [routerLink]="'/patient/userProfile'"
               class="flex items-center cursor-pointer p-3 mb-4 gap-4 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors">
-              <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" shape="circle" />
-               <span class="font-bold">Amy Elsner</span>
+              <p-avatar label="{{fullName[0].toUpperCase()}}" shape="circle" />
+               <span class="font-bold">{{fullName.toUpperCase()}}</span>
             </a>
           </li>
         </ul>
