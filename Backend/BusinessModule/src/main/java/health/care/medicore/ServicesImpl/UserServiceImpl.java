@@ -14,6 +14,7 @@ import health.care.medicore.RequestDTO.VerifyOtpRequest;
 import health.care.medicore.ResponseDTO.BaseResponse;
 import health.care.medicore.ResponseDTO.GetCredits;
 import health.care.medicore.ResponseDTO.Patient.GetAllConsultants;
+import health.care.medicore.Services.AppConfigService;
 import health.care.medicore.Services.RoleService;
 import health.care.medicore.Services.UserService;
 import health.care.medicore.Utils.Constants;
@@ -48,7 +49,7 @@ public class UserServiceImpl extends GenericServiceImpl<Users> implements UserDe
     private RoleService roleService;
 
     @Autowired
-    private AppConfigRepository appConfigRepository;
+    private AppConfigService appConfigService;
 
     @Autowired
     private JavaMailSender mailSender;
@@ -198,7 +199,7 @@ public class UserServiceImpl extends GenericServiceImpl<Users> implements UserDe
         userRepository.save(users);
         // Sending Email
         /* GENERATING EMAIL */
-        AppConfigs appConfigs = appConfigRepository.findByName(Constants.EMAIL_OTP_TEMPLATE_NAME);
+        AppConfigs appConfigs = appConfigService.getAppConfigsByName(Constants.EMAIL_OTP_TEMPLATE_NAME);
         sendEmail(users, appConfigs, "User Activation", otp);
     }
 
@@ -209,7 +210,7 @@ public class UserServiceImpl extends GenericServiceImpl<Users> implements UserDe
         userRepository.save(users);
         // Sending Email
         /* GENERATING EMAIL */
-        AppConfigs appConfigs = appConfigRepository.findByName(Constants.FORGOT_PASSWORD_OTP_TEMPLATE_NAME);
+        AppConfigs appConfigs = appConfigService.getAppConfigsByName(Constants.FORGOT_PASSWORD_OTP_TEMPLATE_NAME);
         sendEmail(users, appConfigs, "Reset Password", otp);
     }
 

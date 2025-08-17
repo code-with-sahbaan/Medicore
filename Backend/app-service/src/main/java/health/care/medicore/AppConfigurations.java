@@ -1,8 +1,9 @@
 package health.care.medicore;
 
 import com.stripe.Stripe;
-import com.stripe.StripeClient;
+import health.care.medicore.Utils.QueueConstants;
 import jakarta.annotation.PostConstruct;
+import org.springframework.amqp.core.Queue;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,5 +45,10 @@ public class AppConfigurations {
     @PostConstruct
     public void stripeClient(){
         Stripe.apiKey = secret;
+    }
+
+    @Bean
+    public Queue emailQueue() {
+        return new Queue(QueueConstants.EMAIL_QUEUE, true); // durable queue
     }
 }
