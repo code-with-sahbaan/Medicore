@@ -78,7 +78,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         if (!logInResponse.getIsActive()) {
             try {
                 userService.sendOTP(users);
-            } catch (MessagingException e) {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }

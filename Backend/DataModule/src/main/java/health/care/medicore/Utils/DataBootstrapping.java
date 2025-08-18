@@ -65,73 +65,73 @@ public class DataBootstrapping implements CommandLineRunner {
             }
         }
 
-        log.info("*** INSERTING PATIENT AND DOCTOR WITH APPOINTMENT AND WORKOUT USER FOR TESTING ***");
-        if (
-                userRepository.findByEmail("sahbaanalam34@gmail.com").isEmpty()
-                && userRepository.findByEmail("sahbaanalam25@gmail.com").isEmpty()
-        ){
-
-            // Inserting Patient
-
-            Users user = new Users();
-            user.setIsActive(true);
-            user.setPassword(new BCryptPasswordEncoder().encode("123456789"));
-            user.setRole(roleRepository.findByRoleIgnoreCase(Constants.PATIENT));
-            user.setEmail("sahbaanalam34@gmail.com");
-            user.setCredits(200);
-            user.setFullName("Sahbaan Alam");
-            Users saved1 = userRepository.save(user);
-
-            // Inserting Doctor 01
-
-            Users user2 = new Users();
-            user2.setIsActive(true);
-            user2.setPassword(new BCryptPasswordEncoder().encode("123456789"));
-            user2.setRole(roleRepository.findByRoleIgnoreCase(Constants.DOCTOR));
-            user2.setEmail("sahbaanalam25@gmail.com");
-            user2.setCredits(200);
-            user2.setFullName("Sahbaan Alam - Doctor");
-            user2.setWorkingHourStart(LocalTime.of(11, 0));
-            user2.setWorkingHourEnd(LocalTime.of(20, 0));
-            user2.setConsultationRates(150);
-            Users saved2 = userRepository.save(user2);
-
-            // Inserting Doctor 02
-
-            Users user3 = new Users();
-            user3.setIsActive(true);
-            user3.setPassword(new BCryptPasswordEncoder().encode("123456789"));
-            user3.setRole(roleRepository.findByRoleIgnoreCase(Constants.DOCTOR));
-            user3.setEmail("sahbaanalam9@gmail.com");
-            user3.setCredits(200);
-            user3.setFullName("John Doe");
-            user3.setWorkingHourStart(LocalTime.of(10, 50));
-            user3.setWorkingHourEnd(LocalTime.of(15, 20));
-            user3.setConsultationRates(200);
-            Users saved3 = userRepository.save(user3);
-
-            // Inserting Appointment
-
-            Appointments appointments = new Appointments();
-            appointments.setAppointmentStartTime(LocalTime.now());
-            appointments.setPatient(saved1);
-            appointments.setDoctor(saved2);
-            appointments.setAppointmentDuration(30);
-            appointments.setAppointmentCharges(saved2.getConsultationRates());
-            appointments.setAppointmentDate(LocalDate.now());
-            appointmentsRepository.save(appointments);
-
-            // Inserting Workout for Patient
-
-            Workout workout = new Workout();
-            workout.setWorkoutDate(LocalDate.now());
-            workout.setStart(LocalDateTime.now().plusHours(2));
-            workout.setEnd(workout.getStart().plusMinutes(40));
-            workout.setTitle("Running");
-            workout.setUsers(saved1);
-            workoutRepository.save(workout);
-
-        }
+//        log.info("*** INSERTING PATIENT AND DOCTOR WITH APPOINTMENT AND WORKOUT USER FOR TESTING ***");
+//        if (
+//                userRepository.findByEmail("sahbaanalam34@gmail.com").isEmpty()
+//                && userRepository.findByEmail("sahbaanalam25@gmail.com").isEmpty()
+//        ){
+//
+//            // Inserting Patient
+//
+//            Users user = new Users();
+//            user.setIsActive(true);
+//            user.setPassword(new BCryptPasswordEncoder().encode("123456789"));
+//            user.setRole(roleRepository.findByRoleIgnoreCase(Constants.PATIENT));
+//            user.setEmail("sahbaanalam34@gmail.com");
+//            user.setCredits(200);
+//            user.setFullName("Sahbaan Alam");
+//            Users saved1 = userRepository.save(user);
+//
+//            // Inserting Doctor 01
+//
+//            Users user2 = new Users();
+//            user2.setIsActive(true);
+//            user2.setPassword(new BCryptPasswordEncoder().encode("123456789"));
+//            user2.setRole(roleRepository.findByRoleIgnoreCase(Constants.DOCTOR));
+//            user2.setEmail("sahbaanalam25@gmail.com");
+//            user2.setCredits(200);
+//            user2.setFullName("Sahbaan Alam - Doctor");
+//            user2.setWorkingHourStart(LocalTime.of(11, 0));
+//            user2.setWorkingHourEnd(LocalTime.of(20, 0));
+//            user2.setConsultationRates(150);
+//            Users saved2 = userRepository.save(user2);
+//
+//            // Inserting Doctor 02
+//
+//            Users user3 = new Users();
+//            user3.setIsActive(true);
+//            user3.setPassword(new BCryptPasswordEncoder().encode("123456789"));
+//            user3.setRole(roleRepository.findByRoleIgnoreCase(Constants.DOCTOR));
+//            user3.setEmail("sahbaanalam9@gmail.com");
+//            user3.setCredits(200);
+//            user3.setFullName("John Doe");
+//            user3.setWorkingHourStart(LocalTime.of(10, 50));
+//            user3.setWorkingHourEnd(LocalTime.of(15, 20));
+//            user3.setConsultationRates(200);
+//            Users saved3 = userRepository.save(user3);
+//
+//            // Inserting Appointment
+//
+//            Appointments appointments = new Appointments();
+//            appointments.setAppointmentStartTime(LocalTime.now());
+//            appointments.setPatient(saved1);
+//            appointments.setDoctor(saved2);
+//            appointments.setAppointmentDuration(30);
+//            appointments.setAppointmentCharges(saved2.getConsultationRates());
+//            appointments.setAppointmentDate(LocalDate.now());
+//            appointmentsRepository.save(appointments);
+//
+//            // Inserting Workout for Patient
+//
+//            Workout workout = new Workout();
+//            workout.setWorkoutDate(LocalDate.now());
+//            workout.setStart(LocalDateTime.now().plusHours(2));
+//            workout.setEnd(workout.getStart().plusMinutes(40));
+//            workout.setTitle("Running");
+//            workout.setUsers(saved1);
+//            workoutRepository.save(workout);
+//
+//        }
 
         log.info("*** INSERTING EMAIL OTP TEMPLATE ***");
         if (appConfigRepository.findByName(Constants.EMAIL_OTP_TEMPLATE_NAME) == null){

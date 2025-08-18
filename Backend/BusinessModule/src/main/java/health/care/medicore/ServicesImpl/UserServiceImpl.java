@@ -1,25 +1,19 @@
 package health.care.medicore.ServicesImpl;
 
-import health.care.medicore.Entities.AppConfigs;
 import health.care.medicore.Entities.Role;
 import health.care.medicore.Entities.Users;
-import health.care.medicore.Repositories.AppConfigRepository;
 import health.care.medicore.Repositories.UserRepository;
-import health.care.medicore.RequestDTO.ForgotPassword;
-import health.care.medicore.RequestDTO.PageableRequest;
+import health.care.medicore.RequestDTO.*;
 import health.care.medicore.ResponseDTO.Doctor.DoctorProfile;
 import health.care.medicore.ResponseDTO.Patient.PatientProfile;
-import health.care.medicore.RequestDTO.SignupRequest;
-import health.care.medicore.RequestDTO.VerifyOtpRequest;
 import health.care.medicore.ResponseDTO.BaseResponse;
 import health.care.medicore.ResponseDTO.GetCredits;
 import health.care.medicore.ResponseDTO.Patient.GetAllConsultants;
 import health.care.medicore.Services.AppConfigService;
+import health.care.medicore.Services.QueueService;
 import health.care.medicore.Services.RoleService;
 import health.care.medicore.Services.UserService;
 import health.care.medicore.Utils.Constants;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +21,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,7 +29,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 @Service
@@ -53,6 +45,9 @@ public class UserServiceImpl extends GenericServiceImpl<Users> implements UserDe
 
     @Autowired
     private JavaMailSender mailSender;
+
+    @Autowired
+    private QueueService queueService;
 
     @Value("${medicore.email.sender}")
     private String emailSender;
@@ -101,10 +96,11 @@ public class UserServiceImpl extends GenericServiceImpl<Users> implements UserDe
             Role role = roleService.getByRole(signupRequest.getRole());
             users.setRole(role);
             Users savedUser = userRepository.save(users);
+            /* Sending OTP via Email */
             sendOTP(savedUser);
             return new BaseResponse<>("Account Created Successfully", null);
         } catch (Exception e) {
-            throw new Exception("failed to signup");
+            throw new Exception("Failed to Signup");
         }
     }
 
@@ -192,42 +188,38 @@ public class UserServiceImpl extends GenericServiceImpl<Users> implements UserDe
         }
     }
 
-    public void sendOTP(Users users) throws MessagingException, UnsupportedEncodingException {
+    public void sendOTP(Users users) throws Exception {
         // Creating OTP
         String otp = Integer.toString(generateRandomNumber());
         users.setEmailOTP(otp);
         userRepository.save(users);
         // Sending Email
-        /* GENERATING EMAIL */
-        AppConfigs appConfigs = appConfigService.getAppConfigsByName(Constants.EMAIL_OTP_TEMPLATE_NAME);
-        sendEmail(users, appConfigs, "User Activation", otp);
+        SendEmail sendEmail = new SendEmail();
+        sendEmail.setToEmail(users.getEmail());
+        sendEmail.setSubject("User Activation");
+        sendEmail.setEmailTemplateName(Constants.EMAIL_OTP_TEMPLATE_NAME);
+        Map<String,String> emailContent = new HashMap<>();
+        emailContent.put("code",otp);
+        emailContent.put("name",users.getFullName());
+        sendEmail.setContent(emailContent);
+        queueService.sendEmailToQueue(sendEmail);
     }
 
-    private void sendForgotPasswordOTP(Users users) throws MessagingException, UnsupportedEncodingException {
+    private void sendForgotPasswordOTP(Users users) throws Exception {
         // Creating OTP
         String otp = Integer.toString(generateRandomNumber());
         users.setForgotPasswordOTP(otp);
         userRepository.save(users);
         // Sending Email
-        /* GENERATING EMAIL */
-        AppConfigs appConfigs = appConfigService.getAppConfigsByName(Constants.FORGOT_PASSWORD_OTP_TEMPLATE_NAME);
-        sendEmail(users, appConfigs, "Reset Password", otp);
-    }
-
-    private void sendEmail(Users users, AppConfigs appConfigs, String subject, String randomCode) throws MessagingException, UnsupportedEncodingException {
-        String fullName = users.getFullName();
-        String toEmail = users.getEmail();
-        String fromEmail = emailSender;
-        String content = appConfigs.getValue();
-        MimeMessage mimeMessage = mailSender.createMimeMessage();
-        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
-        mimeMessageHelper.setFrom(fromEmail, appName);
-        mimeMessageHelper.setSubject(subject);
-        mimeMessageHelper.setTo(toEmail);
-        content = content.replace("[[name]]", fullName);
-        content = content.replace("[[code]]", randomCode);
-        mimeMessageHelper.setText(content, true);
-        mailSender.send(mimeMessage);
+        SendEmail sendEmail = new SendEmail();
+        sendEmail.setToEmail(users.getEmail());
+        sendEmail.setSubject("Reset Password");
+        sendEmail.setEmailTemplateName(Constants.FORGOT_PASSWORD_OTP_TEMPLATE_NAME);
+        Map<String,String> emailContent = new HashMap<>();
+        emailContent.put("code",otp);
+        emailContent.put("name",users.getFullName());
+        sendEmail.setContent(emailContent);
+        queueService.sendEmailToQueue(sendEmail);
     }
 
     private int generateRandomNumber() {

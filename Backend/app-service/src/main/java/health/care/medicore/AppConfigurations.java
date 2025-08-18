@@ -4,6 +4,8 @@ import com.stripe.Stripe;
 import health.care.medicore.Utils.QueueConstants;
 import jakarta.annotation.PostConstruct;
 import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.support.converter.DefaultJackson2JavaTypeMapper;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,6 +47,19 @@ public class AppConfigurations {
     @PostConstruct
     public void stripeClient(){
         Stripe.apiKey = secret;
+    }
+
+    // Adding Email classes in trusted folder for deserialization
+    @Bean
+    public Jackson2JsonMessageConverter jackson2JsonMessageConverter() {
+        Jackson2JsonMessageConverter converter = new Jackson2JsonMessageConverter();
+
+        DefaultJackson2JavaTypeMapper typeMapper = new DefaultJackson2JavaTypeMapper();
+        // ✅ use the package name, not the class
+        typeMapper.setTrustedPackages("health.care.medicore.RequestDTO");
+        converter.setJavaTypeMapper(typeMapper);
+
+        return converter;
     }
 
     @Bean
