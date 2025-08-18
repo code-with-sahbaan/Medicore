@@ -27,8 +27,8 @@ A modern web-based platform designed for **real-time medical consultation** betw
 
 ## 🛠️ Tech Stack (Suggested)
 
-* **Frontend**: Angular / React
-* **Backend**: Spring Boot / Node.js
+* **Frontend**: Angular
+* **Backend**: Spring Boot
 * **Authentication**: JWT-based authentication
 * **Payments**: Stripe integration (credit/debit cards)
 * **Video/Audio Calls**: WebRTC
