@@ -7,16 +7,24 @@ export function getJWTtoken() {
     return data.accessToken;
 }
 
-export function getCurrentUserData(){
+export function getCurrentUserData() {
     const data = localStorage.getItem('USER');
-    if(data){
+    if (data) {
         return JSON.parse(data);
-    }else{
+    } else {
         logout();
     }
 }
 
-export function logout(){
+export function getHomePageRedirection(user: any) {
+    if (user.role == "PATIENT") {
+        return 'patient';
+    } else {
+        return 'doctor';
+    }
+}
+
+export function logout() {
     localStorage.clear();
     window.location.href = APP_URL;
 }

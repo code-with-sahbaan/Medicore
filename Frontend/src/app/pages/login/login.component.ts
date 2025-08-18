@@ -17,6 +17,7 @@ import { ApiService } from '../../service/api.service';
 import { finalize } from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthService } from '../../service/auth.service';
+import { getHomePageRedirection } from '../../core/auth.utils';
 
 @Component({
   selector: 'app-login',
@@ -86,11 +87,7 @@ export class LoginComponent {
             this.router.navigate(['verifyOtp']);
           }else{
             localStorage.setItem("USER", JSON.stringify(user));
-            if(user.role == "PATIENT"){
-              this.router.navigate(['patient']);
-            }else{
-              this.router.navigate(['doctor']);
-            }
+            this.router.navigate([getHomePageRedirection(user)]);
           }
         },
         error: (error) => {

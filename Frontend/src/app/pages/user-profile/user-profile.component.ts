@@ -56,6 +56,8 @@ export class UserProfileComponent implements OnInit {
           this.uiService.showSuccess(response.responseMessage);
           const data = response.responseBody;
           this.userProfile = data;
+          this.userProfile.workingHourStart = new Date(data.workingHourStart);
+          this.userProfile.workingHourEnd = new Date(data.workingHourEnd);
         },
         error: (error) => {
           // Showing error toast
@@ -64,7 +66,18 @@ export class UserProfileComponent implements OnInit {
       });
   }
 
+  getCurrentTimeZoneDate(date: Date) {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes() - date.getTimezoneOffset());
+  }
+
   updateUserProfile() {
+    const payload: UserProfile = {
+      fullName: this.userProfile.fullName,
+      email: this.userProfile.email,
+      consultationRates: this.userProfile.consultationRates,
+      workingHourStart: this.getCurrentTimeZoneDate(this.userProfile.workingHourStart),
+      workingHourEnd: this.getCurrentTimeZoneDate(this.userProfile.workingHourEnd)
+    }
     /**
          * Showing Loader
          */
@@ -73,7 +86,7 @@ export class UserProfileComponent implements OnInit {
      * Calling API
      */
     this.apiService
-      .updateProfile(this.userProfile)
+      .updateProfile(payload)
       .pipe(
         finalize(() => {
           // Hiding Loader after API call completion
@@ -92,7 +105,7 @@ export class UserProfileComponent implements OnInit {
       });
   }
 
-  logout(){
+  logout() {
     logout();
   }
 }

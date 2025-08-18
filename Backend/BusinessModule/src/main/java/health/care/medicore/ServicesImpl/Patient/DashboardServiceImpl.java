@@ -2,6 +2,7 @@ package health.care.medicore.ServicesImpl.Patient;
 
 import health.care.medicore.Entities.Users;
 import health.care.medicore.ResponseDTO.BaseResponse;
+import health.care.medicore.ResponseDTO.Doctor.DoctorDashboard;
 import health.care.medicore.ResponseDTO.Patient.Dashboard;
 import health.care.medicore.Services.AppointmentService;
 import health.care.medicore.Services.Patient.DashboardService;
@@ -32,6 +33,20 @@ public class DashboardServiceImpl implements DashboardService {
             dashboard.setCredits(users.getCredits());
             dashboard.setTotalAppointments(appointmentService.totalNumberOfAppointmentsByPatientId(users.getUserId()));
             dashboard.setPatientWorkouts(workoutService.getTodayWorkoutSchedule(users));
+            return new BaseResponse<>("Dashboard Data has been fetched successfully", dashboard);
+        }catch (Exception e){
+            throw new Exception("Failed to fetch Dashboard Data");
+        }
+    }
+
+    @Override
+    public BaseResponse<DoctorDashboard> getDashboardForDoctor() throws Exception {
+        try{
+            Users users = userService.getCurrentUser();
+            DoctorDashboard dashboard = new DoctorDashboard();
+            dashboard.setDoctorAppointments(appointmentService.getTop1AppointmentsByDoctorId(users.getUserId()));
+            dashboard.setCredits(users.getCredits());
+            dashboard.setTotalAppointments(appointmentService.totalNumberOfAppointmentsByDoctorId(users.getUserId()));
             return new BaseResponse<>("Dashboard Data has been fetched successfully", dashboard);
         }catch (Exception e){
             throw new Exception("Failed to fetch Dashboard Data");

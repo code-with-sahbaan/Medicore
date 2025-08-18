@@ -19,6 +19,9 @@ public class PaymentServiceImpl implements PaymentService {
     @Value("${app.currency}")
     private String currency;
 
+    @Value("${app.platform.charges.percentage}")
+    private int platformChargesPercentage;
+
     @Autowired
     private UserService userService;
 
@@ -47,7 +50,8 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     private long updatedAmount(long amount){
-        return (long) ((amount * 0.1) + amount); // Adding 10% fees of Platform
+        int platformFee = platformChargesPercentage / 100;
+        return (amount * platformFee) + amount; // Adding 10% fees of Platform
     }
 
     @Override

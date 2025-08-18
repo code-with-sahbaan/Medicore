@@ -7,6 +7,7 @@ import health.care.medicore.RequestDTO.Patient.BookAppointment;
 import health.care.medicore.RequestDTO.Patient.CancelAppointment;
 import health.care.medicore.RequestDTO.Patient.GetAvailableTimeSlots;
 import health.care.medicore.ResponseDTO.BaseResponse;
+import health.care.medicore.ResponseDTO.Doctor.DoctorAppointment;
 import health.care.medicore.ResponseDTO.Patient.GetAllTimeSlots;
 import health.care.medicore.ResponseDTO.Patient.MyAppointments;
 import health.care.medicore.ResponseDTO.Patient.PatientAppointment;
@@ -48,8 +49,20 @@ public class AppointmentServiceImpl extends GenericServiceImpl<Appointments> imp
     }
 
     @Override
+    public List<DoctorAppointment> getTop1AppointmentsByDoctorId(long doctorId) {
+        Pageable pageable = PageRequest.of(0,1);
+        Page<DoctorAppointment> doctorAppointments = appointmentsRepository.getTop1AppointmentsByDoctorId(doctorId, LocalDate.now(), LocalTime.now(), pageable);
+        return doctorAppointments.getContent();
+    }
+
+    @Override
     public long totalNumberOfAppointmentsByPatientId(long patientId) {
         return appointmentsRepository.totalNumberOfAppointmentsByPatientId(patientId);
+    }
+
+    @Override
+    public long totalNumberOfAppointmentsByDoctorId(long patientId) {
+        return appointmentsRepository.totalNumberOfAppointmentsByDoctorId(patientId);
     }
 
     @Override

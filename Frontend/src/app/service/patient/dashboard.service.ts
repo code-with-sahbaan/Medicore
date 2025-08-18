@@ -32,6 +32,10 @@ export class DashboardService {
         return this.http.get('/patient/v1/getDashboardData').pipe();
     }
 
+    getDashboardDataForDoctor(): Observable<any> {
+        return this.http.get('/doctor/v1/getDashboardDataForDoctor').pipe();
+    }
+
     addWorkout(payload: Workout){
         return this.http.post('/patient/v1/addWorkout', payload).pipe();
     }

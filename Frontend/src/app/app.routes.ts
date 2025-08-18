@@ -10,8 +10,10 @@ import { BookAppointmentComponent } from './pages/patient/book-appointment/book-
 import { MyAppointmentsComponent } from './pages/patient/my-appointments/my-appointments.component';
 import { AppointmentConversationComponent } from './pages/appointment-conversation/appointment-conversation.component';
 import { BuyCreditsComponent } from './pages/patient/buy-credits/buy-credits.component';
-import { AiSymptomCheckerComponent } from './pages/patients/ai-symptom-checker/ai-symptom-checker.component';
+import { AiSymptomCheckerComponent } from './pages/patient/ai-symptom-checker/ai-symptom-checker.component';
 import { UserProfileComponent } from './pages/user-profile/user-profile.component';
+import { DoctorSideDrawerComponent } from './components/doctor/doctor-side-drawer/doctor-side-drawer.component';
+import { DoctorDashboardComponent } from './pages/doctor/doctor-dashboard/doctor-dashboard.component';
 
 export const routes: Routes = [
   {
@@ -93,6 +95,26 @@ export const routes: Routes = [
         component: AiSymptomCheckerComponent,
         data: {
           title: 'AI Checker',
+        },
+      },
+      {
+        path: 'userProfile',
+        component: UserProfileComponent,
+        data: {
+          title: 'User Profile',
+        },
+      }
+    ],
+  },
+  // Doctor Dashboard Menu
+  { path: 'doctor', redirectTo: 'doctor/home' },
+  {
+    path: 'doctor',
+    component: DoctorSideDrawerComponent,
+    children: [
+      {
+        path: 'home', component: DoctorDashboardComponent, data: {
+          title: 'Home',
         },
       },
       {

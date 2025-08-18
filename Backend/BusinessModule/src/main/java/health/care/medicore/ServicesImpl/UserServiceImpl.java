@@ -181,6 +181,11 @@ public class UserServiceImpl extends GenericServiceImpl<Users> implements UserDe
         try{
             Users users = getCurrentUser();
             BeanUtils.copyProperties(doctorProfile, users);
+            /* Converting full Dates into Time */
+            if (users.getRole().getRole().equals(Constants.DOCTOR)){
+                users.setWorkingHourStart(doctorProfile.getWorkingHourStart().toLocalTime());
+                users.setWorkingHourEnd(doctorProfile.getWorkingHourEnd().toLocalTime());
+            }
             userRepository.save(users);
             return new BaseResponse<>("Profile Updated successfully", null);
         } catch (Exception e) {

@@ -119,6 +119,8 @@ public class WebConfiguration {
         http.authorizeHttpRequests(authorize -> {
             // Allowing specific pattern urls for patient role users
             authorize.requestMatchers("/patient/**", "/aiChat/**").hasAuthority(PATIENT);
+            // Allowing specific pattern urls for patient role users
+            authorize.requestMatchers("/doctor/**").hasAuthority(DOCTOR);
             // Allowing specific pattern urls for patient and doctor role users
             authorize.requestMatchers("/appointment/**").hasAnyAuthority(PATIENT, DOCTOR);
             // Allowing specific pattern urls for patient and doctor role users

@@ -5,6 +5,7 @@ import health.care.medicore.RequestDTO.Patient.BookAppointment;
 import health.care.medicore.RequestDTO.Patient.CancelAppointment;
 import health.care.medicore.RequestDTO.Patient.GetAvailableTimeSlots;
 import health.care.medicore.ResponseDTO.BaseResponse;
+import health.care.medicore.ResponseDTO.Doctor.DoctorAppointment;
 import health.care.medicore.ResponseDTO.Patient.GetAllTimeSlots;
 import health.care.medicore.ResponseDTO.Patient.MyAppointments;
 import health.care.medicore.ResponseDTO.Patient.PatientAppointment;
@@ -15,7 +16,11 @@ public interface AppointmentService {
 
     List<PatientAppointment> getTop1AppointmentsByPatientId(long patientId);
 
+    List<DoctorAppointment> getTop1AppointmentsByDoctorId(long doctorId);
+
     long totalNumberOfAppointmentsByPatientId(long patientId);
+
+    long totalNumberOfAppointmentsByDoctorId(long patientId);
 
     BaseResponse<List<GetAllTimeSlots>> getAvailableTimeSlots(GetAvailableTimeSlots getAvailableTimeSlots) throws Exception;
 

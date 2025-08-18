@@ -2,6 +2,7 @@ package health.care.medicore.Repositories;
 
 import health.care.medicore.Entities.Appointments;
 import health.care.medicore.Entities.Users;
+import health.care.medicore.ResponseDTO.Doctor.DoctorAppointment;
 import health.care.medicore.ResponseDTO.Patient.MyAppointments;
 import health.care.medicore.ResponseDTO.Patient.PatientAppointment;
 import org.springframework.data.domain.Page;
@@ -27,8 +28,19 @@ public interface AppointmentsRepository extends JpaRepository<Appointments, Long
             "ORDER BY ap.appointmentDate ASC, ap.appointmentStartTime ASC")
     Page<PatientAppointment> getTop1AppointmentsByPatientId(@Param("patientId") long patientId, @Param("currentDate") LocalDate currentDate, @Param("currentTime")LocalTime currentTime, Pageable pageable);
 
+    @Query("SELECT NEW health.care.medicore.ResponseDTO.Doctor.DoctorAppointment" +
+            "(ap.appointmentId, ap.appointmentDate, ap.appointmentStartTime, ap.appointmentDuration, ap.patient.fullName) " +
+            "FROM Appointments ap " +
+            "WHERE ap.doctor.userId = :doctorId " +
+            "AND ((ap.appointmentDate = :currentDate AND ap.appointmentStartTime >= :currentTime) OR ap.appointmentDate > :currentDate) " +
+            "ORDER BY ap.appointmentDate ASC, ap.appointmentStartTime ASC")
+    Page<DoctorAppointment> getTop1AppointmentsByDoctorId(@Param("doctorId") long doctorId, @Param("currentDate") LocalDate currentDate, @Param("currentTime")LocalTime currentTime, Pageable pageable);
+
     @Query("SELECT COUNT(ap.appointmentId) FROM Appointments ap WHERE ap.patient.userId = :patientId")
     long totalNumberOfAppointmentsByPatientId(@Param("patientId") long patientId);
+
+    @Query("SELECT COUNT(ap.appointmentId) FROM Appointments ap WHERE ap.doctor.userId = :doctorId")
+    long totalNumberOfAppointmentsByDoctorId(@Param("doctorId") long doctorId);
 
     @Query("SELECT ap.appointmentStartTime FROM Appointments ap WHERE ap.doctor = :doctor AND ap.appointmentDate = :today")
     Set<LocalTime> getAppointmentTimesByDoctorId(@Param("doctor") Users doctor, @Param("today") LocalDate today);
