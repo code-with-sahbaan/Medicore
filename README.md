@@ -32,10 +32,8 @@ A modern web-based platform designed for **real-time medical consultation** betw
 * **Authentication**: JWT-based authentication
 * **Payments**: Stripe integration (credit/debit cards)
 * **Video/Audio Calls**: WebRTC
-* **Messaging/Events**: Apache Kafka
-* **Database**: PostgreSQL / MongoDB
-* **API Gateway**: NGINX / Kong
-* **Resilience**: Circuit Breaker (Resilience4j/Hystrix)
+* **Messaging/Events**: RabbitMQ
+* **Database**: PostgreSQL
 
 ---
 
