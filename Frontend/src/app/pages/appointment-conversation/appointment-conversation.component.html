@@ -18,7 +18,7 @@
   </div>
   <div class="col-12">
     <div class="h-full w-full">
-      <p-editor (onTextChange)="textChange($event)" placeholder="Write your prescription here.." [(ngModel)]="webRtc.prescription" [style]="{ height: '81vh' }">
+      <p-editor [readonly]="!isDoctor" (onTextChange)="textChange($event)" placeholder="Write your prescription here.." [(ngModel)]="webRtc.prescription" [style]="{ height: '81vh' }">
         <ng-template #header>
           <span class="ql-formats">
             <p class="text-800 text-primary-900 text-4xl font-semibold mb-3">Prescription</p>

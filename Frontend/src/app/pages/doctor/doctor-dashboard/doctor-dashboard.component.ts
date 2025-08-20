@@ -18,7 +18,7 @@ import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-doctor-dashboard',
-  imports: [CommonModule, TabsModule, CardModule, TableModule, AccordionModule, WorkoutScheduleComponent, ButtonModule, InputTextModule, FormsModule, FieldsetModule],
+  imports: [CommonModule, TabsModule, CardModule, TableModule, AccordionModule, ButtonModule, InputTextModule, FormsModule, FieldsetModule],
   templateUrl: './doctor-dashboard.component.html',
   styleUrl: './doctor-dashboard.component.css'
 })

@@ -113,7 +113,7 @@ public class DataBootstrapping implements CommandLineRunner {
             // Inserting Appointment
 
             Appointments appointments = new Appointments();
-            appointments.setAppointmentStartTime(LocalTime.now().plusHours(1));
+            appointments.setAppointmentStartTime(LocalTime.now());
             appointments.setPatient(saved1);
             appointments.setDoctor(saved2);
             appointments.setAppointmentDuration(30);
@@ -146,6 +146,22 @@ public class DataBootstrapping implements CommandLineRunner {
             AppConfigs appConfigs = new AppConfigs();
             appConfigs.setName(Constants.FORGOT_PASSWORD_OTP_TEMPLATE_NAME);
             appConfigs.setValue(Constants.FORGOT_PASSWORD_OTP_TEMPLATE);
+            appConfigRepository.save(appConfigs);
+        }
+
+        log.info("*** INSERTING APPOINTMENT CONFIRMATION TEMPLATE ***");
+        if (appConfigRepository.findByName(Constants.APPOINTMENT_CONFIRM_TEMPLATE_NAME) == null){
+            AppConfigs appConfigs = new AppConfigs();
+            appConfigs.setName(Constants.APPOINTMENT_CONFIRM_TEMPLATE_NAME);
+            appConfigs.setValue(Constants.APPOINTMENT_CONFIRM_TEMPLATE);
+            appConfigRepository.save(appConfigs);
+        }
+
+        log.info("*** INSERTING APPOINTMENT CANCELLATION TEMPLATE ***");
+        if (appConfigRepository.findByName(Constants.APPOINTMENT_CANCEL_TEMPLATE_NAME) == null){
+            AppConfigs appConfigs = new AppConfigs();
+            appConfigs.setName(Constants.APPOINTMENT_CANCEL_TEMPLATE_NAME);
+            appConfigs.setValue(Constants.APPOINTMENT_CANCEL_TEMPLATE);
             appConfigRepository.save(appConfigs);
         }
     }

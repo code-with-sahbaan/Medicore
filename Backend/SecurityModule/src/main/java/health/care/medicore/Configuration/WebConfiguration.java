@@ -57,8 +57,7 @@ public class WebConfiguration {
 
     @Bean
     AuthenticationManager myAuthenticationManager() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService);
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
         provider.setPasswordEncoder(encoder());
         return provider::authenticate;
     }
@@ -78,9 +77,7 @@ public class WebConfiguration {
     @Bean
     protected SecurityFilterChain securityFilterChain(HttpSecurity http,AuthenticationManager authenticationManager) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
-        http.cors(cors -> {
-            cors.configure(http);
-        });
+        http.cors(cors -> cors.configure(http));
         http.logout(lOut->{
             lOut.logoutUrl("/user/logout").invalidateHttpSession(true)
                     .logoutSuccessHandler((new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK)));
@@ -93,9 +90,7 @@ public class WebConfiguration {
         });
 
         // Stateless Session because of JWT
-        http.sessionManagement(session->{
-            session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        });
+        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         // Disabling it causes the h2 database to be viewed.
         http.headers(header->
@@ -130,9 +125,7 @@ public class WebConfiguration {
         });
 
         // authenticating any other url.
-        http.authorizeHttpRequests(authorize->{
-            authorize.anyRequest().authenticated();
-        });
+        http.authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated());
 
         // Enabling custom filters to act before UsernamePasswordAuthenticationFilter
         http.addFilterBefore(new AuthorizationFilter(publicUrls, secret), UsernamePasswordAuthenticationFilter.class);

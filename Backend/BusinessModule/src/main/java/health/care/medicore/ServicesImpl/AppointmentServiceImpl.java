@@ -6,13 +6,16 @@ import health.care.medicore.Repositories.AppointmentsRepository;
 import health.care.medicore.RequestDTO.Patient.BookAppointment;
 import health.care.medicore.RequestDTO.Patient.CancelAppointment;
 import health.care.medicore.RequestDTO.Patient.GetAvailableTimeSlots;
+import health.care.medicore.RequestDTO.SendEmail;
 import health.care.medicore.ResponseDTO.BaseResponse;
 import health.care.medicore.ResponseDTO.Doctor.DoctorAppointment;
 import health.care.medicore.ResponseDTO.Patient.GetAllTimeSlots;
 import health.care.medicore.ResponseDTO.Patient.MyAppointments;
 import health.care.medicore.ResponseDTO.Patient.PatientAppointment;
 import health.care.medicore.Services.AppointmentService;
+import health.care.medicore.Services.QueueService;
 import health.care.medicore.Services.UserService;
+import health.care.medicore.Utils.Constants;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,9 +26,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class AppointmentServiceImpl extends GenericServiceImpl<Appointments> implements AppointmentService {
@@ -35,6 +36,9 @@ public class AppointmentServiceImpl extends GenericServiceImpl<Appointments> imp
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private QueueService queueService;
 
     public AppointmentServiceImpl() {
         super(Appointments.class);
@@ -129,6 +133,13 @@ public class AppointmentServiceImpl extends GenericServiceImpl<Appointments> imp
             patient.setCredits(remainingCredits);
             userService.updateUser(patient);
             successfulAppointments += 1;
+
+            // Sending Emails to Doctor and Patient
+            Map<String, String> content = new HashMap<>();
+            content.put("doctor", doctor.getFullName());
+            content.put("patient", patient.getFullName());
+            content.put("dateTime", bookAppointment.getAppointmentDate().toString() + " - " + appointments.getAppointmentStartTime().toString());
+            sendEmailForConfirmingOrCancellingAppointment(doctor, patient, "Appointment Confirmation", Constants.APPOINTMENT_CONFIRM_TEMPLATE_NAME, content);
         }
     }
 
@@ -136,7 +147,12 @@ public class AppointmentServiceImpl extends GenericServiceImpl<Appointments> imp
     public BaseResponse<List<MyAppointments>> getAllAppointments() throws Exception {
         try{
             Users user = userService.getCurrentUser();
-            List<MyAppointments> myAppointments = appointmentsRepository.getAllAppointments(user);
+            List<MyAppointments> myAppointments;
+            if (user.getRole().getRole().equals(Constants.DOCTOR)){
+                myAppointments = appointmentsRepository.getAllAppointmentsForDoctor(user);
+            }else{
+                myAppointments = appointmentsRepository.getAllAppointments(user);
+            }
             return new BaseResponse<>("Appointments Fetched", myAppointments);
         }catch (Exception e){
             throw new  Exception("Failed to get All Appointments");
@@ -151,11 +167,19 @@ public class AppointmentServiceImpl extends GenericServiceImpl<Appointments> imp
             throw new Exception("Appointment cannot be cancelled as either it is passed or within 24 hours");
         }
 
-        Users users = userService.getCurrentUser();
+        Users users = appointments.getPatient();
         // Returning credits back to Users
         long updatedCredits = users.getCredits() + appointments.getAppointmentCharges();
         users.setCredits(updatedCredits);
         userService.updateUser(users);
+        // Sending Emails to Doctor and Patient
+        Users doctor = appointments.getDoctor();
+        Users patient = appointments.getPatient();
+        Map<String, String> content = new HashMap<>();
+        content.put("doctor", doctor.getFullName());
+        content.put("patient", patient.getFullName());
+        content.put("dateTime", appointments.getAppointmentDate().toString() + " - " + appointments.getAppointmentStartTime().toString());
+        sendEmailForConfirmingOrCancellingAppointment(doctor, patient, "Appointment Cancellation", Constants.APPOINTMENT_CANCEL_TEMPLATE_NAME, content);
         // Deleting the Appointment
         appointmentsRepository.delete(appointments);
         BaseResponse<List<MyAppointments>> listBaseResponse = getAllAppointments();
@@ -176,5 +200,20 @@ public class AppointmentServiceImpl extends GenericServiceImpl<Appointments> imp
     @Override
     public List<Appointments> getAllPreviousDayAppointments() throws Exception {
         return appointmentsRepository.getAllPreviousDayAppointments(LocalDate.now().minusDays(1));
+    }
+
+    private void sendEmailForConfirmingOrCancellingAppointment(Users doctor, Users patient, String subject, String templateName, Map<String, String> content) throws Exception {
+        for (int j = 0; j < 2; j++){
+            // Sending Emails to Patient and Doctor both
+            boolean isDoctor = j == 0;
+            content.put("name", isDoctor ? doctor.getFullName() : patient.getFullName());
+            SendEmail sendEmail = new SendEmail(
+                    isDoctor ? doctor.getEmail() : patient.getEmail(),
+                    subject,
+                    templateName,
+                    content
+            );
+            queueService.sendEmailToQueue(sendEmail);
+        }
     }
 }

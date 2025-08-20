@@ -5,6 +5,7 @@ import { Button, ButtonModule } from "primeng/button";
 import { NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Editor, EditorTextChangeEvent } from 'primeng/editor';
+import { getCurrentUserData } from '../../core/auth.utils';
 
 @Component({
   selector: 'app-appointment-conversation',
@@ -20,7 +21,7 @@ export class AppointmentConversationComponent {
 
   videoText: string = 'Stop Video';
   audioText: string = 'Mute';
-
+  isDoctor: boolean = getCurrentUserData().role == "DOCTOR";
   text: string = '';
 
   constructor(public webRtc: WebRtcService, private calendarService: CalendarService) { }

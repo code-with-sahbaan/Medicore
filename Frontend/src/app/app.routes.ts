@@ -118,6 +118,13 @@ export const routes: Routes = [
         },
       },
       {
+        path: 'appointments',
+        component: MyAppointmentsComponent,
+        data: {
+          title: 'My Appointments',
+        },
+      },
+      {
         path: 'userProfile',
         component: UserProfileComponent,
         data: {
