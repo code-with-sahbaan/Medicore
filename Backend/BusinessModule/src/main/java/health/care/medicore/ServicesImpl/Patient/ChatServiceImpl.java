@@ -56,7 +56,7 @@ public class ChatServiceImpl extends GenericServiceImpl<ChatMessages> implements
             // fetching last 10 user and assistant messages
             List<ChatMessages> chatMessagesList = chatMessageRepository.getLastUserChatMessages(users.getUserId(), MESSAGE_LIMIT * 2);
 
-            // converting messages to ai messages
+            // converting messages to AI messages
             List<Message> messages = new ArrayList<>(chatMessagesList.stream().map(chatMessages1 ->
                     chatMessages1.getRole().equals(Constants.CHAT_USER_ROLE) ? new UserMessage(chatMessages1.getContent()) : new AssistantMessage(chatMessages1.getContent())
             ).toList());
@@ -74,7 +74,7 @@ public class ChatServiceImpl extends GenericServiceImpl<ChatMessages> implements
 
             AiAssistantResponse aiAssistantResponse = new AiAssistantResponse();
             aiAssistantResponse.setReply(reply);
-            return new BaseResponse<AiAssistantResponse>("Response Get Successfully", aiAssistantResponse );
+            return new BaseResponse<>("Response Get Successfully", aiAssistantResponse);
         } catch (Exception e) {
             throw new Exception("Failed to get response from Symptom Checker");
         }
