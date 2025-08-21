@@ -53,6 +53,9 @@ public class Users {
     @Column(name = "CONSULTATION_RATES")
     private long consultationRates;
 
+    @Column(name = "STRIPE_ACCOUNT_ID")
+    private String stripeAccountId;
+
     // Appointments where this user is the doctor
     @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
     private List<Appointments> doctorAppointments;

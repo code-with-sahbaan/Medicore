@@ -1,5 +1,6 @@
 package health.care.medicore.Controllers.v1;
 
+import health.care.medicore.RequestDTO.Doctor.PayoutCredits;
 import health.care.medicore.RequestDTO.Patient.BuyCredits;
 import health.care.medicore.ResponseDTO.BaseResponse;
 import health.care.medicore.ResponseDTO.Patient.BuyCreditsDetails;
@@ -32,6 +33,13 @@ public class PaymentController {
     public ResponseEntity<BaseResponse<BuyCreditsDetails>> updateCredits(@RequestBody BuyCredits buyCredits) throws Exception {
         log.info("Executing updateCredits in AppointmentController");
         paymentService.updateCredits(buyCredits);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("v1/payoutCredits")
+    public ResponseEntity<BaseResponse<?>> payoutCredits(@RequestBody PayoutCredits payoutCredits) throws Exception {
+        log.info("Executing payoutCredits in AppointmentController");
+        paymentService.payoutCredits(payoutCredits);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

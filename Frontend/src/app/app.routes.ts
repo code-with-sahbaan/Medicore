@@ -14,6 +14,7 @@ import { AiSymptomCheckerComponent } from './pages/patient/ai-symptom-checker/ai
 import { UserProfileComponent } from './pages/user-profile/user-profile.component';
 import { DoctorSideDrawerComponent } from './components/doctor/doctor-side-drawer/doctor-side-drawer.component';
 import { DoctorDashboardComponent } from './pages/doctor/doctor-dashboard/doctor-dashboard.component';
+import { PayoutComponent } from './pages/doctor/payout/payout.component';
 
 export const routes: Routes = [
   {
@@ -129,6 +130,13 @@ export const routes: Routes = [
         component: UserProfileComponent,
         data: {
           title: 'User Profile',
+        },
+      },
+      {
+        path: 'payout',
+        component: PayoutComponent,
+        data: {
+          title: 'Payout',
         },
       }
     ],

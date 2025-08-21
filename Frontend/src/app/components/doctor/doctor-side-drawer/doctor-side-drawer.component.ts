@@ -37,8 +37,8 @@ export class DoctorSideDrawerComponent implements OnInit {
     },
     {
       icon: 'pi pi-dollar',
-      label: 'Manage Credits',
-      route: '/doctor/manageCredits',
+      label: 'Payout Credits',
+      route: '/doctor/payout',
     }
   ];
 
