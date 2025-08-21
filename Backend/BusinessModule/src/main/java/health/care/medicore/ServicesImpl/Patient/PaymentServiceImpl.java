@@ -1,14 +1,8 @@
 package health.care.medicore.ServicesImpl.Patient;
 
-import com.stripe.model.Account;
-import com.stripe.model.BankAccount;
-import com.stripe.model.PaymentIntent;
-import com.stripe.model.Payout;
+import com.stripe.model.*;
 import com.stripe.net.RequestOptions;
-import com.stripe.param.AccountCreateParams;
-import com.stripe.param.PaymentIntentCreateParams;
-import com.stripe.param.PaymentLinkCreateParams;
-import com.stripe.param.PayoutCreateParams;
+import com.stripe.param.*;
 import health.care.medicore.Entities.Users;
 import health.care.medicore.RequestDTO.Doctor.PayoutCredits;
 import health.care.medicore.RequestDTO.Patient.BuyCredits;
@@ -65,6 +59,11 @@ public class PaymentServiceImpl implements PaymentService {
         return (amount * platformFee) + amount; // Adding 10% fees of Platform
     }
 
+    private long updatedAmountForPayout(long amount){
+        int platformFee = platformChargesPercentage / 100;
+        return amount - (amount * platformFee); // Reducing 10% fees of Platform
+    }
+
     @Override
     public void updateCredits(BuyCredits buyCredits) throws Exception {
         try{
@@ -78,13 +77,14 @@ public class PaymentServiceImpl implements PaymentService {
         }
     }
 
-    public Account createConnectedAccount(String email) throws Exception {
+    public Account createConnectedAccount(String email, String country, String accountHolderType) throws Exception {
         try{
             AccountCreateParams params = AccountCreateParams.builder()
                     .setType(AccountCreateParams.Type.CUSTOM) // EXPRESS also works
-                    .setCountry("US")
+                    .setCountry(country)
                     .setEmail(email)
-                    .setBusinessType(AccountCreateParams.BusinessType.INDIVIDUAL)
+                    .putExtraParam("capabilities[transfers][requested]", true)
+                    .setBusinessType(accountHolderType.equalsIgnoreCase("individual")? AccountCreateParams.BusinessType.INDIVIDUAL : AccountCreateParams.BusinessType.COMPANY)
                     .build();
 
             return Account.create(params);
@@ -97,11 +97,13 @@ public class PaymentServiceImpl implements PaymentService {
     public void payoutCredits(PayoutCredits payoutCredits) throws Exception {
         try{
             Users users = userService.getCurrentUser();
-
+            if (users.getCredits() < payoutCredits.getCredits()) {
+                throw new Exception("Payout Credit Not Enough");
+            }
             /* CREATING STRIPE ACCOUNT */
             Account account;
             if (Objects.isNull(users.getStripeAccountId())){
-                account = createConnectedAccount(users.getEmail());
+                account = createConnectedAccount(users.getEmail(), payoutCredits.getCountry(), payoutCredits.getAccount_holder_type());
                 users.setStripeAccountId(account.getId());
                 userService.updateUser(users);
             }else{
@@ -110,20 +112,23 @@ public class PaymentServiceImpl implements PaymentService {
             }
 
             /* CONNECTING BANK ACCOUNT WITH STRIPE */
-            Map<String, Object> params = new HashMap<>();
-            params.put("external_account", payoutCredits.getBankToken()); // btok_xxx from frontend
-            account.getExternalAccounts().create(params);
-
+            ExternalAccountCollectionCreateParams externalAccountCollectionCreateParams = ExternalAccountCollectionCreateParams.builder()
+                    .setExternalAccount(payoutCredits.getBankToken()).build();
+            ExternalAccount externalAccount = account.getExternalAccounts().create(externalAccountCollectionCreateParams);
             /* PAYING OUT CREDITS */
-            PayoutCreateParams payoutCreateParams = PayoutCreateParams.builder()
-                    .setAmount(payoutCredits.getCredits() * 100) // converting cents to actual amount
-                    .setCurrency(currency)
+            PayoutCreateParams payoutCreateParams =  PayoutCreateParams.builder()
+                    .setAmount(updatedAmountForPayout(payoutCredits.getCredits())) // converting cents to actual amount
+                    .setCurrency(payoutCredits.getCurrency())
                     .build();
-            Payout.create(params,
+            Payout.create(payoutCreateParams,
                     RequestOptions.builder()
                             .setStripeAccount(account.getId())
                             .build());
 
+            /* UPDATING USER CREDITS */
+            long updatedCredits = users.getCredits() - payoutCredits.getCredits();
+            users.setCredits(updatedCredits);
+            userService.updateUser(users);
         }catch (Exception e){
             throw new Exception("Failed to Payout Credits");
         }

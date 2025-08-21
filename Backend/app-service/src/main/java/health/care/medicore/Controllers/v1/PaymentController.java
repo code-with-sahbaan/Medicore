@@ -40,6 +40,6 @@ public class PaymentController {
     public ResponseEntity<BaseResponse<?>> payoutCredits(@RequestBody PayoutCredits payoutCredits) throws Exception {
         log.info("Executing payoutCredits in AppointmentController");
         paymentService.payoutCredits(payoutCredits);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(new BaseResponse<>("Credits Withdraw successfully", null), HttpStatus.OK);
     }
 }

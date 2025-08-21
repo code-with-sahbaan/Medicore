@@ -90,6 +90,7 @@ public class DataBootstrapping implements CommandLineRunner {
             user2.setRole(roleRepository.findByRoleIgnoreCase(Constants.DOCTOR));
             user2.setEmail("sahbaanalam25@gmail.com");
             user2.setCredits(200);
+            user2.setStripeAccountId("acct_1RyhJRQcT45Bmv6l");
             user2.setFullName("Sahbaan Alam - Doctor");
             user2.setWorkingHourStart(LocalTime.of(11, 0));
             user2.setWorkingHourEnd(LocalTime.of(20, 0));

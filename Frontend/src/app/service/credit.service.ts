@@ -7,6 +7,14 @@ export interface BuyCredits{
     credits: number
 }
 
+export interface PayoutCredits{
+    bankToken: string,
+    credits: number,
+    currency: string,
+    country: string,
+    account_holder_type: string
+}
+
 @Injectable({
     providedIn: 'root',
 })
@@ -23,5 +31,9 @@ export class CreditService {
 
     updateCredits(buyCredits: BuyCredits): Observable<any> {
         return this.http.post('/payment/v1/updateCredits', buyCredits).pipe();
+    }
+
+    payoutCredits(payoutCredits: PayoutCredits): Observable<any> {
+        return this.http.post('/payment/v1/payoutCredits', payoutCredits).pipe();
     }
 }

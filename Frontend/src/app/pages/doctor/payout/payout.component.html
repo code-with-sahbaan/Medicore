@@ -1,1 +1,133 @@
-<p>payout works!</p>
+<div>
+    <div id="header" class="pb-7 grid grid-nogutter justify-between">
+        <div class="col-12 md:col-6">
+            <h2 class="text-800 text-primary-900 text-4xl font-semibold">
+                Payout Credits
+            </h2>
+        </div>
+        <!-- <div class="col-12 md:col-6">
+      <input placeholder="Search for doctors, appointments..." pInputText id="task-help" aria-describedby="task-help" />
+    </div> -->
+    </div>
+
+    <div>
+        <div class="grid grid-nogutter justify-between">
+            <p-card class="col-12 md:col-4 h-15rem">
+                <ng-template #title class="m-0"> Available Credits </ng-template>
+                <ng-template #subtitle class="m-0">
+                    Expires at 31-Dec-2025</ng-template>
+                <div class="flex flex-column gap-1 mt-4">
+                    <h2 class="text-primary-500 text-7xl font-bold" style="margin: 0">
+                        {{credits}} $
+                    </h2>
+                </div>
+            </p-card>
+        </div>
+        <form [formGroup]="withdrawForm" (ngSubmit)="printBankToken()" class="flex flex-column
+            gap-4">
+            <div></div>
+            <!-- 1st Row -->
+            <div class="col-12 grid grid-nogutter justify-between">
+                <div class="col-5">
+                    <p-floatlabel>
+
+                        <p-inputnumber id="amount" [min]="5" formControlName="amount" mode="decimal" [format]="false" />
+                        <label for="amount">Credits to Withdraw</label>
+                    </p-floatlabel>
+                    <small *ngIf="getFormControls['amount'].touched && getFormControls['amount'].invalid"
+                        class="p-error">
+                        <p-message *ngIf="getFormControls['amount'].errors?.['required']" severity="error"
+                            variant="simple" size="small">Amount is required</p-message>
+                    </small>
+                </div>
+                <div class="col-5">
+                    <p-floatlabel>
+
+                        <input pInputText id="account_holder_name" formControlName="account_holder_name" />
+                        <label for="account_holder_name">Account Holder Name</label>
+                    </p-floatlabel>
+                    <small
+                        *ngIf="getFormControls['account_holder_name'].touched && getFormControls['account_holder_name'].invalid"
+                        class="p-error">
+                        <p-message *ngIf="getFormControls['account_holder_name'].errors?.['required']" severity="error"
+                            variant="simple" size="small">Account Holder Name is
+                            required</p-message>
+                    </small>
+                </div>
+            </div>
+            <!-- 2nd Row -->
+            <div class="col-12 grid grid-nogutter justify-between">
+                <div class="col-5">
+                    <p-floatlabel>
+                        <p-select [options]="holderType" formControlName="account_holder_type" placeholder="Select Account Holder Type" />
+                        <label for="account_holder_type">Account Holder Type</label>
+                    </p-floatlabel>
+                    <small
+                        *ngIf="getFormControls['account_holder_type'].touched && getFormControls['account_holder_type'].invalid"
+                        class="p-error">
+                        <p-message *ngIf="getFormControls['account_holder_type'].errors?.['required']" severity="error"
+                            variant="simple" size="small">Account Holder Type is
+                            required</p-message>
+                    </small>
+                </div>
+                <div class="col-5">
+                    <p-floatlabel>
+
+                        <input pInputText id="account_number" formControlName="account_number" />
+                        <label for="account_number">Account Number</label>
+                    </p-floatlabel>
+                    <small
+                        *ngIf="getFormControls['account_number'].touched && getFormControls['account_number'].invalid"
+                        class="p-error">
+                        <p-message *ngIf="getFormControls['account_number'].errors?.['required']" severity="error"
+                            variant="simple" size="small">Account Number is required</p-message>
+                    </small>
+                </div>
+            </div>
+            <!-- 3rd Row -->
+            <div class="col-12 grid grid-nogutter justify-between">
+                <div class="col-5">
+                    <p-floatlabel>
+                        <p-select [options]="SUPPORTED_COUNTRIES" formControlName="country" placeholder="Select Account Country" />
+                        <label for="country">Country</label>
+                    </p-floatlabel>
+                    <small *ngIf="getFormControls['country'].touched && getFormControls['country'].invalid"
+                        class="p-error">
+                        <p-message *ngIf="getFormControls['country'].errors?.['required']" severity="error"
+                            variant="simple" size="small">Country is required</p-message>
+                    </small>
+                </div>
+                <div class="col-5">
+                    <p-floatlabel>
+                        <p-select [options]="SUPPORTED_CURRENCIES" formControlName="currency" placeholder="Select Account Currency" />
+                        <label for="currency">Currency</label>
+                    </p-floatlabel>
+                    <small *ngIf="getFormControls['currency'].touched && getFormControls['currency'].invalid"
+                        class="p-error">
+                        <p-message *ngIf="getFormControls['currency'].errors?.['required']" severity="error"
+                            variant="simple" size="small">Currency is required</p-message>
+                    </small>
+                </div>
+            </div>
+            <!-- 4th Row -->
+            <div class="col-12 grid grid-nogutter justify-between">
+                <div class="col-5">
+                    <p-floatlabel>
+                        <input pInputText id="routing_number" formControlName="routing_number" />
+                        <label for="routing_number">Routing Number</label>
+                    </p-floatlabel>
+                    <small
+                        *ngIf="getFormControls['routing_number'].touched && getFormControls['routing_number'].invalid"
+                        class="p-error">
+                        <p-message *ngIf="getFormControls['routing_number'].errors?.['required']" severity="error"
+                            variant="simple" size="small">Routing Number is required</p-message>
+                    </small>
+                </div>
+                <div class="col-5">
+                    <p-button class="w-full" type="submit" [disabled]="withdrawForm.invalid" label="Withdraw" />
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
