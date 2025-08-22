@@ -44,7 +44,7 @@ export class SignupComponent {
   constructor(private fb: FormBuilder, private api: ApiService, private router: Router, private uiService: UiService, private authService : AuthService) {
     this.singupForm = fb.group({
       fullName: ['', [Validators.required]],
-      role: ['Owner', Validators.required],
+      role: ['Doctor', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       TC:['', Validators.required]

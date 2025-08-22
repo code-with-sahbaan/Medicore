@@ -13,4 +13,6 @@ public interface PaymentService {
     public void updateCredits(BuyCredits buyCredits) throws Exception;
 
     public void payoutCredits(PayoutCredits payoutCredits) throws Exception;
+
+    void updateVerification() throws  Exception;
 }

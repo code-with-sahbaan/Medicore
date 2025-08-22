@@ -13,6 +13,7 @@ import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { NgIf } from '@angular/common';
 import { SelectModule } from 'primeng/select';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-payout',
@@ -36,27 +37,42 @@ export class PayoutComponent implements OnInit {
     "mxn", "nzd", "nok", "pln", "ron", "sgd", "sek", "chf", "gbp", "usd"
   ];
 
-  constructor(private fb: FormBuilder, public uiService: UiService, public creditService: CreditService) {
+  constructor(private fb: FormBuilder, public uiService: UiService, public creditService: CreditService, private route: ActivatedRoute) {
     this.withdrawForm = fb.group({
       amount: [5, [Validators.required]],
-      country: ['', [Validators.required]],
-      currency: ['', [Validators.required]],
+      country: ['US', [Validators.required]],
+      currency: ['usd', [Validators.required]],
       routing_number: ['', [Validators.required]],
       account_number: ['', [Validators.required]],
       account_holder_name: ['', [Validators.required]],
-      account_holder_type: ['', [Validators.required]],
+      account_holder_type: ['Individual', [Validators.required]],
     });
   }
 
   ngOnInit(): void {
-    setTimeout(() => this.getCredits(), 0);
+    setTimeout(() => {
+      this.getCredits();
+      const status = this.route.snapshot.queryParamMap.get('verificationStatus');
+      const token = this.route.snapshot.queryParamMap.get('bankToken') ?? '';
+      const currency = this.route.snapshot.queryParamMap.get('currency') ?? '';
+      const credits = this.route.snapshot.queryParamMap.get('credits') ?? '';
+      if (status?.length != 0 && token?.length != 0) {
+        this.withdrawForm.get('amount')?.setValue(credits);
+        this.withdrawForm.get('currency')?.setValue(currency);
+        this.updateVerification(token);
+      }
+    }, 0);
+
   }
 
   get getFormControls() {
     return this.withdrawForm?.controls;
   }
 
-  async printBankToken() {
+  async sendPayout() {
+    if (this.withdrawForm.invalid) {
+      return;
+    }
     const stripe = await loadStripe(environment.stripePublicKey) as Stripe;
     this.uiService.showSpinner();
     stripe.createToken('bank_account', this.withdrawForm.value).
@@ -89,10 +105,16 @@ export class PayoutComponent implements OnInit {
         next: (response) => {
           // Showing success Toast
           this.uiService.showSuccess(response.responseMessage);
+          this.credits = this.credits - Number(this.withdrawForm.get('amount')?.value);
         },
         error: (error) => {
-          // Showing error toast\
-          this.uiService.showError("Failed to Withdraw Credits");
+          // Showing error toast
+          const msg: string = error.error.responseMessage;
+          if (msg.includes("https")) {
+            window.location.href = msg;
+          } else {
+            this.uiService.showError("Failed to Withdraw Credits");
+          }
         },
       });
   }
@@ -117,6 +139,35 @@ export class PayoutComponent implements OnInit {
         error: (error) => {
           // Showing error toast\
           this.uiService.showError("Failed to fetch Credits");
+        },
+      });
+  }
+
+  getAmountCharged(): number {
+    const newCredits = Number(this.getFormControls['amount'].value);
+    const platformCharges:number = 1 - (environment.platformCharges / 100);
+    return newCredits * platformCharges;
+  }
+
+  private updateVerification(bankToken: string) {
+    this.uiService.showSpinner();
+    this.creditService
+      .updateVerification()
+      .pipe(
+        finalize(() => {
+          // Hiding Loader after API call completion
+          this.uiService.hideSpinner();
+        })
+      )
+      .subscribe({
+        next: (response) => {
+          // Showing success Toast
+          this.uiService.showSuccess(response.responseMessage);
+          this.payoutCredits(bankToken);
+        },
+        error: (error) => {
+          // Showing error toast\
+          this.uiService.showError(error.error.responseMessage);
         },
       });
   }

@@ -36,4 +36,8 @@ export class CreditService {
     payoutCredits(payoutCredits: PayoutCredits): Observable<any> {
         return this.http.post('/payment/v1/payoutCredits', payoutCredits).pipe();
     }
+
+    updateVerification(): Observable<any> {
+        return this.http.get('/payment/v1/updateVerification').pipe();
+    }
 }

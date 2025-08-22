@@ -9,10 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("payment")
@@ -41,5 +38,12 @@ public class PaymentController {
         log.info("Executing payoutCredits in AppointmentController");
         paymentService.payoutCredits(payoutCredits);
         return new ResponseEntity<>(new BaseResponse<>("Credits Withdraw successfully", null), HttpStatus.OK);
+    }
+
+    @GetMapping("v1/updateVerification")
+    public ResponseEntity<BaseResponse<?>> updateVerification() throws Exception {
+        log.info("Executing updateVerification in AppointmentController");
+        paymentService.updateVerification();
+        return new ResponseEntity<>(new BaseResponse<>("Account Verification Completed", null), HttpStatus.OK);
     }
 }

@@ -27,6 +27,9 @@ public class PaymentServiceImpl implements PaymentService {
     @Value("${app.platform.charges.percentage}")
     private int platformChargesPercentage;
 
+    @Value("${cors.allowed.origins}")
+    private String appUrl;
+
     @Autowired
     private UserService userService;
 
@@ -35,10 +38,9 @@ public class PaymentServiceImpl implements PaymentService {
     public BaseResponse<BuyCreditsDetails> buyCredits(BuyCredits buyCredits) throws Exception {
         try{
             long quantity = buyCredits.getCredits();
-            long amount = quantity * 100L; // $1 = 100 cents
 
             PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
-                    .setAmount(updatedAmount(amount))
+                    .setAmount(updatedAmount(quantity))
                     .setCurrency(currency)
                     .setAutomaticPaymentMethods(
                             PaymentIntentCreateParams.AutomaticPaymentMethods.builder().setEnabled(true).build()
@@ -55,13 +57,13 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     private long updatedAmount(long amount){
-        int platformFee = platformChargesPercentage / 100;
-        return (amount * platformFee) + amount; // Adding 10% fees of Platform
+        double platformFee = 1 + (platformChargesPercentage / 100.00);
+        return Math.round(amount * platformFee * 100); // Adding 10% fees of Platform + converting usd into cents
     }
 
     private long updatedAmountForPayout(long amount){
-        int platformFee = platformChargesPercentage / 100;
-        return amount - (amount * platformFee); // Reducing 10% fees of Platform
+        double platformFee = 1 - (platformChargesPercentage / 100.00);
+        return Math.round(amount * platformFee * 100); // Reducing 10% fees of Platform + converting usd into cents
     }
 
     @Override
@@ -84,6 +86,7 @@ public class PaymentServiceImpl implements PaymentService {
                     .setCountry(country)
                     .setEmail(email)
                     .putExtraParam("capabilities[transfers][requested]", true)
+                    .putExtraParam("settings[payouts][schedule][interval]", "manual")
                     .setBusinessType(accountHolderType.equalsIgnoreCase("individual")? AccountCreateParams.BusinessType.INDIVIDUAL : AccountCreateParams.BusinessType.COMPANY)
                     .build();
 
@@ -106,18 +109,59 @@ public class PaymentServiceImpl implements PaymentService {
                 account = createConnectedAccount(users.getEmail(), payoutCredits.getCountry(), payoutCredits.getAccount_holder_type());
                 users.setStripeAccountId(account.getId());
                 userService.updateUser(users);
+                /* CONNECTING BANK ACCOUNT WITH STRIPE */
+                if (account.getExternalAccounts().getData().isEmpty()){
+                    ExternalAccountCollectionCreateParams externalAccountCollectionCreateParams = ExternalAccountCollectionCreateParams.builder()
+                            .setExternalAccount(payoutCredits.getBankToken()).build();
+                    account.getExternalAccounts().create(externalAccountCollectionCreateParams);
+                }
+                AccountLinkCreateParams params =
+                        AccountLinkCreateParams.builder()
+                                .setAccount(account.getId())
+                                .setRefreshUrl(appUrl + "/doctor/payout") // where to send if they abandon
+                                .setReturnUrl(appUrl +
+                                        "/doctor/payout?verificationStatus=completed&bankToken="
+                                        + payoutCredits.getBankToken()
+                                        + "&credits=" + payoutCredits.getCredits()
+                                        + "&currency=" + payoutCredits.getCurrency()) // where to send after finishing
+                                .setType(AccountLinkCreateParams.Type.ACCOUNT_ONBOARDING) // for initial onboarding
+                                .build();
+
+                AccountLink accountLink = AccountLink.create(params);
+                throw new Exception(accountLink.getUrl());
             }else{
                 String accountId = users.getStripeAccountId();
                 account = Account.retrieve(accountId);
+                if (!users.getIsVerificationCompleted()){
+                    AccountLinkCreateParams params =
+                            AccountLinkCreateParams.builder()
+                                    .setAccount(accountId)
+                                    .setRefreshUrl(appUrl + "/doctor/payout") // where to send if they abandon
+                                    .setReturnUrl(appUrl +
+                                            "/doctor/payout?verificationStatus=completed&bankToken="
+                                            + payoutCredits.getBankToken()
+                                            + "&credits=" + payoutCredits.getCredits()
+                                            + "&currency=" + payoutCredits.getCurrency()) // where to send after finishing
+                                    .setType(AccountLinkCreateParams.Type.ACCOUNT_UPDATE) // 👈 request missing info
+                                    .build();
+                    AccountLink accountLink = AccountLink.create(params);
+                    throw new Exception(accountLink.getUrl());
+                }
             }
 
-            /* CONNECTING BANK ACCOUNT WITH STRIPE */
-            ExternalAccountCollectionCreateParams externalAccountCollectionCreateParams = ExternalAccountCollectionCreateParams.builder()
-                    .setExternalAccount(payoutCredits.getBankToken()).build();
-            ExternalAccount externalAccount = account.getExternalAccounts().create(externalAccountCollectionCreateParams);
+            long creditsToTransfer = updatedAmountForPayout(payoutCredits.getCredits());
+            /* TRANSFER AMOUNT FROM PLATFORM STRIPE TO CONNECTED ACCOUNT */
+            TransferCreateParams transferParams = TransferCreateParams.builder()
+                    .setAmount(creditsToTransfer) // in cents
+                    .setCurrency(payoutCredits.getCurrency())
+                    .setDestination(account.getId()) // connected account ID
+                    .build();
+
+            Transfer transfer = Transfer.create(transferParams);
+
             /* PAYING OUT CREDITS */
             PayoutCreateParams payoutCreateParams =  PayoutCreateParams.builder()
-                    .setAmount(updatedAmountForPayout(payoutCredits.getCredits())) // converting cents to actual amount
+                    .setAmount(creditsToTransfer)
                     .setCurrency(payoutCredits.getCurrency())
                     .build();
             Payout.create(payoutCreateParams,
@@ -130,7 +174,18 @@ public class PaymentServiceImpl implements PaymentService {
             users.setCredits(updatedCredits);
             userService.updateUser(users);
         }catch (Exception e){
-            throw new Exception("Failed to Payout Credits");
+            throw e;
+        }
+    }
+
+    @Override
+    public void updateVerification()  throws  Exception{
+        try{
+            Users users = userService.getCurrentUser();
+            users.setIsVerificationCompleted(true);
+            userService.updateUser(users);
+        }catch (Exception e){
+            throw new Exception("Failed to Update Verification");
         }
     }
 }

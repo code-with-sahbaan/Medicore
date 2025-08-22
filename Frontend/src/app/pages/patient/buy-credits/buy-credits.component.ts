@@ -48,7 +48,8 @@ export class BuyCreditsComponent implements OnInit {
   }
 
   getAmountCharged(): number {
-    return Math.round((this.newCredits * 0.1) + this.newCredits);
+    const platformCharges:number = 1 + (environment.platformCharges / 100);
+    return this.newCredits * platformCharges;
   }
 
   onStepChange(e: number | undefined) {

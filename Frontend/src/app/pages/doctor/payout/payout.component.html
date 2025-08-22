@@ -23,7 +23,7 @@
                 </div>
             </p-card>
         </div>
-        <form [formGroup]="withdrawForm" (ngSubmit)="printBankToken()" class="flex flex-column
+        <form [formGroup]="withdrawForm" (ngSubmit)="sendPayout()" class="flex flex-column
             gap-4">
             <div></div>
             <!-- 1st Row -->
@@ -34,10 +34,18 @@
                         <p-inputnumber id="amount" [min]="5" formControlName="amount" mode="decimal" [format]="false" />
                         <label for="amount">Credits to Withdraw</label>
                     </p-floatlabel>
+                    <small>
+                        <p-message severity="info"
+                            variant="simple" size="small">You'll Recieve {{getFormControls['amount'].value}}$ - 10% (Platform Fee) = {{getAmountCharged()}}</p-message>
+                    </small>
                     <small *ngIf="getFormControls['amount'].touched && getFormControls['amount'].invalid"
                         class="p-error">
                         <p-message *ngIf="getFormControls['amount'].errors?.['required']" severity="error"
                             variant="simple" size="small">Amount is required</p-message>
+                    </small>
+                    <small *ngIf="getFormControls['amount'].value < 5" class="p-error">
+                        <p-message *ngIf="getFormControls['amount'].value < 5" severity="error" variant="simple"
+                            size="small">Amount must be at least 5</p-message>
                     </small>
                 </div>
                 <div class="col-5">
@@ -53,13 +61,15 @@
                             variant="simple" size="small">Account Holder Name is
                             required</p-message>
                     </small>
+
                 </div>
             </div>
             <!-- 2nd Row -->
             <div class="col-12 grid grid-nogutter justify-between">
                 <div class="col-5">
                     <p-floatlabel>
-                        <p-select [options]="holderType" formControlName="account_holder_type" placeholder="Select Account Holder Type" />
+                        <p-select [options]="holderType" formControlName="account_holder_type"
+                            placeholder="Select Account Holder Type" />
                         <label for="account_holder_type">Account Holder Type</label>
                     </p-floatlabel>
                     <small
@@ -88,7 +98,8 @@
             <div class="col-12 grid grid-nogutter justify-between">
                 <div class="col-5">
                     <p-floatlabel>
-                        <p-select [options]="SUPPORTED_COUNTRIES" formControlName="country" placeholder="Select Account Country" />
+                        <p-select [options]="SUPPORTED_COUNTRIES" formControlName="country"
+                            placeholder="Select Account Country" />
                         <label for="country">Country</label>
                     </p-floatlabel>
                     <small *ngIf="getFormControls['country'].touched && getFormControls['country'].invalid"
@@ -99,7 +110,8 @@
                 </div>
                 <div class="col-5">
                     <p-floatlabel>
-                        <p-select [options]="SUPPORTED_CURRENCIES" formControlName="currency" placeholder="Select Account Currency" />
+                        <p-select [options]="SUPPORTED_CURRENCIES" formControlName="currency"
+                            placeholder="Select Account Currency" />
                         <label for="currency">Currency</label>
                     </p-floatlabel>
                     <small *ngIf="getFormControls['currency'].touched && getFormControls['currency'].invalid"
@@ -124,7 +136,9 @@
                     </small>
                 </div>
                 <div class="col-5">
-                    <p-button class="w-full" type="submit" [disabled]="withdrawForm.invalid" label="Withdraw" />
+                    <p-button class="w-full" type="submit"
+                        [disabled]="withdrawForm.invalid || this.withdrawForm.get('amount')?.value < 5"
+                        label="Withdraw" />
                 </div>
             </div>
 
