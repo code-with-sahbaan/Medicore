@@ -3,7 +3,7 @@ import { loadStripe, Stripe } from '@stripe/stripe-js';
 import { environment } from '../../../../environments/environment';
 import { CardModule } from 'primeng/card';
 import { UiService } from '../../../service/ui.service';
-import { CreditService, PayoutCredits } from '../../../service/credit.service';
+import { CreditService, PayoutCredits, PayoutCredits2 } from '../../../service/credit.service';
 import { finalize } from 'rxjs';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
@@ -14,16 +14,29 @@ import { MessageModule } from 'primeng/message';
 import { NgIf } from '@angular/common';
 import { SelectModule } from 'primeng/select';
 import { ActivatedRoute } from '@angular/router';
+import { AccordionModule } from 'primeng/accordion';
 
 @Component({
   selector: 'app-payout',
-  imports: [CardModule, InputTextModule, InputNumberModule, FloatLabelModule, FormsModule, ButtonModule, MessageModule, ReactiveFormsModule, NgIf, SelectModule],
+  imports: [CardModule, 
+    InputTextModule, 
+    InputNumberModule, 
+    FloatLabelModule, 
+    FormsModule, 
+    ButtonModule, 
+    MessageModule, 
+    ReactiveFormsModule, 
+    NgIf, 
+    SelectModule,
+    AccordionModule],
   templateUrl: './payout.component.html',
   styleUrl: './payout.component.css'
 })
 export class PayoutComponent implements OnInit {
 
   withdrawForm: FormGroup;
+  withdrawWithConnectedAccount: FormGroup;
+  externalAccountList : any[] = [];
   credits: number = 0;
   holderType: string[] = ['Individual', 'Company'];
   SUPPORTED_COUNTRIES: string[] = [
@@ -47,11 +60,16 @@ export class PayoutComponent implements OnInit {
       account_holder_name: ['', [Validators.required]],
       account_holder_type: ['Individual', [Validators.required]],
     });
+
+    this.withdrawWithConnectedAccount = fb.group({
+      amount: [5, [Validators.required]],
+    });
   }
 
   ngOnInit(): void {
     setTimeout(() => {
       this.getCredits();
+      this.getExternalAccounts();
       const status = this.route.snapshot.queryParamMap.get('verificationStatus');
       const token = this.route.snapshot.queryParamMap.get('bankToken') ?? '';
       const currency = this.route.snapshot.queryParamMap.get('currency') ?? '';
@@ -69,6 +87,10 @@ export class PayoutComponent implements OnInit {
     return this.withdrawForm?.controls;
   }
 
+  get getFormControls2() {
+    return this.withdrawWithConnectedAccount?.controls;
+  }
+
   async sendPayout() {
     if (this.withdrawForm.invalid) {
       return;
@@ -83,6 +105,14 @@ export class PayoutComponent implements OnInit {
           this.payoutCredits(result.token.id);
         }
       })
+  }
+
+  async sendPayout2() {
+    if (this.withdrawWithConnectedAccount.invalid) {
+      return;
+    }
+    this.uiService.showSpinner();
+    this.payoutCredits2();
   }
 
   private payoutCredits(bankToken: string) {
@@ -106,6 +136,36 @@ export class PayoutComponent implements OnInit {
           // Showing success Toast
           this.uiService.showSuccess(response.responseMessage);
           this.credits = this.credits - Number(this.withdrawForm.get('amount')?.value);
+        },
+        error: (error) => {
+          // Showing error toast
+          const msg: string = error.error.responseMessage;
+          if (msg.includes("https")) {
+            window.location.href = msg;
+          } else {
+            this.uiService.showError("Failed to Withdraw Credits");
+          }
+        },
+      });
+  }
+
+  private payoutCredits2() {
+    const payload: PayoutCredits2 = {
+      credits: this.withdrawWithConnectedAccount.get('amount')?.value,
+    }
+    this.creditService
+      .payoutCredits2(payload)
+      .pipe(
+        finalize(() => {
+          // Hiding Loader after API call completion
+          this.uiService.hideSpinner();
+        })
+      )
+      .subscribe({
+        next: (response) => {
+          // Showing success Toast
+          this.uiService.showSuccess(response.responseMessage);
+          this.credits = this.credits - Number(this.withdrawWithConnectedAccount.get('amount')?.value);
         },
         error: (error) => {
           // Showing error toast
@@ -143,10 +203,65 @@ export class PayoutComponent implements OnInit {
       });
   }
 
+  public deleteBankAccount() {
+    this.uiService.showSpinner();
+    this.creditService
+      .deleteBankAccount()
+      .pipe(
+        finalize(() => {
+          // Hiding Loader after API call completion
+          this.uiService.hideSpinner();
+        })
+      )
+      .subscribe({
+        next: (response) => {
+          // Showing success Toast
+          this.uiService.showSuccess(response.responseMessage);
+          let list = this.externalAccountList;
+          list = [];
+          this.externalAccountList = [...list];
+        },
+        error: (error) => {
+          // Showing error toast\
+          this.uiService.showError(error.error.responseMessage);
+        },
+      });
+  }
+
+  private getExternalAccounts() {
+    this.uiService.showSpinner();
+    this.creditService
+      .getExternalAccounts()
+      .pipe(
+        finalize(() => {
+          // Hiding Loader after API call completion
+          this.uiService.hideSpinner();
+        })
+      )
+      .subscribe({
+        next: (response) => {
+          // Showing success Toast
+          this.uiService.showSuccess(response.responseMessage);
+          const data = response.responseBody;
+          this.externalAccountList = [...data];
+        },
+        error: (error) => {
+          // Showing error toast\
+          this.uiService.showError(error.error.responseMessage);
+        },
+      });
+  }
+
   getAmountCharged(): number {
     const newCredits = Number(this.getFormControls['amount'].value);
     const platformCharges:number = 1 - (environment.platformCharges / 100);
-    return newCredits * platformCharges;
+    return Number((newCredits * platformCharges).toFixed(2));
+  }
+
+  getAmountCharged2(): number {
+    const newCredits = Number(this.getFormControls2['amount'].value);
+    const platformCharges:number = 1 - (environment.platformCharges / 100);
+    return Number((newCredits * platformCharges).toFixed(2));
   }
 
   private updateVerification(bankToken: string) {

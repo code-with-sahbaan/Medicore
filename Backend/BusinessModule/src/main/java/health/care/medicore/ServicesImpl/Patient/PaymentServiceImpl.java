@@ -5,8 +5,10 @@ import com.stripe.net.RequestOptions;
 import com.stripe.param.*;
 import health.care.medicore.Entities.Users;
 import health.care.medicore.RequestDTO.Doctor.PayoutCredits;
+import health.care.medicore.RequestDTO.Doctor.PayoutCredits2;
 import health.care.medicore.RequestDTO.Patient.BuyCredits;
 import health.care.medicore.ResponseDTO.BaseResponse;
+import health.care.medicore.ResponseDTO.Doctor.ExternalAccount;
 import health.care.medicore.ResponseDTO.Patient.BuyCreditsDetails;
 import health.care.medicore.Services.Patient.PaymentService;
 import health.care.medicore.Services.UserService;
@@ -14,8 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -179,6 +181,44 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
+    public void payoutCredits(PayoutCredits2 payoutCredits) throws Exception {
+        try{
+            Users users = userService.getCurrentUser();
+            if (users.getCredits() < payoutCredits.getCredits()) {
+                throw new Exception("Payout Credit Not Enough");
+            }
+            Account account = Account.retrieve(users.getStripeAccountId());
+            BankAccount externalAccount = (BankAccount) account.getExternalAccounts().getData().get(0);
+            long creditsToTransfer = updatedAmountForPayout(payoutCredits.getCredits());
+            /* TRANSFER AMOUNT FROM PLATFORM STRIPE TO CONNECTED ACCOUNT */
+            TransferCreateParams transferParams = TransferCreateParams.builder()
+                    .setAmount(creditsToTransfer) // in cents
+                    .setCurrency(externalAccount.getCurrency())
+                    .setDestination(account.getId()) // connected account ID
+                    .build();
+
+            Transfer.create(transferParams);
+
+            /* PAYING OUT CREDITS */
+            PayoutCreateParams payoutCreateParams =  PayoutCreateParams.builder()
+                    .setAmount(creditsToTransfer)
+                    .setCurrency(externalAccount.getCurrency())
+                    .build();
+            Payout.create(payoutCreateParams,
+                    RequestOptions.builder()
+                            .setStripeAccount(account.getId())
+                            .build());
+
+            /* UPDATING USER CREDITS */
+            long updatedCredits = users.getCredits() - payoutCredits.getCredits();
+            users.setCredits(updatedCredits);
+            userService.updateUser(users);
+        }catch (Exception e){
+            throw e;
+        }
+    }
+
+    @Override
     public void updateVerification()  throws  Exception{
         try{
             Users users = userService.getCurrentUser();
@@ -186,6 +226,41 @@ public class PaymentServiceImpl implements PaymentService {
             userService.updateUser(users);
         }catch (Exception e){
             throw new Exception("Failed to Update Verification");
+        }
+    }
+
+    @Override
+    public List<ExternalAccount> getExternalAccounts() throws Exception {
+        try{
+            Users users = userService.getCurrentUser();
+            if (users.getStripeAccountId() != null){
+                Account account = Account.retrieve(users.getStripeAccountId());
+                BankAccount bankAccount = (BankAccount) account.getExternalAccounts().getData().get(0);
+                ExternalAccount externalAccount = new ExternalAccount();
+                externalAccount.setCountry(bankAccount.getCountry());
+                externalAccount.setCurrency(bankAccount.getCurrency());
+                externalAccount.setLast4(bankAccount.getLast4());
+                externalAccount.setRoutingNumber(bankAccount.getRoutingNumber());
+
+                List<ExternalAccount> externalAccounts = new ArrayList<>();
+                externalAccounts.add(externalAccount);
+                return externalAccounts;
+            }
+        }catch (Exception e){
+            throw new Exception("Failed to get external accounts");
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
+    public void deleteBankAccount() throws Exception {
+        try{
+            Users users = userService.getCurrentUser();
+            Account account = Account.retrieve(users.getStripeAccountId());
+            BankAccount bankAccount = (BankAccount) account.getExternalAccounts().getData().get(0);
+            bankAccount.delete();
+        }catch (Exception e){
+            throw new Exception("Failed to delete bank account");
         }
     }
 }

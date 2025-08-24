@@ -23,9 +23,9 @@
                 </div>
             </p-card>
         </div>
-        <form [formGroup]="withdrawForm" (ngSubmit)="sendPayout()" class="flex flex-column
+        <!-- Non Connected Account Phase -->
+        <form *ngIf="externalAccountList.length == 0" [formGroup]="withdrawForm" (ngSubmit)="sendPayout()" class="flex flex-column
             gap-4">
-            <div></div>
             <!-- 1st Row -->
             <div class="col-12 grid grid-nogutter justify-between">
                 <div class="col-5">
@@ -35,8 +35,9 @@
                         <label for="amount">Credits to Withdraw</label>
                     </p-floatlabel>
                     <small>
-                        <p-message severity="info"
-                            variant="simple" size="small">You'll Recieve {{getFormControls['amount'].value}}$ - 10% (Platform Fee) = {{getAmountCharged()}}</p-message>
+                        <p-message severity="info" variant="simple" size="small">You'll Recieve
+                            {{getFormControls['amount'].value}}$ - 10% (Platform Fee) =
+                            {{getAmountCharged()}}</p-message>
                     </small>
                     <small *ngIf="getFormControls['amount'].touched && getFormControls['amount'].invalid"
                         class="p-error">
@@ -143,5 +144,62 @@
             </div>
 
         </form>
+        <!-- Connected Account Phase -->
+        <div *ngIf="externalAccountList.length != 0">
+            <!-- Connected Account -->
+            <p-card header="Connected Bank Account" subheader="{{externalAccountList[0].accountHolderName}}">
+                <p class="m-2">
+                    Account Number: **** **** {{externalAccountList[0].last4}}
+
+                </p>
+                <p class="m-2">
+                    Routing Number: {{externalAccountList[0].routingNumber}}
+
+                </p>
+                <p class="m-2">
+                    Country: {{externalAccountList[0].country}}
+                </p>
+                <p class="m-2">
+                    Currency: {{externalAccountList[0].currency}}
+                </p>
+                <!-- <div class="md:col-4 lg:col-2 sm:col-12">
+                    <p-button severity="danger" variant="outlined" (click)="deleteBankAccount()">Delete Account</p-button>
+                </div> -->
+            </p-card>
+            <br>
+            <!-- With Draw Form With Connected Account -->
+            <form [formGroup]="withdrawWithConnectedAccount" (ngSubmit)="sendPayout2()" class="flex flex-column
+            gap-4">
+                <!-- 1st Row -->
+                <div class="col-12 grid grid-nogutter justify-between">
+                    <div class="col-5">
+                        <p-floatlabel>
+                            <p-inputnumber id="amount" [min]="5" formControlName="amount" mode="decimal"
+                                [format]="false" />
+                            <label for="amount">Credits to Withdraw</label>
+                        </p-floatlabel>
+                        <small>
+                            <p-message severity="info" variant="simple" size="small">You'll Recieve
+                                {{getFormControls2['amount'].value}}$ - 10% (Platform Fee) =
+                                {{getAmountCharged2()}}</p-message>
+                        </small>
+                        <small *ngIf="getFormControls2['amount'].touched && getFormControls2['amount'].invalid"
+                            class="p-error">
+                            <p-message *ngIf="getFormControls2['amount'].errors?.['required']" severity="error"
+                                variant="simple" size="small">Amount is required</p-message>
+                        </small>
+                        <small *ngIf="getFormControls2['amount'].value < 5" class="p-error">
+                            <p-message *ngIf="getFormControls2['amount'].value < 5" severity="error" variant="simple"
+                                size="small">Amount must be at least 5</p-message>
+                        </small>
+                    </div>
+                    <div class="col-5">
+                        <p-button class="w-full" type="submit"
+                            [disabled]="withdrawWithConnectedAccount.invalid || this.withdrawWithConnectedAccount.get('amount')?.value < 5"
+                            label="Withdraw" />
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
