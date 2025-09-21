@@ -77,7 +77,7 @@ public class DataBootstrapping implements CommandLineRunner {
             user.setIsActive(true);
             user.setPassword(new BCryptPasswordEncoder().encode("123456789"));
             user.setRole(roleRepository.findByRoleIgnoreCase(Constants.PATIENT));
-            user.setEmail("sahbaanalam34@gmail.com");
+            user.setEmail("patient@gmail.com");
             user.setCredits(200);
             user.setFullName("Sahbaan Alam");
             Users saved1 = userRepository.save(user);
@@ -88,7 +88,7 @@ public class DataBootstrapping implements CommandLineRunner {
             user2.setIsActive(true);
             user2.setPassword(new BCryptPasswordEncoder().encode("123456789"));
             user2.setRole(roleRepository.findByRoleIgnoreCase(Constants.DOCTOR));
-            user2.setEmail("sahbaanalam25@gmail.com");
+            user2.setEmail("doctor@gmail.com");
             user2.setCredits(200);
             user2.setStripeAccountId("acct_1RyyqHHlc4m6a5zS");
             user2.setIsVerificationCompleted(true);
@@ -104,7 +104,7 @@ public class DataBootstrapping implements CommandLineRunner {
             user3.setIsActive(true);
             user3.setPassword(new BCryptPasswordEncoder().encode("123456789"));
             user3.setRole(roleRepository.findByRoleIgnoreCase(Constants.DOCTOR));
-            user3.setEmail("sahbaanalam9@gmail.com");
+            user3.setEmail("doctor2@gmail.com");
             user3.setCredits(200);
             user3.setFullName("John Doe");
             user3.setWorkingHourStart(LocalTime.of(10, 50));
